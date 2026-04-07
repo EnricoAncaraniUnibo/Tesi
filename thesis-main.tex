@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,openright,twoside]{book} %Definisco carattere a 12 punti, foglio a4, inizio dei capitoli nella pagina a destra, 
+\documentclass[12pt,a4paper,openright,oneside]{book} %Definisco carattere a 12 punti, foglio a4, inizio dei capitoli nella pagina a destra, 
 %gestisce il pdf a 2 pagine
 \usepackage[utf8]{inputenc} %Codifica utf-8 e mi permette di gestire i caratteri accentati.
 \usepackage{disi-thesis} 
@@ -9,46 +9,39 @@
 \usepackage{newtxtext,newtxmath} %usa font times new roman
 
 \school{\unibo}
-\department{DIPARTIMENTO DI INFORMATICA -– SCIENZA E INGEGNERIA}
+\department{DIPARTIMENTO DI INFORMATICA -- SCIENZA E INGEGNERIA}
 \programme{CORSO DI LAUREA IN INGEGNERIA E SCIENZE INFORMATICHE}
 \scripttitle{Titolo TODO:}
 \title{TODO}
-\author{Candidate Name}
+\author{TODO}
 \date{\today}
 \subject{TODO}
-\supervisor{Prof. Supervisor Here}
+\supervisor{TODO}
 \cosupervisor{Dott. CoSupervisor 1}
 \morecosupervisor{Dott. CoSupervisor 2}
 \session{I}
-\academicyear{2022-2023}
+\academicyear{TODO-TODO}
 
 % Definition of acronyms
 \acrodef{IoT}{Internet of Thing}
 \acrodef{vm}[VM]{Virtual Machine}
 
-
 \mainlinespacing{1.241} % line spacing in mainmatter, comment to default (1)
 
 \begin{document}
-
-\frontmatter\frontispiece
-
+\frontmatter\pagenumbering{arabic}\frontispiece
+\tableofcontents  
+\listoffigures
+\listoftables
+\lstlistoflistings
 \begin{abstract}	
 Max 2000 characters, strict.
 \end{abstract}
-
-\begin{dedication} % this is optional
-Optional. Max a few lines.
-\end{dedication}
-
+%\begin{dedication} % this is optional
+%Optional. Max a few lines.
+%\end{dedication} 
 %----------------------------------------------------------------------------------------
-\tableofcontents   
-\listoffigures     % (optional) comment if empty
-\lstlistoflistings % (optional) comment if empty
-%----------------------------------------------------------------------------------------
-
 \mainmatter
-
 %----------------------------------------------------------------------------------------
 \chapter{Introduction}
 \label{chap:introduction}
