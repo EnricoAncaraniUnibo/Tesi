@@ -32,6 +32,7 @@
 \newcommand{\acknowledgementsname}{Acknowledgements}
 
 \newcommand{\school}[1]{\def\theschool{#1}}
+\newcommand{\department}[1]{\def\thedepartment{#1}}
 \newcommand{\programme}[1]{\def\theprogramme{#1}}
 \newcommand{\subject}[1]{\def\thesubject{#1}}
 \newcommand{\cosupervisor}[1]{\def\thecosupervisor{#1}}
@@ -39,6 +40,7 @@
 \newcommand{\supervisor}[1]{\def\thesupervisor{#1}}
 \newcommand{\session}[1]{\def\thesession{#1}}
 \newcommand{\academicyear}[1]{\def\theacademicyear{#1}}
+\newcommand{\scripttitle}[1]{\def\thescripttitle{#1}}
 
 \newenvironment{abstract}{\chapter*{\centering\abstractname}\addcontentsline{toc}{chapter}{\abstractname}}{} 
 \newenvironment{acknowledgements}{\chapter*{\acknowledgementsname}}{} 
@@ -68,31 +70,37 @@
     \begin{titlepage}
         \centering
         \large
-        \textbf{\theschool}
-        \\
-        \noindent\hrulefill
-        \vspace{0.4cm}
-        
-        \Large
-        \theprogramme
+        \theschool
+        \vspace{0.5cm}
 
+        \large
+        \thedepartment
+        \vspace{0.5cm}
+        
+        \large
+        \theprogramme
+        
         \Huge
-        \vspace{4cm}
+        \vspace{3cm}
+        \thescripttitle
+        \\
+        \vspace{1cm}
         \textbf{
             \thetitle
         }
         
         \large
         \vspace{1cm}
-        Tesi di laurea in:
+        Elaborato in:
         \\
-        \textsc{\thesubject}
+        \textbf{\thesubject}
 
         \vspace{4cm}
         %
         \begin{minipage}[t]{0.64\textwidth}
             \begin{flushleft}
-                \textit{Relatore} 
+                \centering
+                Relatore
                 \\ 
                 \textbf{\thesupervisor}
                 \\
