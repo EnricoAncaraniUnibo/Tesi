@@ -7,6 +7,7 @@
 \usepackage{shortcuts}
 \usepackage{acronym}
 \usepackage{newtxtext,newtxmath} %usa font times new roman
+\usepackage{afterpage}
 
 \school{\unibo}
 \department{DIPARTIMENTO DI INFORMATICA -- SCIENZA E INGEGNERIA}
@@ -34,8 +35,21 @@
 \listoffigures
 \listoftables
 \lstlistoflistings
+\afterpage{\null
+           \thispagestyle{empty}
+           \addtocounter{page}{-1}
+           \newpage}
 \begin{abstract}	
-Max 2000 characters, strict.
+TODO
+IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica che ha alla base l'utilizzo di oggetti intelligenti. 
+Per oggetti intelligenti si intendono quei dispositivi, macchine o attrezzature che si possono connettere a internet per trasmettere, ricevere dati o elaborarli.
+All'interno di questa sfera, uno dei metodi di comunicazione più utilizzati è quello basato su un modello Publish/Subscribe che consente lo scambio di dati tra dispositivi della rete senza la necessità di connessioni dirette tra loro.
+Per funzionare si utilizza il protocollo MQTT, uno dei protocolli più diffusi per lo scambio di messaggi, il quale si basa su una struttura con 3 tipologie di dispositivi connessi: Publisher, Subscriber e Broker.
+I Publisher una volta ottenuti dei dati tramite sensori di vario genere, li pubblica, rendendoli disponibili nella rete. I dati per spostarsi all'interno della rete utilizzano i broker cioè vari punti/server di connessione, i quali permettono il passaggio di dati per poi infine arrivare ai Subscribers per la lettura e l'elaborazione.
+Questa tesi riprende il lavoro effettuato da un collega nell'anno 21-22 approfondendo e sviluppando i casi di test con particolare attenzione a quelle che sono le caratteristiche che 
+possono portare criticità al calcolo della soluzione ottima di percorso per il flusso dei dati.
+La tesi del collega si basa sull'idea di costruire un sistema distribuito sfruttando le proprietà matematiche del rilassamento Lagrangiano, dove ogni nodo conosce solamente i propri vicini.
+
 \end{abstract}
 %\begin{dedication} % this is optional
 %Optional. Max a few lines.
