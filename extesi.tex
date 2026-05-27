@@ -158,18 +158,18 @@
 \vspace{-0.5cm}        
 \section{Iot (Internet of Things)}    
 \vspace{-0.3cm}          
-Il termine Iot nasce come acronimo per indicare quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti". Quest'ultima ha avuto particolare rilevanza nell'ultimo periodo storico, andando a rivoluzionare il modo in cui raccogliamo e processiamo le informazioni sia in ambito domestico sia industriale. \smallskip \\
-Un dispositivo definito intelligente o più sentito comunemente "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni, tra le più importanti, sicuramente è presente lo scambio di informazioni. \smallskip \\
-Nella mia tesi mi soffermo particolarmente sui "sensori", dispositivi chiave per lo scambio di messaggi in una rete IoT.
+Il termine Iot nasce come acronimo per indicare quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti". Quest'ultima ha avuto particolare rilevanza nell'ultimo periodo storico, andando a rivoluzionare il modo in cui si raccolgono e si processano le informazioni sia in ambito domestico sia industriale. \smallskip \\
+Un dispositivo definito intelligente o più comunemente chiamato "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni in cui tra le più importanti è presente lo scambio di informazioni. \smallskip \\
+In questa tesi ci si sofferma particolarmente sui "sensori", dispositivi chiave per lo scambio di messaggi in una rete IoT.
 Un sensore è un dispositivo che rileva un cambiamento nel mondo fisico, lo traduce in un segnale digitale e poi lo diffonde ad altri dispositivi, i quali lo utilizzeranno per prendere decisioni. \smallskip \\
 Una possibile criticità risiede proprio in questa parte del funzionamento, se una decisione deve essere presa con tempestività, anche la rete di trasmissione dovrà essere veloce e efficiente.
 \vspace{-0.5cm}
 \section{Publish and Subscribe}
 \vspace{-0.3cm}   
-Tra le metodologie più famose di trasmissione di messaggi, quella su cui mi voglio soffermare è il Publish and Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
-In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti delle tali.
-Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le 2 parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
-Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma presentando alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
+Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish and Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
+In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
+Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
+Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\linewidth]{publish-subscribe}
@@ -189,8 +189,8 @@ Uno dei metodi migliori per poter descrivere una rete di dispositivi connessi è 
 \textbf{TODO Capire se mi conviene parlare della centralizzazione e del 2p2 dato che lavoro più in un ambito non decentralizzato nel mio caso}
 \subsection{Centralizzazione}
 Un altro aspetto fondamentale del problema riguarda la centralizzazione dell'elaborazione della rete.
-In un caso reale, calcolare qual'è il percorso ottimo necessità di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
-Da qui nasce l'idea di non affidarsi più esclusivamente su un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete, rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti, in caso di malfunzionamento di un canale.
+In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
+Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
 \subsubsection{Peer-To-Peer}
 Ciò è reso possibile sfruttando un protocollo Peer-to-Peer, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
 \textbf{TODO origini del p2p, strutturati e non strutturati, problemi legati al p2p}.
@@ -214,33 +214,66 @@ s.t
 	x \in \{0, 1\}
 \end{equation}
 Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ e $B$ le matrici dei coefficienti del problema, $b$ e $d$ i vettori delle costanti per i vincoli.\smallskip \\
-Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo, ottenendo un limite inferiore per la soluzione del problema originale.
+Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo un limite inferiore per la soluzione del problema originale.
 \subsection{Rilassamento Continuo}
-Il rilassamento più intuitivo è quello continuo, dove se il problema presenta la variabile decisionale come intera, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza della variabile e permettendogli di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
+Il rilassamento più intuitivo è quello continuo, dove se il problema presenta la variabile decisionale come intera, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza della variabile e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
 Questo approccio trasforma il problema intero in un problema di programmazione lineare continua, per il quale esistono algoritmi efficienti. Lo spazio delle soluzioni ammissibili, tuttavia, è più ampio e il valore ottimo del problema rilassato potrebbe non essere sempre applicabile al problema originale.
 \begin{equation}
  x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
 \end{equation}
 \subsection{Rilassamento Lagrangiano}
+Un rilassamento particolarmente utile è quello lagrangiano, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange. Quest'ultimo funge da penalità: più ci si allontana dal rispetto del vincolo, maggiore sarà il peggioramento del valore della funzione obiettivo, allontanandolo dall'ottimo. Il risultato è una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
 \subsubsection{Spiegazione matematica}
-Consideriamo un problema di minimizzazione \textbf{P}
+Consideriamo un problema di minimizzazione \textbf{P}:
 \begin{equation}
-	z(P)=min\ c^Tx 
+	z(P)=min\ cx 
 \end{equation}
 s.t 
 \begin{equation}
 	Ax \geq  b
 \end{equation}
 \begin{equation}
-	Bx \geq  d 
+	x \in \{0, 1\}
 \end{equation}
+Con $c$ il vettore dei costi, x la variabile decisionale, A la matrice dei coefficienti del problema, b il vettore delle costanti per il vincolo. \smallskip \\
+Con il rilassamento lagrangiano si rilassa il vincolo $Ax \geq b$ aggiungendo una penalità $\lambda$ non negativa e inserendolo all'interno della funzione obiettivo.
+\begin{equation}
+	z(P)=min\ cx,\ Ax-b \geq 0
+\end{equation}
+$$\downarrow$$
+\begin{equation}
+	L(\lambda)=min\ cx-\lambda(Ax-b)
+\end{equation}
+s.t
 \begin{equation}
 	x \in \{0, 1\}
 \end{equation}
-Con $c$ il vettore dei costi, x la variabile decisionale, A e B le matrici dei coefficienti del problema, b e d i vettori delle costanti per i vincoli.
-Con il rilassamento lagrangiamo andiamo a rilassare il vincolo $Ax \geq b$ aggiungendo una penalità.
+Il motivo del segno $-$ è dovuto al fatto che il vincolo è soddisfatto quando assume un valore maggiore o uguale a 0, quindi dato che $\lambda$ è definita non negativa, se il vincolo non viene soddisfatto come nel caso in cui sia negativo, sottrarlo dalla funzione obiettivo ne aumenta il valore, allontanandolo dal minimo ricercato.\vspace{0.15cm}  \\  Il valore ottimale del problema originale $z(P)$ sarà maggiore o al massimo uguale al valore ottimale del problema rilassato $L(\lambda)$. 
+\begin{align}
+	z(P)\geq L(\lambda),\ \ \ \ \forall \lambda \geq 0
+\end{align}
+Questo perché non avendo l'obbligo di rispettare il vincolo, che è stato rilassato, lo spazio delle soluzioni ammissibili è più ampio e quindi si possono trovare soluzioni che il problema originale non può considerare corrette, le quali, avendo meno costrizioni, avranno un valore più basso o al massimo uguale alla soluzione dell'originale. 
+\begin{enumerate}
+	\item Si prende una $x^*$ che è soluzione ottima di $z(P)$ quindi è ammissibile e il vincolo è rispettato.
+	\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha $cx^* \geq cx^* - \lambda(ax^*-b)$.
+	\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore di $x^*$:
+	$$L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)$$.\vspace{-0.75cm}
+	\item Unendo le diseguaglianze: $z(P)=cx^* \geq cx^* - \lambda(ax^*-b)\geq L(\lambda)$
+\end{enumerate}
+%
+%In ogni caso dove il vincolo è rispettato, il valore di $\lambda(Ax-b)$ è non negativo:
+%\begin{equation}
+%	z(P)=cx \geq cx-\lambda(Ax-b)=L(\lambda)
+%\end{equation}
+%In caso invece non fosse rispettato i due risultati non sarebbero confrontabili in quanto non esisterebbe una soluzione ammissibile per l'originale. \smallskip \\
+Grazie a questa proprietà, si può pensare di massimizzare la funzione lagrangiana per ottenere il migliore limite inferiore possibile per il problema originale e si può descrivere con la formula del duale lagrangiano:
+\begin{equation}
+	z(D_L)=\max_{\lambda\geq0}\ [L(\lambda)]
+\end{equation}
 
 \subsubsection{Metodo del subgradiente}
+
+\section{Ambiente di sviluppo}
 
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
 
