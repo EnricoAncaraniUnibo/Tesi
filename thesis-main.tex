@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper,openright,oneside]{book} %Definisco carattere a 12 punti, foglio a4, inizio dei capitoli nella pagina a destra, 
 %gestisce il pdf a 2 pagine
 \usepackage[utf8]{inputenc} %Codifica utf-8 e mi permette di gestire i caratteri accentati.
+\usepackage[english,italian]{babel}
 \usepackage{disi-thesis} 
 \usepackage{code-lstlistings}
 \usepackage{notes}
@@ -57,29 +58,26 @@ La tesi del collega si basa sull'idea di costruire un sistema distribuito sfrutt
 %----------------------------------------------------------------------------------------
 \mainmatter
 %----------------------------------------------------------------------------------------
-\chapter{Introduction}
+\chapter{Introduzione}
 \label{chap:introduction}
 %----------------------------------------------------------------------------------------
+\section{Iot (Internet of Things)}
+Il termine Iot nasce come acronimo per definire quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti".
+Un dispositivo definito intelligente o più sentito comunemente "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni, tra cui la più importante è lo scambio di informazioni con altri dispositivi.
+Nella mia tesi mi soffermo particolarmente sui "sensori", dispositivi chiave per lo scambio di messaggi in una rete Iot.
+Un sensore è un dispositivo che registra un cambiamento nel mondo fisico, ne genera un messaggio virtuale e poi diffonde il messaggio oppure prende decisioni tramite il valore letto.
+Nella mia tesi vado ad approfondire proprio questo dettaglio.
+Il fatto che un sensore possa generare un messaggio e permettere ad altri dispositivi di prendere decisioni tramite esso significa che se le decisioni devono essere tempestive allora anche il metodo di trasmissione e l'efficienza della stessa lo devono essere.
+\section{Publish and Subscribe}
+Tra le metodologie più famose di trasmissione di messaggi quella su cui mi voglio soffermare è quella del Publish and Subscribe, un paradigma particolarmente adatto all'Iot, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker.
+In questo modello ognuno a il suo ruolo: I Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti delle tali.
+Il meccanismo alla base è molto semplice: Il Publisher invia messaggi etichettati con un topic, il broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. Questo meccanismo permette un disaccoppiamento tra nodo di partenza e di arrivo in quanto le 2 parti non si conoscono direttamente e non devono per forza essere attivi contemporaneamente.
+Il protocollo standard per la implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili.
 
-Write your intro here.
-\sidenote{Add sidenotes in this way. They are named after the author of the thesis}
 
-You can use acronyms that your defined previously,
-such as \ac{IoT}.
-%
-If you use acronyms twice,
-they will be written in full only once
-(indeed, you can mention the \ac{IoT} now without it being fully explained).
-%
-In some cases, you may need a plural form of the acronym.
-%
-For instance,
-that you are discussing \acp{vm},
-you may need both \ac{vm} and \acp{vm}.
 
 \paragraph{Structure of the Thesis}
 
-\note{At the end, describe the structure of the paper}
 
 \chapter{State of the art}
 
