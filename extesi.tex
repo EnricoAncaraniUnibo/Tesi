@@ -9,6 +9,9 @@
 \oddsidemargin=30pt \evensidemargin=20pt
 \hyphenation{sil-la-ba-zio-ne pa-ren-te-si}
 \usepackage{tgtermes}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \makeatletter
 % Capitoli numerati
 \def\@makechapterhead#1{%
@@ -255,10 +258,17 @@ Il motivo del segno $-$ è dovuto al fatto che il vincolo è soddisfatto quando as
 Questo perché non avendo l'obbligo di rispettare il vincolo, che è stato rilassato, lo spazio delle soluzioni ammissibili è più ampio e quindi si possono trovare soluzioni che il problema originale non può considerare corrette, le quali, avendo meno costrizioni, avranno un valore più basso o al massimo uguale alla soluzione dell'originale. 
 \begin{enumerate}
 	\item Si prende una $x^*$ che è soluzione ottima di $z(P)$ quindi è ammissibile e il vincolo è rispettato.
-	\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha $cx^* \geq cx^* - \lambda(ax^*-b)$.
+	\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha: \begin{equation}
+		cx^* \geq cx^* - \lambda(ax^*-b)
+	\end{equation}
 	\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore di $x^*$:
-	$$L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)$$.\vspace{-0.75cm}
-	\item Unendo le diseguaglianze: $z(P)=cx^* \geq cx^* - \lambda(ax^*-b)\geq L(\lambda)$
+	\begin{equation}
+		L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)
+	\end{equation}\vspace{-0.75cm}
+	\item Unendo le diseguaglianze: \begin{equation}
+		z(P)=cx^* \geq cx^* - \lambda(ax^*-b)\geq L(\lambda) \rightarrow z(P)\geq L(\lambda)
+	\end{equation}
+	
 \end{enumerate}
 %
 %In ogni caso dove il vincolo è rispettato, il valore di $\lambda(Ax-b)$ è non negativo:
@@ -270,9 +280,88 @@ Grazie a questa proprietà, si può pensare di massimizzare la funzione lagrangian
 \begin{equation}
 	z(D_L)=\max_{\lambda\geq0}\ [L(\lambda)]
 \end{equation}
-
-\subsubsection{Metodo del subgradiente}
-
+Una delle tecniche che può essere usata per la ricerca della soluzione del duale lagrangiano è il metodo del sottogradiente.
+\subsubsection{Metodo del sottogradiente}
+Il metodo del sottogradiente è un metodo iterativo usato per massimizzare una funzione concava, come quella lagrangiana, con lo scopo di ottenere il migliore limite inferiore per il problema originale. Nello specifico, si può utilizzare per calcolare i moltiplicatori di Lagrange associati ai vincoli rilassati che forniscono il risultato $L(\lambda)$ più alto. \smallskip \\
+La funzione lagrangiana non è perfettamente una curva liscia ma è composta di segmenti, ciascuno corrispondente a una soluzione ottima $\bar{x}$ per il $\lambda$ specificato.
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={$\lambda$},
+			ylabel={$L(\lambda)$},
+			xmin=0, xmax=5,
+			ymin=0, ymax=4.5,
+			xtick=\empty,
+			ytick=\empty,
+			width=8cm,
+			height=6cm,
+			clip=false
+			]
+			\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+			{-0.3667*(x-3)^2 + 3.5};
+			\addplot[red, thick, smooth] coordinates {(0.2,0.86) (1.8,3.21)};  
+			\addplot[red, thick, smooth] coordinates {(1.2,2.55) (2.8,3.72)};  
+			\addplot[red, thick, smooth] coordinates {(2.2,3.5) (3.8,3.5)};    
+			\addplot[red, thick, smooth] coordinates {(3.2,3.72) (4.8,2.55)};   
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Immagine di una funzione lagrangiana con inviluppo}
+	\label{fig:lagrangiana_inviluppo}
+\end{figure}
+\newpage
+\noindent 
+Data una lambda, si ottiene una $\bar{x}$ tale che:
+\begin{equation}
+	L(\bar{\lambda})=\min (cx-\bar{\lambda}(Ax-b))=c\bar{x}-\bar{\lambda}(A\bar{x}-b)
+\end{equation}
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel={$\lambda$},
+			ylabel={$L(\lambda)$},
+			xmin=0, xmax=5,
+			ymin=0, ymax=4.5,
+			xtick=\empty,
+			ytick=\empty,
+			width=8cm,
+			height=6cm,
+			clip=false
+			]
+			\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+			{-0.3667*(x-3)^2 + 3.5};
+			\addplot[black, densely dotted, thin] coordinates {(1.4,0) (1.4,2.561)};
+			\addplot[black, densely dotted, thin] coordinates {(0,2.561) (1.4,2.561)};
+			\node at (axis cs:1.4, 2.561) [anchor=south, yshift=4pt] {$L(\bar{\lambda})$};
+			\node at (axis cs:1.4, 0) [anchor=north, yshift=-4pt] {$\bar{\lambda}$};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Valore di $L(\bar{\lambda})$ corrispondente a una $\bar{\lambda}$ scelta}
+	\label{fig:Determinisco di L scelta una lambda}
+\end{figure} \\
+Riprendendo la soluzione $\bar{x}$ derivata dalla $\bar{\lambda}$ data possiamo ridefinire $L(\lambda)$ cioè la soluzione in una qualsiasi altra lambda generica come o migliore o uguale della soluzione trovata ora:
+\begin{equation}
+	L(\lambda)=\min (cx-\lambda(Ax-b))\leq c\bar{x}-\lambda(A\bar{x}-b)
+\end{equation}
+Sottraendo ora l'equazione (1.17) dalla (1.18) otteniamo:
+\begin{equation}
+	L(\lambda)-L(\bar{\lambda})\leq c\bar{x}-\lambda(A\bar{x}-b)-(c\bar{x}-\bar{\lambda}(A\bar{x}-b))
+\end{equation}
+$$\downarrow$$
+\begin{equation}
+	L(\lambda)-L(\bar{\lambda})\leq -\lambda(A\bar{x}-b)+\bar{\lambda}(A\bar{x}-b)
+\end{equation}
+$$\downarrow$$
+\begin{equation}
+	L(\lambda)-L(\bar{\lambda})\leq (A\bar{x}-b)(-\lambda+\bar{\lambda})
+\end{equation}
+$$\downarrow$$
+\begin{equation}
+	L(\lambda)\leq L(\bar{\lambda})+(A\bar{x}-b)(-\lambda+\bar{\lambda})
+\end{equation}
 \section{Ambiente di sviluppo}
 
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
