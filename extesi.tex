@@ -371,6 +371,11 @@ E noi vogliamo massimizzare $L(\lambda)$ quindi vogliamo che $L(\lambda)-L(\bar{
 Per garantire ciò vogliamo che s per la differenza dei lambda sia positiva perché se fosse negativa $L(\bar{lambda})$ + un valore negativo verrebbe sicuramente più piccola mentre se è positivo aumenta.
 Per fare in modo che sia positiva allora bisogna che s sia di base presa come positiva e la nuova lambda sia > della vecchia
 Se mi muovo nella direzione del subgradiente questo funziona.
+
+In generale per una funzione f un vettore s è subgradiente in un punto y se rispetta la seguente formual f(x)<=f(y)+s(x-y).
+Dato che vogliamo massimizzare L(lambda) e portarlo a un miglioramento allora l'unica sperianza che abbiamo è sommare a L(\bar{lambda}) un valore positivo.
+Dato che per noi lambda nuovo è maggiore di lambda vecchio quello è positivo...
+so che s punta nella direzione massima di L quindi per trovare un lambda migliore partiamo dal vecchio lambda e facciamo un passo in quella direzione di lunghezza step
 \section{Ambiente di sviluppo}
 
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
