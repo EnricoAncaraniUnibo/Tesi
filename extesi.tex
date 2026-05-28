@@ -384,9 +384,19 @@ In generale per una funzione f un vettore s è subgradiente in un punto y se ris
 Dato che vogliamo massimizzare L(lambda) e portarlo a un miglioramento allora l'unica sperianza che abbiamo è sommare a L(\bar{lambda}) un valore positivo.
 
 \section{Ambiente di sviluppo}
-
+Leggere foglio google
+Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione ma quelli su cui mi voglio soffermare sono il sistema automatico di CPLEX Optimization Studio e quello manuale creabile sempre con le librerie di Cplex ma implementabile con python su google colab.
+La scelta di google colab come ambiente python è una scelta fatta sulla base di avere un ambiente con già le librerie installate o facilmente importabili, ambiente online quindi con sempre le cose salvate in ogni dispositivo in cui si effettua l'accesso e la modalità a celle non dovendo rifare ogni volta tutto il codice.
+Come ambiente automatico intendo l'ambiente di CPLEX cioè dove non bisogna configurare i calcoli ma li fa già lui l'unica cosa da inserire sono i problemi di ottimizzazione e i dati di quei problemi poi al calcolo ci pensa lui.
+In python ragioniamo in un ambiente misto nel senso che possiamo importare la libreria di cplex e definire in modo analogo i problemi e fornigli i dati ma anche configuarare da 0 un metodo di calcolo come il rilassamento lagrangiano e implementarlo.
+Per l'avvio CPlex usa una parte di modello, una parte di dati e una parte di configurazione di avvio, mentre per python bisogna definire le variabili con gli elementi e definire come utilizzarle.
+Inoltre python permette di stampare a immagine con la libreria ... i grafi dando un'idea più chiara del tipo di casistica che si sta affrontando
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
-
+\chapter{problem descriptio}
+\section{global symbols}
+\section{first formulation}
+\section{second formulation}
+\section{Rilassamento lagrangiano nella seconda formulazione}
 
 
 %Ora vediamo un elenco numerato:         %crea un elenco numerato
