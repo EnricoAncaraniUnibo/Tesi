@@ -364,6 +364,13 @@ $$\downarrow$$
 \begin{equation}
 	L(\lambda)\leq L(\bar{\lambda})+(A\bar{x}-b)(-\lambda+\bar{\lambda})
 \end{equation}
+Definiamo $s=-(A\bar{x}-b)$
+Così poi diventa $L(\lambda)-L(\bar{\lambda})<=s(\lambda-\bar{\lambda})$
+Quindi abbiamo un upper bound sulla differenza quindi in pratica non possiamo avere una differenza più alta del valore del subgradiente per la differenza dei lambda.
+E noi vogliamo massimizzare $L(\lambda)$ quindi vogliamo che $L(\lambda)-L(\bar{\lambda})$ risulti $>$ di 0 cioè il nuovo L sia maggiore del precedente.
+Per garantire ciò vogliamo che s per la differenza dei lambda sia positiva perché se fosse negativa $L(\bar{lambda})$ + un valore negativo verrebbe sicuramente più piccola mentre se è positivo aumenta.
+Per fare in modo che sia positiva allora bisogna che s sia di base presa come positiva e la nuova lambda sia > della vecchia
+Se mi muovo nella direzione del subgradiente questo funziona.
 \section{Ambiente di sviluppo}
 
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
