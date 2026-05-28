@@ -366,6 +366,14 @@ $$\downarrow$$
 \end{equation}
 Definiamo $s=-(A\bar{x}-b)$
 Così poi diventa $L(\lambda)-L(\bar{\lambda})<=s(\lambda-\bar{\lambda})$
+Noi vogliamo che L lambda sia > di L \bar{lambda} quindi che la loro differenza sia > 0
+Per ottenere questo risultato è importante che dato che L(\lambda) <=  L(\bar{lambda})+s(\lambda-\bar{lambda}) la parte a dx sia positiva:
+s(\lambda-\bar{lambda})>0
+Quindi lo spostamento \lambda-\bar{lambda} deve avere lo stesso verso del subgradiente s ed è per questo che si sceglie \lambda = \bar{lambda}+0s così lo spostamento segue il verso di lambda
+infatti \lambda - \bar{lambda}=0s
+s(\lambda-\bar{lambda})=s(0s)=0s^2 che è sicuramente >0 per uno step positivo e s!=0 quindi ci stiamo muovendo nella stessa direzione che tende ad aumentare L
+
+
 Quindi abbiamo un upper bound sulla differenza quindi in pratica non possiamo avere una differenza più alta del valore del subgradiente per la differenza dei lambda.
 E noi vogliamo massimizzare $L(\lambda)$ quindi vogliamo che $L(\lambda)-L(\bar{\lambda})$ risulti $>$ di 0 cioè il nuovo L sia maggiore del precedente.
 Per garantire ciò vogliamo che s per la differenza dei lambda sia positiva perché se fosse negativa $L(\bar{lambda})$ + un valore negativo verrebbe sicuramente più piccola mentre se è positivo aumenta.
@@ -374,8 +382,7 @@ Se mi muovo nella direzione del subgradiente questo funziona.
 
 In generale per una funzione f un vettore s è subgradiente in un punto y se rispetta la seguente formual f(x)<=f(y)+s(x-y).
 Dato che vogliamo massimizzare L(lambda) e portarlo a un miglioramento allora l'unica sperianza che abbiamo è sommare a L(\bar{lambda}) un valore positivo.
-Dato che per noi lambda nuovo è maggiore di lambda vecchio quello è positivo...
-so che s punta nella direzione massima di L quindi per trovare un lambda migliore partiamo dal vecchio lambda e facciamo un passo in quella direzione di lunghezza step
+
 \section{Ambiente di sviluppo}
 
 \chapter{nella parte del problema spiegare che ci sono costi e capacità}
