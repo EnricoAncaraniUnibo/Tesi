@@ -167,16 +167,16 @@
 	Un sensore è un dispositivo che rileva un cambiamento nel mondo fisico, lo traduce in un segnale digitale e poi lo diffonde ad altri dispositivi, i quali lo utilizzeranno per prendere decisioni. \smallskip \\
 	Una possibile criticità risiede proprio in questa parte del funzionamento, se una decisione deve essere presa con tempestività, anche la rete di trasmissione dovrà essere veloce e efficiente.
 	\vspace{-0.5cm}
-	\section{Publish and Subscribe}
+	\section{Publish/Subscribe}
 	\vspace{-0.3cm}   
-	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish and Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
+	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
 	In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
 	Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
 	Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=1\linewidth]{publish-subscribe}
-		\caption[Immagine di funzionamento di una rete Publish and Subscribe]{Immagine di funzionamento di una rete Publish and Subscribe}
+		\caption[Immagine di funzionamento di una rete Publish/Subscribe]{Immagine di funzionamento di una rete Publish/Subscribe}
 		\label{fig:publish-subscribe}
 	\end{figure}
 	\section{La difficoltà del percorso ottimo}
@@ -204,7 +204,7 @@
 	\begin{equation}
 		min/max\ \sum_i c_ix_i
 	\end{equation}
-	s.t 
+	vincoli:
 	\begin{equation}
 		Ax \geq  b
 	\end{equation}
@@ -231,7 +231,7 @@
 	\begin{equation}
 		z(P)=min\ cx 
 	\end{equation}
-	s.t 
+	vincoli:
 	\begin{equation}
 		Ax \geq  b
 	\end{equation}
@@ -247,7 +247,7 @@
 	\begin{equation}
 		L(\lambda)=min\ cx-\lambda(Ax-b)
 	\end{equation}
-	s.t
+	vincoli:
 	\begin{equation}
 		x \in \{0, 1\}
 	\end{equation}
@@ -411,36 +411,221 @@
 	\chapter{Descrizione del Problema}
 	\section{Scenario del problema}
 	\textbf{TODO, ricontrollare e cambiare in base a quale sarà la scelta per l'obiettivo finale della tesi}
-	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliano scambiare informazioni tra dei generatori di questi dati e dei ricevitori o richiedenti.
-	La rete è caratterizzata da una struttura a modello Publish and Subscribe che come definita in precedenza presenta al suo interno dei nodi di comunicazioni definiti Broker.
-	L'obiettivo della tesi è andare a costruire basandomi sulla tesi di un mio collega un algoritmo efficiente per la creazione del percorso ottimale.
-	Nel calcolo per la strada ottima bisogna prendere in considerazione vari fattori:
+	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
+	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
+	L'obiettivo della tesi è sviluppare, prendendo come riferimento il lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. \textbf{TODO da espandere in caso di altre cose da fare}. \smallskip \\
+	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
 	\begin{itemize}
-		\item Capacità del canale (Quante informazioni possono passare insieme)
-		\item Costo del canale (Quanto è dispendioso in termini o economici o computazionali utilizzare un determinato percorso)
-		\item Peso di una informazioni (Quanta banda occupa la singola informazione all'interno del canale)
+		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
+		\item Costo del canale (quanto è dispendioso in termini economici o computazionali utilizzare quel determinato percorso).
+		\item Peso di un'informazione (quanta banda occupa la singola informazione all'interno del canale).
 	\end{itemize}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Rete}
+		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
+		\label{fig:rete}
+	\end{figure}
+	
 	\section{Simboli Globali}
-	Per poter definire meglio il nostro problema abbiamo bisogno di incorporare quelle che sono le variabili reali in un contesto informatico/matematico:
-	$K$, è l'insieme delle informazioni da inviare o ricevere.
-	$N$, è il numero dei nodi totali della rete.
-	$Publisher$, è l'insieme contenente i nodi che secondo il modello Publish and Subscribe fanno parte dei generatori dei flussi di informazioni.
-	$Broker$, è l'insieme contenente i nodi di mezzo che non devono ne generare ne consumare le informazioni ma solo ritrasmettere.
-	$Subscriber$, è l'insieme contenente i nodi che al contrario dei Publisher devono ricevere le informazioni e utilizzarle.
-	$A$, è l'insieme contenente gli archi della rete quindi i vari canali di comunicazione.
-	$NodoOrigine$, è l'insieme contenente per ogni informazione specificata il suo nodo di origine.
-	$NodiTarget$, è l'insieme contenente per ogni informazioni specificata i nodi che richiedono quella informazione.
-	$b$, è una variabile che a seconda del nodo e della informazione mi indica il ruolo di quel nodo: se è $\geq 0$ allora mi indica per quanti $NodiTarget$ sta producendo l'informazione, se è $0$ mi indica che è un nodo di trasmissione e invece se è $-1$ mi indica che è un nodo che richiede quella informazione.
-	$a$, è una variabile che mi indica per ogni informazione quanta banda occupa all'interno di un canale.
-	$C$, è l'insieme che associa a ogni arco quindi ad ogni collegamento un determinato costo.
-	$u$, è l'insieme che associa ad ogni arco una determinata capacità che può trasportare di informazioni insieme.
-	$Lt$, è l'insieme che passato un determinato nodo i mi fornisce la lista dei nodi raggiungibili da i.
-	$Lr$, è l'insieme che passato un determinato nodo i mi fornisce la lista dei nodi dai quali si può raggiungere i.
-	\section{first formulation}
-	\section{second formulation}
-	\section{Rilassamento lagrangiano nella seconda formulazione}
-	
-	
+	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
+	è necessario mappare le variabili reali in un contesto informatico/matematico:
+	\begin{itemize}
+		\item $K$, è l'insieme contenente le informazioni da inviare o ricevere.
+		\item $N$, è l'insieme contenente tutti i nodi della rete.
+		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe fanno parte dei generatori delle informazioni.
+		\item $Broker$, è l'insieme contenente i nodi di mezzo che non devono ne generare ne consumare le informazioni ma solo ritrasmettere.
+		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe devono ricevere le informazioni.
+		\item $A$, è l'insieme contenente gli archi della rete quindi i canali di comunicazione.
+		\item $NodoOrigine_k$, è l'insieme contenente per ogni informazione $k$ il suo nodo di origine.
+		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
+		\item $b^k_i$, è una variabile che a seconda del nodo $i$ e della informazione $k$ mi indica il ruolo di $i$ rispetto a $k$: se è $\geq 0$ allora mi indica che è un generatore e per quanti $NodiTarget$ sta producendo $k$, se è $0$ mi indica che è un nodo di trasmissione e invece se è $-1$ mi indica che è un nodo richiedente di $k$.
+		\item $a_k$, è una variabile che mi indica per ogni informazione $k$ quanta banda occupa all'interno di un canale.
+		\item $c_{ij}$, è l'insieme contenente per ogni arco $i,j$ il suo costo.
+		\item $u_{ij}$, è l'insieme contenente per ogni arco $i,j$ la sua capacità.
+		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
+		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
+		\item $x^k_{ij}$, è una variabile decisionale che mi indica quanti subscriber richiedenti l'informazione $k$ sto servendo usando l'arco $i,j$.
+		\item $e^k_{ij}$, è una variabile decisionale che mi indica se per il trasporto di una informazione $k$ attivo l'arco $i,j$.
+		\item $M$, è una variabile di valore molto alto usata per definire dei vincoli.
+	\end{itemize}
+	\section{Prima formulazione del problema}
+	\textbf{TODO capire se descrivere le problematiche di questa formulazione come il crollo in caso di nodo saturo}
+	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo.\\
+	Funzione Obiettivo:
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
+	\end{equation}
+	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
+	In pratica il costo totale dipende da quante volte l'informazione $k$ sta passando per l'arco $i,j$ nello stesso momento.\smallskip \\
+	Vincoli:
+	\begin{align}
+		\sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K
+	\end{align}
+	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
+	Questo vincolo permette di garantire che ogni subscriber riceva l'informazione che ha richiesto, né di meno né di più.
+	Questo deve valere per ogni subscriber e per ogni informazione richiesta.
+	\begin{align}
+		\sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K
+	\end{align}
+	(2.3): Sommando il numero di Subscriber serviti con gli archi entranti nel Broker $i$, questo deve risultare uguale al numero di Subscriber serviti con gli archi uscenti.
+	Questo vincolo garantisce che $i$ è esclusivamente un nodo di passaggio e che non può generare o consumare informazioni.    	
+	\begin{align}
+		Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K
+	\end{align}
+	Se sto soddisfando un subscriber attraverso l'arco allora questo per forza deve essere considerato attivo rispetto al transito del flusso k.
+	Questo vincolo ci serve per legare la variabile e con la x in modo che se sto usando un arco allora è considerato per forza attivo.
+	M è scelto come il numero totale dei nodi perché è impossibile in quanto nodi loro stessi che il numero di subscribers siano maggiori
+	della somma dei nodi (N $\geq$ numero subscribers in quanto loro nodi stessi).
+	\begin{align}
+		\sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i
+	\end{align}
+	Per ogni arco controllo che la sommatoria della banda occupata da tutti i flussi passanti da quell'arco in qualsiasi direzione non sia
+	mai maggiore della capacità totale dell'arco.
+	Questo vincolo mi permette di non superare mai il valore massimo della capacità di un arco controllando quando occupano tutti i flussi passanti
+	da esso.
+	\begin{align}
+		x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K
+	\end{align}
+	\begin{align}
+		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	La differenza sta nel primo è il caso intero, nel secondo è rilassamento continuo.
+	In questa formulazione ci immaginiamo che ogni volta che una informazione viene inviata ne viene inviata una copia per ogni subscriber che deve soddisfare quindi usa più canale e costa di più.
+	\section{Seconda formulazione}
+	\textbf{TODO capire se si vuole parlare del fatto che cerchiamo una formula distribuita o meno}
+	La seconda formulazione del problema viene definito in maniera diversa, infatti non ci preoccupiamo più di capire quante informazioni far passare da quali nodi ma decidiamo di gestire il problema decidendo se attivare o meno un arco.
+	Funzione obiettivo:
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
+	\end{equation}
+	Per ogni flusso k, sommiamo il costo dell'arco per il fatto se è attivo o meno per il trasporto di k, minimizzando cerchiamo di usare il numero minore di archi possibili e comunque soddisfare tutte le richieste.
+	In questa formulazione non si ragione come ogni invio di una informazione costa come un utilizzo intero ma l'informazione viene copiata e inviata in ogni nodo di mezzo portando a un costo che non dipende da quante volte invio l'informazione attraverso un canale ma semplicemente se il canale è attivato per il trasporto di quella informazione.
+	L'altro obiettivo della seconda formulazione è quello di avere una formula facilmente rilassabile con lagrange in modo da creare sotto problemi definibili locali, per problema locale intendiamo un problema che sia indipendente dagli altri e lavora solamente conoscendo la situazione dei sui vicini e archi.\\
+	Vincoli:
+	\begin{align}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K
+	\end{align}
+	Sommando i flussi in entrata e uscita dal nodo, il valore deve risultare con la funzione del nodo, $\geq$0 se genera flussi, 0 se è un broker
+	quindi il numero di flussi non cambia e si mantiene, -1 se è un subscriber che consuma il flusso.
+	La scelta di questo preciso vincolo viene fatta per accorpare il vincolo 18 e 19 che lasciati separati entrambi analizzavano più archi.
+	(18 con la sommatoria) e per il rilassamento lagrangiano non può andare bene in quanto ha bisogno di rilassare un solo vincolo per 
+	creare poi tutti i vincoli indipendenti basanti su l'analisi di un solo arco alla volta.
+	Questo vincolo ci serve per dichiarare che ognuno riceva la quantità di flusso richiesta e che i broker non possano eliminare o aggiungere
+	flusso.
+	\begin{align}
+		\sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A
+	\end{align}
+	Per ogni arco controllo che la somma di quanto occupano i flussi passanti da quell'arco non sia mai più grande della capacità massima
+	dell'arco stesso.
+	Questo vincolo ci serve per garantire che non si superi mai la capacità massima dell'arco.   					
+	\begin{align}
+		e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K
+	\end{align}
+	Se l'arco è attivo allora deve per forza passare del flusso e nell'arco al massimo per ogni flusso k può passare un numero di flussi
+	pari ai subscriber che deve soddisfare.
+	Questo vincolo ci garantisce un legame tra l'attivazione di un arco e il flusso che passa al suo interno.
+	\begin{align}
+		x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K
+	\end{align}
+	\begin{align}
+		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	Dipende dal rilassamento intero o continuo.
+	\section{Rilassamento lagrangiano della seconda formulazione}
+	Andando ad applicare il rilassamento lagrangiano nella seconda formulazione si noterà come la formula cambierà molto e attraverserà vari passaggi nel farlo.
+	Prima di tutto si definiscono le famose penalità classiche del rilassamento lagrangiano: $\lambda^k_i$ con $k$ informazione e $i$ nodo.
+	Questo succede perché si ha un vincolo 25 per ogni i e k quindi ci saranno lo stesso numero di penalità.
+	Si crea il vincolo $=0$
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	Da qui si crea la nuova funzione obiettivo lagrangiana:
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
+	\end{equation}
+	Il motivo della doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è perché si vuole trovare il minimo considerando che il vincolo sia applicato e rispettatto per tutte le k su tutti i nodi(quando abbiamo creato il vincolo era per via del $\forall i \in N, k \in K$)
+	Il $+$ invece prima delle sommatorie è poiché il vincolo è un'uguaglianza, $\lambda$ può assumere qualsiasi valore reale. In caso di violazione, il segno di $\lambda$ si adatta al segno del vincolo non rispettato, garantendo che il termine di penalità $\lambda(\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)$ sia sempre positivo e allontani la soluzione dal minimo.\\
+	Espandendo:
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij} - \sum_{k \in K}\sum_{i \in N} \lambda^k_i\sum_{j \in Lr_i}x^k_{ji}-\sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}-\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+	\end{equation}
+	La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ji}$ succede perché quando li moltiplico per la legge delle sommatorie diventa $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ ma pensandoci bene se per ogni $i$ prendo i nodi raggiungibili da quella $i$ è come prendere ogni arco.\\
+	Prossima operazione:
+	la seconda $\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}$ viene rinominata cambiando $j \rightarrow i$ e $i \rightarrow j$ così diventa:
+	\begin{equation}
+		\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}
+	\end{equation}
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}-\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}- \sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+	\end{equation}
+	Arrivati a sto punto si raccoglie:
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} (\lambda^k_i - \lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N} \lambda^k_i b^k_i
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+	\end{equation}
+	Dato che l'ultima parte non ha variabili decisionali può essere tirata fuori in quanto nella ricerca del min non cambia niente.
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	Ci troviamo ora davanti a un problema che si basa unicamente su i valori di un arco e i nodi confinanti quindi è come avere numero archi problemi.
+	\begin{equation}
+		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	\begin{equation}
+		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
+	\end{equation}
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima per quel sotto problema $i,j$
+	Ma come si risolve $LR_{i,j}(\lambda)$?\\
+	Creo una variabile $d^k_{ij}$ che mi indica il risultato di $LR_{i,j}(\lambda)$ per il flusso $k$ cioè:
+	\begin{equation}
+		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	Ho 2 scelte: se non attivo l'arco allora mi costa 0 perché $e^k_{ij}=0$ e $x^k_{ij}=0$ per il vincolo (27)
+	Se invece lo attivo $d^k_{ij}$ mi indica il suo costo e se è $<0$ allora mi conviene attivarlo, se invece maggiore di 0 non mi conviene attivarlo.
+	Per il calcolo di $d^k_{ij}$ $c_{ij}$ lo abbiamo già: $e^k_{ij}=1$ perché vogliamo vedere il costo se è attivo altrimenti sarebbe $d^k_{ij}$=0.
+	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$ perché se $(\lambda^k_i-\lambda^k_j)>0$ noi vogliamo minimizzare e quindi ridurre al minimo la somma positiva quindi $x^k_{ij}$ dovra assumere il minore valore possibile che per lui è 1
+	altrimenti se $(\lambda^k_i-\lambda^k_j)<0$ allora vogliamo massimizzare questo valore negativo perché ci aiuterà a minimizzare il problema globale e quindi vogliamo che x sia il massimo valore da lui possibile che è $NodiTarget_k$ e questo si deduce dal vincolo 27.
+	Ora che sappiamo in un arco per quali flussi conviene attivare con i costi penalizzati ci troviamo davanti a un'altro problema cioè quello della capacità dell'arco, può darsi che l'arco non possa far passare tutte le informazioni.
+	Per fortuna si può notare come esso sia un problema di Knapsack quindi abbiamo uno zaino(l'arco) con una capacità massima u e degli oggetti che vogliamo inserire k con il loro peso a e il loro valore d
+	Nel nostro caso le d saranno da *-1 perché altrimenti non ha senso che il loro vantaggio sia negativo
+	Il knapsack lavora con un vantaggio positivo.
+	\subsection{Aggiornamento Lambda}
+	Per aggiornale le lambda usiamo il metodo del subgradiente
+	Prendo il vincolo che avevo rilassato cioè:
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	definisco il subgradiente come:
+	\begin{equation}
+		s^k_i=\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i
+	\end{equation}
+	Questo mi indica di quanto stiamo sforando il vincolo che dovrebbe tendere a 0
+	Definiamo $s^k_i$ dipendente da k e i perché il vincolo 25 è dipendente da quelle 2 cose mentre le j le somma tutte e ha senso che sia per un noo i in quanto anche $\lambda$ è legata a un nodo non a un arco.
+	La soluzione ottima è quella che rispetta tutti i vincoli anche quello rilassato, se non trovo una soluzione che riesce a essere ottima allora in vincolo rilassato non viene rispettato.
+	Una volta che abbiamo definito $s^k_i$ le calcoliamo tutte insieme ai $x^k_{ij}$ e andiamo ad aggiornare $\lambda^k_i$ facendo $\lambda^k_i=\lambda^k_i+ \theta s^k_i$.
+	Per scegliere il passo $\theta$ utilizziamo: 
+	\begin{equation}
+		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s^2||}
+	\end{equation}
+	Scegliamo proprio questi parametri per garantire all'inizio salti grandi per convergere in fretta e poi salti più piccoli per evitare la divergenza:
+	$\alpha$ è un moltiplicatore generale che viene dimezzato ogni volta che il nostro LowerBound non aumenta per tot iterazioni.
+	$\text{UpperBound}-\text{LowerBound}$ ha una logica teorica dietro: io so che il mio ottimo sta tra l'upper bound e il lower bound quindi se loro si avvicinano molto devo fare un lavoro di precisione per trovare l'ottimo invece se sono distanti allora posso permettermi salti più grandi.
+	$||s^2||$ è la norma di tutti i $s_i$ con k fissato.
+	Se gli s sommati hanno un valore alto vuol dire che stiamo sforando di tanto e quindi dividendo per $||s^2||$ riduciamo il passo evitando $\lambda$ esagerate o che il passo diventi spropositato.
+	Stessa cosa al contrario, se i subgradienti sono piccoli allora la norma può diventare molto piccola e dividendo per essa possiamo aumentare un pò il passo che altrimenti per gli altri 2 valori rischierebbe di muoversi troppo lentamente quando siamo vicini all'ottimo.
+	\chapter{Implementazione}
+	\section{Upper bound}
+	\section{Knapsack}
+	\section{Scelta step}
+	\section{Possibile algoritmo di mostraggio risultato o distribuito o correzione di quello del tipo}
 	%Ora vediamo un elenco numerato:         %crea un elenco numerato
 	%\begin{enumerate}
 	%\item primo oggetto
