@@ -451,80 +451,70 @@
 	\end{itemize}
 	\section{Prima formulazione del problema}
 	\textbf{TODO capire se descrivere le problematiche di questa formulazione come il crollo in caso di nodo saturo}
-	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo.\\
+	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
 	Funzione Obiettivo:
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
 	\end{equation}
-	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
-	In pratica il costo totale dipende da quante volte l'informazione $k$ sta passando per l'arco $i,j$ nello stesso momento.\smallskip \\
+	\smallskip \\
 	Vincoli:
 	\begin{align}
 		\sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K
 	\end{align}
-	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
-	Questo vincolo permette di garantire che ogni subscriber riceva l'informazione che ha richiesto, né di meno né di più.
-	Questo deve valere per ogni subscriber e per ogni informazione richiesta.
 	\begin{align}
 		\sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K
 	\end{align}
-	(2.3): Sommando il numero di Subscriber serviti con gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti con gli archi uscenti.
-	Questo vincolo garantisce che $i$ è esclusivamente un nodo di passaggio e che non può generare o consumare informazioni.    	
 	\begin{align}
 		Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K
 	\end{align}
-	Se sto soddisfando un subscriber attraverso l'arco allora questo per forza deve essere considerato attivo rispetto al transito del flusso k.
-	Questo vincolo ci serve per legare la variabile e con la x in modo che se sto usando un arco allora è considerato per forza attivo.
-	M è scelto come il numero totale dei nodi perché è impossibile in quanto nodi loro stessi che il numero di subscribers siano maggiori
-	della somma dei nodi (N $\geq$ numero subscribers in quanto loro nodi stessi).
 	\begin{align}
 		\sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i
 	\end{align}
-	Per ogni arco controllo che la sommatoria della banda occupata da tutti i flussi passanti da quell'arco in qualsiasi direzione non sia
-	mai maggiore della capacità totale dell'arco.
-	Questo vincolo mi permette di non superare mai il valore massimo della capacità di un arco controllando quando occupano tutti i flussi passanti
-	da esso.
 	\begin{align}
 		x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K
 	\end{align}
 	\begin{align}
 		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	La differenza sta nel primo è il caso intero, nel secondo è rilassamento continuo.
-	In questa formulazione ci immaginiamo che ogni volta che una informazione viene inviata ne viene inviata una copia per ogni subscriber che deve soddisfare quindi usa più canale e costa di più.
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che quindi per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. \smallskip \\
+	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
+	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
+	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
+	Questo vincolo permette di garantire che ogni subscriber riceva l'informazione che ha richiesto, né di meno né di più. 
+	Questo deve valere per ogni Subscriber e per ogni informazione richiesta.\smallskip \\
+	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
+	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
+	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $(i,j)$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
+	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è considerato attivo. \smallskip \\
+	(2.5): Per ogni arco $(i,j)$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
+	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
+	(2.6): Per ogni arco $(i,j)$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
+	(2.7): Per ogni arco $(i,j)$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
 	\section{Seconda formulazione}
 	\textbf{TODO capire se si vuole parlare del fatto che cerchiamo una formula distribuita o meno}
-	La seconda formulazione del problema viene definito in maniera diversa, infatti non ci preoccupiamo più di capire quante informazioni far passare da quali nodi ma decidiamo di gestire il problema decidendo se attivare o meno un arco.
-	Funzione obiettivo:
+	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e quindi che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sottoproblemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e nodi adiacenti. \smallskip \\
+	Funzione Obiettivo:
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
 	\end{equation}
-	Per ogni flusso k, sommiamo il costo dell'arco per il fatto se è attivo o meno per il trasporto di k, minimizzando cerchiamo di usare il numero minore di archi possibili e comunque soddisfare tutte le richieste.
-	In questa formulazione non si ragione come ogni invio di una informazione costa come un utilizzo intero ma l'informazione viene copiata e inviata in ogni nodo di mezzo portando a un costo che non dipende da quante volte invio l'informazione attraverso un canale ma semplicemente se il canale è attivato per il trasporto di quella informazione.
-	L'altro obiettivo della seconda formulazione è quello di avere una formula facilmente rilassabile con lagrange in modo da creare sotto problemi definibili locali, per problema locale intendiamo un problema che sia indipendente dagli altri e lavora solamente conoscendo la situazione dei sui vicini e archi.\\
+	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.
+	\smallskip \\
 	Vincoli:
 	\begin{align}
 		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K
 	\end{align}
-	Sommando i flussi in entrata e uscita dal nodo, il valore deve risultare con la funzione del nodo, $\geq$0 se genera flussi, 0 se è un broker
-	quindi il numero di flussi non cambia e si mantiene, -1 se è un subscriber che consuma il flusso.
-	La scelta di questo preciso vincolo viene fatta per accorpare il vincolo 18 e 19 che lasciati separati entrambi analizzavano più archi.
-	(18 con la sommatoria) e per il rilassamento lagrangiano non può andare bene in quanto ha bisogno di rilassare un solo vincolo per 
-	creare poi tutti i vincoli indipendenti basanti su l'analisi di un solo arco alla volta.
-	Questo vincolo ci serve per dichiarare che ognuno riceva la quantità di flusso richiesta e che i broker non possano eliminare o aggiungere
-	flusso.
+	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
+	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.
 	\begin{align}
 		\sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A
 	\end{align}
-	Per ogni arco controllo che la somma di quanto occupano i flussi passanti da quell'arco non sia mai più grande della capacità massima
-	dell'arco stesso.
-	Questo vincolo ci serve per garantire che non si superi mai la capacità massima dell'arco.   					
+	(2.10): Per ogni arco $(i,j)$ si verifica che la somma della banda occupata dalle informazioni passanti non sia mai maggiore della capacità massima.	
+	La differenza del vincolo rispetto alla versione della prima formulazione (2.5) risiede nella gestione delle capacità: anziché considerare ogni arco come singolo e bidirezionale con una capacità condivisa tra le due direzioni, ora si considera come due archi distinti monodirezionali con capacità indipendenti. Questa scelta viene effettuata per semplificare il rilassamento lagrangiano, rendendo il vincolo dipendente dal singolo arco.
 	\begin{align}
 		e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K
 	\end{align}
-	Se l'arco è attivo allora deve per forza passare del flusso e nell'arco al massimo per ogni flusso k può passare un numero di flussi
-	pari ai subscriber che deve soddisfare.
-	Questo vincolo ci garantisce un legame tra l'attivazione di un arco e il flusso che passa al suo interno.
+	(2.11): Per ogni arco $(i,j)$ e per ogni informazione $k$, il valore della variabile $x$ è legato alla variabile $e$: se l'arco è disattivato nessuna informazione può transitarvi, altrimenti se è attivo il numero di informazioni può essere scelto in un intervallo da uno fino al numero di Subscriber richiedenti.
+	Questo vincolo garantisce un legame tra l'attivazione di un arco e il numero di informazioni che passano al suo interno.
 	\begin{align}
 		x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K
 	\end{align}
@@ -622,6 +612,9 @@
 	Se gli s sommati hanno un valore alto vuol dire che stiamo sforando di tanto e quindi dividendo per $||s^2||$ riduciamo il passo evitando $\lambda$ esagerate o che il passo diventi spropositato.
 	Stessa cosa al contrario, se i subgradienti sono piccoli allora la norma può diventare molto piccola e dividendo per essa possiamo aumentare un pò il passo che altrimenti per gli altri 2 valori rischierebbe di muoversi troppo lentamente quando siamo vicini all'ottimo.
 	\chapter{Implementazione}
+	\section{Parlare di come viene scelta M}
+	M è scelto come il numero totale dei nodi perché è impossibile in quanto nodi loro stessi che il numero di subscribers siano maggiori
+	della somma dei nodi (N $\geq$ numero subscribers in quanto loro nodi stessi).
 	\section{Upper bound}
 	\section{Knapsack}
 	\section{Scelta step}
