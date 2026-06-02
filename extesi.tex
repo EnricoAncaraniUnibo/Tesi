@@ -139,10 +139,6 @@
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 	\cleardoublepage
 	\tableofcontents
-	\cleardoublepage
-	\listoffigures
-	\cleardoublepage
-	\listoftables
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 	
 	\chapter*{Sommario}
@@ -566,48 +562,43 @@
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 	\end{equation}
-	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono stati svolte 2 semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà associativa. \smallskip \\
-	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non porta differenza.
+	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà associativa. \smallskip \\
+	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non influenza il risultato.
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
-	Ci troviamo ora davanti a un problema che si basa unicamente su i valori di un arco e i nodi confinanti quindi è come avere numero archi problemi.
+	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sottoproblema indipendente definito $LR$.
 	\begin{equation}
 		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
 	\begin{equation}
 		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
 	\end{equation}
-	$LR_{i,j}(\lambda)$ indica la soluzione ottima per quel sotto problema $i,j$
-	Ma come si risolve $LR_{i,j}(\lambda)$?\\
-	Creo una variabile $d^k_{ij}$ che mi indica il risultato di $LR_{i,j}(\lambda)$ per il flusso $k$ cioè:
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sottoproblema per l'arco su cui è definito.\\
+	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per la informazione $k$:
 	\begin{equation}
 		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
-	Ho 2 scelte: se non attivo l'arco allora mi costa 0 perché $e^k_{ij}=0$ e $x^k_{ij}=0$ per il vincolo (27)
-	Se invece lo attivo $d^k_{ij}$ mi indica il suo costo e se è $<0$ allora mi conviene attivarlo, se invece maggiore di 0 non mi conviene attivarlo.
-	Per il calcolo di $d^k_{ij}$ $c_{ij}$ lo abbiamo già: $e^k_{ij}=1$ perché vogliamo vedere il costo se è attivo altrimenti sarebbe $d^k_{ij}$=0.
-	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$ perché se $(\lambda^k_i-\lambda^k_j)>0$ noi vogliamo minimizzare e quindi ridurre al minimo la somma positiva quindi $x^k_{ij}$ dovra assumere il minore valore possibile che per lui è 1
-	altrimenti se $(\lambda^k_i-\lambda^k_j)<0$ allora vogliamo massimizzare questo valore negativo perché ci aiuterà a minimizzare il problema globale e quindi vogliamo che x sia il massimo valore da lui possibile che è $NodiTarget_k$ e questo si deduce dal vincolo 27.
-	Ora che sappiamo in un arco per quali flussi conviene attivare con i costi penalizzati ci troviamo davanti a un'altro problema cioè quello della capacità dell'arco, può darsi che l'arco non possa far passare tutte le informazioni.
-	Per fortuna si può notare come esso sia un problema di Knapsack quindi abbiamo uno zaino(l'arco) con una capacità massima u e degli oggetti che vogliamo inserire k con il loro peso a e il loro valore d
-	Nel nostro caso le d saranno da *-1 perché altrimenti non ha senso che il loro vantaggio sia negativo
-	Il knapsack lavora con un vantaggio positivo.
-	\subsection{Aggiornamento Lambda}
-	Per aggiornale le lambda usiamo il metodo del subgradiente
-	Prendo il vincolo che avevo rilassato cioè:
+	Si presentano due casi: se l'arco è disattivato, il costo è pari a 0, poiché $e^k_{ij}=0$ implica $x^k_{ij}=0$ per il vincolo (2.11).
+	Se invece è attivato, $d^k_{ij}$ rappresenta il costo dell'attivazione. Nel caso in cui $d^k_{ij}$ sia minore di 0 conviene attivare l'arco in quanto si ha un guadagno. \smallskip \\
+	Per calcolare $d^k_{ij}$ si hanno già tutti i valori necessari: $c_{ij}$ è noto, si pone $e^k_{ij}=1$ poiché si vuole confrontare se si ha un guadagno dall'attivazione dell'arco e
+	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$. Poiché l'obiettivo è minimizzare, se il termine $(\lambda^k_i-\lambda^k_j)$ fosse positivo allontanerebbe dalla soluzione ottima e quindi $x^k_{ij}$ assume il valore minimo consentito dal vincolo (2.11). Se invece fosse negativo contribuirebbe alla minimizzazione e quindi $x^k_{ij}$ assume il valore massimo consentito che è pari a $NodiTarget_k$. \smallskip \\
+	Determinati quali archi attivare e per quali informazioni si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
+	Questo problema è riconducibile al classico problema del Knapsack in cui l'arco rappresenta lo zaino con capacità $u_{ij}$ e le informazioni $k$ sono gli oggetti con peso $a_k$ e valore $-d^k_{ij}$ che si vuole inserire all'interno.
+	Il segno di $d^k_{ij}$ è necessariamente negativo poiché il Knapsack massimizza il valore degli oggetti inseriti, mentre il guadagno delle informazioni viene rappresentato come negativo.
+	\subsection{Aggiornamento delle Penalità Lagrangiane}
+	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente come descritto nella sezione (1.4.2). \smallskip \\
+	Si prende il vincolo rilassato e da esso si definisce il subgradiente:
 	\begin{equation}
 		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
 	\end{equation}
-	definisco il subgradiente come:
+	$$\downarrow$$
 	\begin{equation}
 		s^k_i=\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i
 	\end{equation}
-	Questo mi indica di quanto stiamo sforando il vincolo che dovrebbe tendere a 0
-	Definiamo $s^k_i$ dipendente da k e i perché il vincolo 25 è dipendente da quelle 2 cose mentre le j le somma tutte e ha senso che sia per un noo i in quanto anche $\lambda$ è legata a un nodo non a un arco.
-	La soluzione ottima è quella che rispetta tutti i vincoli anche quello rilassato, se non trovo una soluzione che riesce a essere ottima allora in vincolo rilassato non viene rispettato.
-	Una volta che abbiamo definito $s^k_i$ le calcoliamo tutte insieme ai $x^k_{ij}$ e andiamo ad aggiornare $\lambda^k_i$ facendo $\lambda^k_i=\lambda^k_i+ \theta s^k_i$.
-	Per scegliere il passo $\theta$ utilizziamo: 
+	La variabile $s^k_i$ rappresenta quanto il vincolo rilassato (2.9) viene violato nella soluzione corrente e dipende da $k$ e $i$ poiché il vincolo stesso è definito per ogni combinazione di informazione $k$ e nodo $i$.
+	Definito il subgradiente, lo si calcola insieme alle variabili $x^k_{ij}$ e si aggiornano le penalità $\lambda^k_i$ secondo la formula $\lambda^k_i=\lambda^k_i+ \theta s^k_i$. \smallskip \\
+	Per scegliere $\theta$ si utilizza l'equazione: 
 	\begin{equation}
 		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s^2||}
 	\end{equation}
