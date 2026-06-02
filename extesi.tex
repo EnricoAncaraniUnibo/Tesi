@@ -600,14 +600,14 @@
 	Definito il subgradiente, lo si calcola insieme alle variabili $x^k_{ij}$ e si aggiornano le penalità $\lambda^k_i$ secondo la formula $\lambda^k_i=\lambda^k_i+ \theta s^k_i$. \smallskip \\
 	Per scegliere $\theta$ si utilizza l'equazione: 
 	\begin{equation}
-		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s^2||}
+		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s||^2}
 	\end{equation}
-	Scegliamo proprio questi parametri per garantire all'inizio salti grandi per convergere in fretta e poi salti più piccoli per evitare la divergenza:
-	$\alpha$ è un moltiplicatore generale che viene dimezzato ogni volta che il nostro LowerBound non aumenta per tot iterazioni.
-	$\text{UpperBound}-\text{LowerBound}$ ha una logica teorica dietro: io so che il mio ottimo sta tra l'upper bound e il lower bound quindi se loro si avvicinano molto devo fare un lavoro di precisione per trovare l'ottimo invece se sono distanti allora posso permettermi salti più grandi.
-	$||s^2||$ è la norma di tutti i $s_i$ con k fissato.
-	Se gli s sommati hanno un valore alto vuol dire che stiamo sforando di tanto e quindi dividendo per $||s^2||$ riduciamo il passo evitando $\lambda$ esagerate o che il passo diventi spropositato.
-	Stessa cosa al contrario, se i subgradienti sono piccoli allora la norma può diventare molto piccola e dividendo per essa possiamo aumentare un pò il passo che altrimenti per gli altri 2 valori rischierebbe di muoversi troppo lentamente quando siamo vicini all'ottimo.
+	I parametri sono scelti in modo da garantire passi ampi in caso di lontananza dall'ottimo, favorendo una convergenza rapida, e passi più piccoli nelle iterazioni vicine all'ottimo, evitando la divergenza dalla soluzione.
+	\begin{itemize}
+		\item $\alpha$ è un moltiplicatore che viene dimezzato ogni volta che il LowerBound non migliora per un numero prefissato di iterazioni. Se il LowerBound non migliora è probabile si stia lavorando con passi troppo elevati.
+		\item $\text{UpperBound}-\text{LowerBound}$ rappresenta l'ampiezza dell'intervallo in cui si trova la soluzione ottima. Se i due bound sono distanti si consiglia di effettuare passi più grandi mentre al contrario bisogna lavorare con passi più piccoli e una maggiore precisione.
+		\item $||s||^2$ è la norma al quadrato del vettore dei subgradienti. Un valore elevato indica una violazione significativa del vincolo e dividendo per esso si riduce il passo, evitando aggiornamenti eccessivi di $\lambda$. Al contrario, una norma di valore piccolo indica che si è vicini all'ottimo e quindi dividendo per esso si aumenta il passo evitando una convergenza troppo lenta.
+	\end{itemize}
 	\chapter{Implementazione}
 	\section{Parlare di come viene scelta M}
 	M è scelto come il numero totale dei nodi perché è impossibile in quanto nodi loro stessi che il numero di subscribers siano maggiori
