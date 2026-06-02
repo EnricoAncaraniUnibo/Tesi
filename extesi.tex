@@ -543,7 +543,7 @@
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\  -\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 		\end{split}
 	\end{equation}
-	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà distributiva della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $i,j$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{i,j \in A}$. \smallskip \\
+	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà della linearità della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $i,j$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{i,j \in A}$. \smallskip \\
 	Successivamente, il termine $\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}$ viene rinominato cambiando $j \rightarrow i$ e $i \rightarrow j$:
 	\begin{equation}
 		\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}
@@ -562,7 +562,7 @@
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 	\end{equation}
-	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà associativa. \smallskip \\
+	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà della linearità. \smallskip \\
 	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non influenza il risultato.
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
@@ -574,8 +574,8 @@
 	\begin{equation}
 		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
 	\end{equation}
-	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sottoproblema per l'arco su cui è definito.\\
-	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per la informazione $k$:
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sottoproblema per l'arco su cui è definita.\\
+	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per l'informazione $k$:
 	\begin{equation}
 		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
@@ -583,9 +583,9 @@
 	Se invece è attivato, $d^k_{ij}$ rappresenta il costo dell'attivazione. Nel caso in cui $d^k_{ij}$ sia minore di 0 conviene attivare l'arco in quanto si ha un guadagno. \smallskip \\
 	Per calcolare $d^k_{ij}$ si hanno già tutti i valori necessari: $c_{ij}$ è noto, si pone $e^k_{ij}=1$ poiché si vuole confrontare se si ha un guadagno dall'attivazione dell'arco e
 	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$. Poiché l'obiettivo è minimizzare, se il termine $(\lambda^k_i-\lambda^k_j)$ fosse positivo allontanerebbe dalla soluzione ottima e quindi $x^k_{ij}$ assume il valore minimo consentito dal vincolo (2.11). Se invece fosse negativo contribuirebbe alla minimizzazione e quindi $x^k_{ij}$ assume il valore massimo consentito che è pari a $NodiTarget_k$. \smallskip \\
-	Determinati quali archi attivare e per quali informazioni si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
+	Determinati quali archi attivare e per quali informazioni, si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
 	Questo problema è riconducibile al classico problema del Knapsack in cui l'arco rappresenta lo zaino con capacità $u_{ij}$ e le informazioni $k$ sono gli oggetti con peso $a_k$ e valore $-d^k_{ij}$ che si vuole inserire all'interno.
-	Il segno di $d^k_{ij}$ è necessariamente negativo poiché il Knapsack massimizza il valore degli oggetti inseriti, mentre il guadagno delle informazioni viene rappresentato come negativo.
+	Poiché il Knapsack massimizza il valore degli oggetti inseriti e il mio guadagno è rappresentato in negativo da $d^k_{ij}$, invertendone il segno rendo compatibili i due problemi.
 	\subsection{Aggiornamento delle Penalità Lagrangiane}
 	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente come descritto nella sezione (1.4.2). \smallskip \\
 	Si prende il vincolo rilassato e da esso si definisce il subgradiente:
