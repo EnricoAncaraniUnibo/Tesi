@@ -609,6 +609,7 @@
 		\item $||s||^2$ è la norma al quadrato del vettore dei subgradienti. Un valore elevato indica una violazione significativa del vincolo e dividendo per esso si riduce il passo, evitando aggiornamenti eccessivi di $\lambda$. Al contrario, una norma di valore piccolo indica che si è vicini all'ottimo e quindi dividendo per esso si aumenta il passo evitando una convergenza troppo lenta.
 	\end{itemize}
 	\chapter{Rendere Possibili Le Soluzioni Parziali}
+	\section{Nuovo Modello}
 	Nei modelli appena descritti esiste una problematica alla base logica: i vincoli (2.2) e (2.9) rendono impossibile il calcolare soluzioni parziali ovvero soluzioni in cui non tutti i riceventi vengono soddisfatti.
 	Per ampliare il problema a questa possibilità si ragiona con una nuova variabile decisionale $y_i^k$ che indica se un determinato nodo $i$ va servito con l'informazione $k$ ($y^k_i \in \{0,1\}$).
 	Questa variabile prende importanza in 2 punti distinti del problema: la definizione di $b^k_i$ e la funzione obiettivo del problema.\\
@@ -644,33 +645,65 @@
 	Si espandono i casi della $b^k_i$ e si applicano le prime moltiplicazioni:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{p \in Publisher}\lambda^k_ {p} b^k_{p}+\sum_{s \in Subscriber}\lambda^k_ {s} b^k_{s})
+			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{o \in NodoOrigine_k}\lambda^k_ {o} b^k_{o}+\sum_{t \in NodiTarget_k}\lambda^k_{t} b^k_{t})
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-(\sum_{k \in K}\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br}& \\\sum_{k \in K}\sum_{p \in Publisher}\lambda^k_ {p} b^k_{p}+\sum_{k \in K}\sum_{s \in Subscriber}\lambda^k_ {s} b^k_{s})
+			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
 		\end{split}
 	\end{equation}
+	(3.5)$\rightarrow$(3.6): Nel passaggio tra le 2 funzioni, le $b$ per i Broker si annullano in quanto valenti 0 e per ogni NodoOrigine dell'informazione $k$ viene aggiunto il valore dettato dalla definizione di $b$ cioè la sommatoria delle $y$ attive per quell'informazione.
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
+	\end{equation}
+	(3.7): La sommatoria dei generatori per l'informazione $k$ viene rimossa in quanto per ogni informazione possediamo un solo nodo di origine mentre si effettuano contemporaneamente raccoglimenti.
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}) 
+	\end{equation}
 	$$\downarrow$$
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}P-y^k_t(\lambda^k_ {o} -\lambda^k_{t}+P)
+	\end{equation}
+	Questo ci fa capire come la scelta per attivare $y$ sta nella condizione che dove sia attiva costi di meno di quello in cui è disattiva.
+	\begin{equation}
+	 \text{(caso attivo) }	P-\lambda^k_ {o} +\lambda^k_{t}-P \rightarrow \lambda^k_{t}-\lambda^k_ {o}<P \text{ (caso disattivo)}
+	\end{equation}
+	$y$ conviene sia attivo quando $ \lambda^k_{t}-\lambda^k_ {o}<P$ con $t$ nodo target e $o$ nodo origine.
+	\section{Problema della Formulazione}
+	Questo nuovo modello presenta un problema subdolo ma importante e cioè quello di avere una formulazione del vincolo debole.
+	Il nuovo vincolo si presenta in questa forma: 	\begin{align}
+		e^k_{ij}\leq x^k_{ij}\leq e^k_{ij} \sum_{t \in NodiTarget_k}y^k_t && \forall k \in K, \forall (i,j) \in A
+	\end{align}
+	\subsection{Definizione di Formulazione Debole}
+	Il vincolo lega la variabile $x^k_{ij}$ alla binaria di attivazione $e^k_{ij}$. L?idea alla base viene spiegato nel punto (2.11).
+	Il problema emerge durante la risoluzione del vincolo in quanto se ribaltato presenta dei casi interessanti.
+	Normalmente il vincolo dovrebbe ragionare con se non passa informazione allora $0\leq e\sum_{t \in NodiTarget_k}y^k_t$ quindi $e=0$ mentre se $x>0$ allora $e=1$.
+	Quello che in realtà succede è che se per esempio i nodi target sono due e $x=1$ allora il vincolo mi dà che $e=1/2$ e dato che può avere per definizione della variabile solo valore zero o uno allora prende 1 ma tiene salvato matematicamente nei lambda l'idea di voler essere 0,5.
+	Per mettere in pratica questa idea cosa va a fare con i nostri lambda, li aggiorna in modo da 1 arco spegnerlo e 1 accenderlo invertendoli a ogni iterazione portando così la media degli archi accesi rispetto a spenti proprio a 0,5.
+	Questo ovviamente in questo caso è un problema perchè non permette di far salire il lower bound dopo una certa soglia perché per il problema non sarà fattibile attivare due archi in contemporanea.
+	
+	\subsection{Scrittura in Formulazione Forte}
+	
+	Per costringere il nostro vincolo a essere rispettato rimanendo nell'opzione di acceso e spendo dobbiamo andare a ridefinire le variabili del nostro problema per distinguerle in casi isolati basandoci sul nodo che vogliono raggiungere.
+	Da qui nascono 2 variabili: $x^{kt}_{ij}$ e $b^{kt}_i$ con $\lambda^{kt}_i$g
+	I nuovi vincoli derivanti sono:
+	\begin{align}
+		x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, \forall t \in NodiTarget_k, \forall (i,j) \in A
+	\end{align}
+	\begin{align}
+		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N,\forall t \in NodiTarget_k, k \in K
+	\end{align}
+	Questo costringe l'arco a venire attivato se si vuole far passare l'informazione dallo stesso e costringe l'informazioni passanti a essere 0 o 1 dipendenti dall'attivazione dell'arco.
+	\subsection{Nuovo Modo di Decidere}
+	Essendo state cambiate le variabili ora anche le scelte per l'attivazione dell'arco o le scelte per il valore di $x$ devono adattarsi.
+	
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-(\sum_{k \in K}\sum_{p \in Publisher}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {p}y^k_t+\sum_{k \in K}\sum_{s \in Subscriber}-\lambda^k_ {s}y^k_s)
+			\sum_{k \in K}\sum_{i,j \in A} c{ij}e^k_{ij}+P\sum{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_i)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
-	(3.5)$\rightarrow$(3.7): Nel passaggio tra le 2 funzioni $b$ per i Broker si annullano e per ogni Publisher dell'informazione $k$ viene aggiunto il valore dettato dalla definizione di $b$.
-	La sommatoria dei Pubblisher viene rimossa in quanto per ogni informazione $k$ possediamo un solo Pubblisher e la sommatoria dei Subscriber viene divisa in 2: sommatoria dei nodi subscriber che per la informazione k sono broker e quelli che sono target, ovviamente la sommatoria per i quali sono broker si annulla e rimangono i target:
-	\begin{equation}
-		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}& \\(\sum_{t \in NodiTarget_k}\lambda^k_ {p}y^k_t+\sum_{s \in Subscriber}-\lambda^k_ {s}y^k_s)
-		\end{split}
-	\end{equation}
-	$$\downarrow$$
-	\begin{equation}
-		\min \sum_{k \in K}(\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}\lambda^k_ {p}y^k_t-\sum_{s \in Subscriber}+\lambda^k_ {s}y^k_s)
-	\end{equation}
-	$$\downarrow$$
 	
 	\chapter{Implementazione}
 	\section{Parlare di come viene scelta M}
