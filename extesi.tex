@@ -176,7 +176,7 @@
 		\label{fig:publish-subscribe}
 	\end{figure}
 	\section{La Difficoltà del Percorso Ottimo}
-	In un sistema moderno, trovare il percorso ottimo per la trasmissione dei dati è cruciale, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale.
+	In un sistema moderno, per garantire la velocità di una rete è cruciale trovare il percorso ottimo per la trasmissione dei dati, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale.
 	\subsection{Grafo}
 	Uno dei metodi migliori per poter descrivere una rete di dispositivi connessi è tramite un grafo. Usando questa struttura, i dispositivi vengono rappresentati tramite dei nodi e i collegamenti tramite degli archi. \begin{figure}[h]
 		\centering
@@ -185,14 +185,12 @@
 		\label{fig:grafo}
 	\end{figure}\newpage 
 	\noindent L'uso di un grafo risulta una scelta efficiente perché, per reti semplici, consente di mostrare in modo naturale sia i componenti della rete sia le relazioni tra essi e grazie alla sua flessibilità permette inoltre di aggiungere varie proprietà agli elementi rappresentati, rendendo possibile modellare scenari complessi con facilità.
-	\textbf{TODO Capire se mi conviene parlare della centralizzazione e del 2p2 dato che lavoro più in un ambito non decentralizzato nel mio caso}
 	\subsection{Centralizzazione}
 	Un altro aspetto fondamentale del problema riguarda la centralizzazione dell'elaborazione della rete.
 	In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
 	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
 	\subsubsection{Peer-To-Peer}
 	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
-	\textbf{TODO origini del p2p, strutturati e non strutturati, problemi legati al p2p}.
 	
 	\section{Problema di Ottimizzazione}
 	Il problema descritto è così definito come un problema di ottimizzazione, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
@@ -379,7 +377,17 @@
 	\end{equation}
 	Di conseguenza per un $s\neq 0$ e per un passo $\theta > 0$ il valore risultante sarà sicuramente positivo e porterà ad una $\lambda$ maggiore rispetto a $\bar{\lambda}$. \smallskip \\
 	Anche la scelta del parametro $\theta$ è fondamentale, un passo troppo grande potrebbe far saltare la soluzione ottima portando alla divergenza, mentre un passo troppo corto potrebbe convergere alla soluzione ottima troppo lentamente.
-	
+	\subsection{Formulazione Matematica del Problema}
+	Nei problemi di ottimizzazione, uno degli aspetti più cruciali risiede nel modo in cui le relazioni tra le variabili vengono tradotte in vincoli.
+	Uno stesso problema può essere modellato attraverso diversi insiemi di vincoli, ciascuno dei quali si definisce come una formulazione del problema. \medskip \\
+	Due formulazioni si definiscono equivalenti se possiedono lo stesso identico insieme di soluzioni ammissibili intere. Tuttavia, nonostante l'equivalenza sull'insieme delle soluzioni, le loro prestazioni computazionali possono differire di molto, rendendo la scelta della formulazione un fattore chiave per la qualità del modello matematico creato.
+	\subsubsection{Debole Contro Forte}
+	I risolutori, nel cercare la soluzione ottima, non operano direttamente con le variabili intere, ma applicano il rilassamento continuo permettendo loro di assumere valori frazionari.
+	È proprio durante questa fase di calcolo che si possono andare a distinguere due tipologie di formulazioni diverse:
+	\begin{itemize}
+		\item Formulazione debole: Dopo aver effettuato il rilassamento il risolutore è libero di assegnare valori frazionari molto distanti dai limiti interi reali per massimizzare il proprio vantaggio matematico. Di conseguenza il valore della funzione obiettivo rilassata avrà una distanza importante dall'ottimo intero.
+		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionali costringendo il risolutore a scegliere valori interi per le variabili quindi ottenendo un valore molto vicino all'ottimo intero.
+	\end{itemize}
 	
 	\section{Ambiente di Sviluppo}
 	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
@@ -389,16 +397,15 @@
 	Google Colab invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
 	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo CPLEX con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
 	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx e Matplotlib.pyplot.
-	Lo svantaggio principale di questo ambiente è la necessità di implementare i metodi risolutivi che, in molti casi, non presentano aiuti da librerie esterne o implementazioni pronte e quindi vanno scritti da zero sulla base della teoria.
 	\begin{figure}[h]
 		\centering
-		\begin{minipage}{0.45\textwidth}
+		\begin{minipage}{0.75\textwidth}
 			\includegraphics[width=1\linewidth]{Cplex}
-			\caption[Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio]{Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio}
+			\caption[Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio]{Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio\\}
 			\label{fig:cplex}
 		\end{minipage}
 		\hfill
-		\begin{minipage}{0.45\textwidth}
+		\begin{minipage}{0.75\textwidth}
 			\includegraphics[width=1\linewidth]{GoogleColab}
 			\caption[Immagine dell'ambiente di sviluppo di Google Colab]{Immagine dell'ambiente di sviluppo di Google Colab}
 			\label{fig:google}
@@ -697,13 +704,35 @@
 	\end{align}
 	Questo costringe l'arco a venire attivato se si vuole far passare l'informazione dallo stesso e costringe l'informazioni passanti a essere 0 o 1 dipendenti dall'attivazione dell'arco.
 	\subsection{Nuovo Modo di Decidere}
+	\[
+	b^{kt}_i =
+	\begin{cases}
+		y^k_i & \text{se } i \text{ Publisher}\\
+		-y^k_i & \text{se } i \text{ Subscriber}\\
+		0 & \text{se } i \text{ Broker} 
+	\end{cases}
+	\]
 	Essendo state cambiate le variabili ora anche le scelte per l'attivazione dell'arco o le scelte per il valore di $x$ devono adattarsi.
 	
 	\begin{equation}
 		\begin{split}
-			\sum_{k \in K}\sum_{i,j \in A} c{ij}e^k_{ij}+P\sum{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_i)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_i)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-& \\\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-\sum_{i \in N}\lambda^{kt}_ib^{kt}_i)+\sum_{t \in NodiTarget_k}P(1-y^k_i))
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}-\sum_{t \in NodiTarget_k}(& \\(\lambda^{kt}_o-\lambda^{kt}_t)y^{kt}_t)+\sum_{t \in NodiTarget_k}(P-Py^k_i))
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	
 	
 	\chapter{Implementazione}
 	\section{Parlare di come viene scelta M}
