@@ -378,17 +378,17 @@
 	Di conseguenza per un $s\neq 0$ e per un passo $\theta > 0$ il valore risultante sarà sicuramente positivo e porterà ad una $\lambda$ maggiore rispetto a $\bar{\lambda}$. \smallskip \\
 	Anche la scelta del parametro $\theta$ è fondamentale, un passo troppo grande potrebbe far saltare la soluzione ottima portando alla divergenza, mentre un passo troppo corto potrebbe convergere alla soluzione ottima troppo lentamente.
 	\subsection{Formulazione Matematica del Problema}
+	\textbf{TODO controllare se va bene}
 	Nei problemi di ottimizzazione, uno degli aspetti più cruciali risiede nel modo in cui le relazioni tra le variabili vengono tradotte in vincoli.
 	Uno stesso problema può essere modellato attraverso diversi insiemi di vincoli, ciascuno dei quali si definisce come una formulazione del problema. \medskip \\
 	Due formulazioni si definiscono equivalenti se possiedono lo stesso identico insieme di soluzioni ammissibili intere. Tuttavia, nonostante l'equivalenza sull'insieme delle soluzioni, le loro prestazioni computazionali possono differire di molto, rendendo la scelta della formulazione un fattore chiave per la qualità del modello matematico creato.
 	\subsubsection{Debole Contro Forte}
 	I risolutori, nel cercare la soluzione ottima, non operano direttamente con le variabili intere, ma applicano il rilassamento continuo permettendo loro di assumere valori frazionari.
-	È proprio durante questa fase di calcolo che si possono andare a distinguere due tipologie di formulazioni diverse:
+	È proprio durante questa fase di calcolo che si distinguono due tipologie di formulazioni diverse:
 	\begin{itemize}
-		\item Formulazione debole: Dopo aver effettuato il rilassamento il risolutore è libero di assegnare valori frazionari molto distanti dai limiti interi reali per massimizzare il proprio vantaggio matematico. Di conseguenza il valore della funzione obiettivo rilassata avrà una distanza importante dall'ottimo intero.
-		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionali costringendo il risolutore a scegliere valori interi per le variabili quindi ottenendo un valore molto vicino all'ottimo intero.
+		\item Formulazione debole: Dopo aver effettuato il rilassamento, il risolutore è libero di assegnare alle variabili valori frazionari molto distanti dai limiti interi reali. Di conseguenza il modello può ottenere un valore ottimo rilassato anche molto distante dall'ottimo intero.
+		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie, favorendo l'ottenimento di valori interi per le variabili e, di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
 	\end{itemize}
-	
 	\section{Ambiente di Sviluppo}
 	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
 	CPLEX Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
@@ -411,12 +411,12 @@
 			\label{fig:google}
 		\end{minipage}
 	\end{figure}
-	\chapter{Descrizione del Problema}
+	\chapter{Descrizione del Problema e delle Formulazioni}
 	\section{Scenario del Problema}
-	\textbf{TODO, ricontrollare e cambiare in base a quale sarà la scelta per l'obiettivo finale della tesi}
+	\textbf{TODO, controllare se va bene}
 	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
 	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
-	L'obiettivo della tesi è sviluppare, prendendo come riferimento il lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. \textbf{TODO da espandere in caso di altre cose da fare}. \smallskip \\
+	L'obiettivo della tesi è sviluppare, a partire dal lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. L'algoritmo dovrà essere in grado di gestire sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti. \smallskip \\
 	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
 	\begin{itemize}
 		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
@@ -453,7 +453,6 @@
 		\item $M$, è una variabile di valore molto alto usata per definire dei vincoli.
 	\end{itemize}
 	\section{Prima Formulazione}
-	\textbf{TODO capire se descrivere le problematiche di questa formulazione come il crollo in caso di nodo saturo}
 	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
 	Funzione Obiettivo:
 	\begin{equation}
@@ -479,7 +478,8 @@
 	\begin{align}
 		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. \smallskip \\
+	\textbf{TODO controllare se va bene}
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
 	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
 	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
 	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
@@ -494,7 +494,6 @@
 	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
 	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
 	\section{Seconda Formulazione}
-	\textbf{TODO capire se si vuole parlare del fatto che cerchiamo una formula distribuita o meno}
 	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sottoproblemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
 	Funzione Obiettivo:
 	\begin{equation}
@@ -517,6 +516,8 @@
 	\begin{align}
 		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
+	\textbf{TODO controlla}
+	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
 	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
 	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
 	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.\\
@@ -615,9 +616,9 @@
 		\item $\text{UpperBound}-\text{LowerBound}$ rappresenta l'ampiezza dell'intervallo in cui si trova la soluzione ottima. Se i due bound sono distanti si consiglia di effettuare passi più grandi mentre al contrario bisogna lavorare con passi più piccoli e una maggiore precisione.
 		\item $||s||^2$ è la norma al quadrato del vettore dei subgradienti. Un valore elevato indica una violazione significativa del vincolo e dividendo per esso si riduce il passo, evitando aggiornamenti eccessivi di $\lambda$. Al contrario, una norma di valore piccolo indica che si è vicini all'ottimo e quindi dividendo per esso si aumenta il passo evitando una convergenza troppo lenta.
 	\end{itemize}
-	\chapter{Rendere Possibili Le Soluzioni Parziali}
-	\section{Nuovo Modello}
-	Nei modelli appena descritti esiste una problematica alla base logica: i vincoli (2.2) e (2.9) rendono impossibile il calcolare soluzioni parziali ovvero soluzioni in cui non tutti i riceventi vengono soddisfatti.
+	\chapter{Miglioramento della Formulazione Rispetto ai Percorsi Parziali}
+	\section{Nuova Formulazione}
+	Le formulazioni descritte in precedenza presentano un limite nel fondamento logico: i vincoli (2.2) e (2.9) impongono che ogni Subscriber riceva l'informazione richiesta. Di conseguenza, se anche un solo destinatario non è raggiungibile, tali vincoli risultano violati, il problema diventa inammissibile e non è possibile calcolare una soluzione parziale, ovvero una in cui solo un sottoinsieme di riceventi viene soddisfatto.
 	Per ampliare il problema a questa possibilità si ragiona con una nuova variabile decisionale $y_i^k$ che indica se un determinato nodo $i$ va servito con l'informazione $k$ ($y^k_i \in \{0,1\}$).
 	Questa variabile prende importanza in 2 punti distinti del problema: la definizione di $b^k_i$ e la funzione obiettivo del problema.\\
 	Per correttezza logica andiamo ad aggiornare la seconda formulazione:
