@@ -698,7 +698,7 @@
 	\begin{align}
 		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N,\forall t \in NodiTarget_k, k \in K
 	\end{align}
-	e la definizione di $b^{kt}_i$:
+	La definizione di $b^{kt}_i$ diventa:
 	\begin{equation}
 		b^{kt}_i =
 		\begin{cases}
@@ -707,16 +707,8 @@
 			0 & \text{se } i \text{ Broker} 
 		\end{cases}
 	\end{equation}
-	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo se l'arco è disattivato l'informazione passante è nulla e se acceso è massima una, questo rimuove le oscillazione descritte in precedenza.
+	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo se l'arco è disattivato l'informazione passante è nulla e viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazione descritte in precedenza.
 	\subsection{Nuovo Modo di Decidere}
-	\[
-	b^{kt}_i =
-	\begin{cases}
-		y^k_i & \text{se } i \text{ Publisher}\\
-		-y^k_i & \text{se } i \text{ Subscriber}\\
-		0 & \text{se } i \text{ Broker} 
-	\end{cases}
-	\]
 	Essendo state cambiate le variabili ora anche le scelte per l'attivazione dell'arco o le scelte per il valore di $x$ devono adattarsi.
 	
 	\begin{equation}
