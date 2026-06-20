@@ -686,7 +686,7 @@
 	La presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ è la causa diretta di tale debolezza.
 	\subsection{Analisi del Problema nel Dettaglio}
 	Il vincolo lega la variabile $x^k_{ij}$ alla variabile binaria di attivazione $e^k_{ij}$. Seguendo la logica del vincolo ci si aspetterebbe che se non transita alcuna informazione ($x=0$) allora il vincolo imponga $e=0$, mentre nel caso contrario costringa $e=1$. 
-	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t1 \text{ e } t2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
+	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t_1 \text{ e } t_2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
 	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco attivo e a favorire quello disattivo, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
 	\subsection{Scrittura in Formulazione Forte}
 	Per eliminare la debolezza del vincolo, si ridefiniscono le variabili $x$, $b$ e $\lambda$ in modo da distinguere il nodo target che l'informazione deve raggiungere.
@@ -708,28 +708,45 @@
 		\end{cases}
 	\end{equation}
 	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
-	\subsection{Nuovo Modo di Decidere}
-	Essendo state cambiate le variabili ora anche le scelte per l'attivazione dell'arco o le scelte per il valore di $x$ devono adattarsi.
-	
+	\subsection{Nuove Condizioni di Attivazione}
+	A seguito della ridefinizione delle variabili decisionali, occorre riformulare le condizioni di scelta per l'attivazione degli archi, l'instradamento delle informazioni e la selezione dei nodi da servire.\\
+	Esse si possono ricalcolare procedendo come nel rilassamento lagrangiano svolto in precedenza:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_i)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-& \\\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-\sum_{i \in N}\lambda^{kt}_ib^{kt}_i)+\sum_{t \in NodiTarget_k}P(1-y^k_i))
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
 		\end{split}
 	\end{equation}
-	$$\downarrow$$
+	Considerando che per informazione $k$ e target $t$ è presente un solo generatore $o$ e un solo target $ta$ che è pari a $t$ stesso:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}-\sum_{t \in NodiTarget_k}(& \\(\lambda^{kt}_o-\lambda^{kt}_t)y^{kt}_t)+\sum_{t \in NodiTarget_k}(P-Py^k_i))
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
-	$$\downarrow$$
-	
+	Da qui la funzione obiettivo si può dividere in due parti indipendenti, ognuna utilizzata per ricavare la condizione di attivazione delle relative variabili decisionali.\\
+	La prima permette di ricavare le condizioni per $e^k_{ij}$ e $x^{kt}_{ij}$:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{i,j \in A}( c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij})
+		\end{split}
+	\end{equation}
+	Per l'attivazione di $e^k_{ij}$ occorre avere un guadagno nella funzione obiettivo nel caso in cui l'arco sia attivo rispetto al caso in cui rimanga disattivato:
+	\begin{equation}
+		c_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}<0
+	\end{equation}
+	Nello specifico, se $(\lambda^{kt}_i-\lambda^{kt}_j)<0$, poiché genera un guadagno, si pone $x^{kt}_{ij}=1$ altrimenti $x^{kt}_{ij}=0$. \\
+	La seconda permette di ricavare la condizione per $y^k_t$:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+		\end{split}
+	\end{equation}
+	Sviluppando l'equazione essa porta alla condizione descritta in precedenza, rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$.
 	
 	\chapter{Implementazione}
 	\section{Parlare di come viene scelta M}
