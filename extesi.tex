@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,openright,twoside]{report}
+\documentclass[12pt,a4paper,twoside]{report}
 \usepackage[italian]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{graphicx}
@@ -142,7 +142,7 @@
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 	
 	\chapter*{Sommario}
-	\setcounter{page}{9}
+%	\setcounter{page}{5}
 	\thispagestyle{plain}
 	TODO
 	IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica che ha alla base l'utilizzo di oggetti intelligenti. 
@@ -710,22 +710,22 @@
 	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
 	\subsection{Nuove Condizioni di Attivazione}
 	A seguito della ridefinizione delle variabili decisionali, occorre riformulare le condizioni di scelta per l'attivazione degli archi, l'instradamento delle informazioni e la selezione dei nodi da servire.\\
-	Esse si possono ricalcolare procedendo come nel rilassamento lagrangiano svolto in precedenza:
+	Tali condizioni si ricalcolano seguendo lo stesso procedimento del rilassamento lagrangiano svolto in precedenza:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
 		\end{split}
 	\end{equation}
-	Considerando che per informazione $k$ e target $t$ è presente un solo generatore $o$ e un solo target $ta$ che è pari a $t$ stesso:
+	Poiché per ogni informazione $k$ e per ogni target $t$ esiste un unico nodo di origine $o$ e un unico target $ta$ che è pari a $t$ stesso:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
 	Da qui la funzione obiettivo si può dividere in due parti indipendenti, ognuna utilizzata per ricavare la condizione di attivazione delle relative variabili decisionali.\\
