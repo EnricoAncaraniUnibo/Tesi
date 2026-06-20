@@ -449,8 +449,8 @@
 		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
 		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
 		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
-		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
-		\item $M$, è una variabile di valore molto alto usata per definire dei vincoli.
+		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.\textbf{TODO controlla}
+		\item $M$, è una variabile di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
 	\end{itemize}
 	\section{Prima Formulazione}
 	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
@@ -488,7 +488,7 @@
 	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
 	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
 	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $i,j$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
-	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo. \smallskip \\
+	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo.\smallskip \\
 	(2.5): Per ogni arco $i,j$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
 	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
 	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
@@ -619,38 +619,37 @@
 	\chapter{Miglioramento della Formulazione Rispetto ai Percorsi Parziali}
 	\section{Nuova Formulazione}
 	Le formulazioni descritte in precedenza presentano un limite nel fondamento logico: i vincoli (2.2) e (2.9) impongono che ogni Subscriber riceva l'informazione richiesta. Di conseguenza, se anche un solo destinatario non è raggiungibile, tali vincoli risultano violati, il problema non ammette soluzioni e non è possibile perciò calcolare una soluzione parziale, ovvero una in cui solo un sottoinsieme di riceventi viene soddisfatto.
-	Per ampliare il problema a questa possibilità si ragiona con una nuova variabile decisionale $y_i^k$ che indica se un determinato nodo $i$ va servito con l'informazione $k$ ($y^k_i \in \{0,1\}$).
-	Questa variabile prende importanza in 2 punti distinti del problema: la definizione di $b^k_i$ e la funzione obiettivo del problema.\\
-	Per correttezza logica andiamo ad aggiornare la seconda formulazione:
+	Per superare questa limitazione si introduce una nuova variabile decisionale binaria $y^k_i \in \{0,1\}$ che indica se un determinato nodo $i$ va servito con l'informazione $k$.
+	Questa variabile ricopre un ruolo chiave in due aspetti del problema: la funzione obiettivo del problema e la definizione di $b^k_i$.\medskip \\
+	Per la sua integrazione si aggiorna la seconda formulazione:
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 	\end{equation}
-	e la definizione di $b^k_i$:
-	\[
+	dove P è la penalità per la mancata consegna a un nodo richiedente.
+	\begin{equation}
 	b^k_i =
 	\begin{cases}
 		\sum_{t \in NodiTarget_k}y^k_t & \text{se } i \text{ Publisher}\\
 		-y^k_i & \text{se } i \text{ Subscriber}\\
 		0 & \text{se } i \text{ Broker} 
 	\end{cases}
-	\]
-	P deve essere un valore abbastanza grande da rendere più conveniente cercare una qualsiasi strada che soddisfi il nodo piuttosto di scegliere di pagare P ponendo $y^k_i =0$. Idealmente si può pensare a P come il costo di tutti gli archi della rete sommati a uno, e che quindi conviene di più una strada che soddisfa il nodo ma deve attraversare tutti gli archi rispetto al non servirlo. 
+	\end{equation}
+	P è scelto con un valore sufficientemente grande affinché, se un nodo è raggiungibile, risulti sempre più conveniente servirlo piuttosto che pagare la penalità. Idealmente si può pensare a P come il costo complessivo di tutti gli archi della rete sommato a uno. In questo modo, anche un percorso che utilizza tutti gli archi risulta preferibile al mancato servizio del nodo. 
 	\begin{equation}
 		P = (\sum_{i,j \in A} c_{ij})+1
 	\end{equation}
-	Ma come si scelgono quali nodi sono da servire e quali invece conviene abbandonare?
-	Al medesimo modo con il quale abbiamo trovare le varie condizioni decisionali per la variabile $x$ e $e$ utilizzando il rilassamento lagrangiano, lo si può utilizzare anche in questo caso per trovare la condizione ottimale di accensione e spegnimento di $y$.
-	Riportando il lagrangiano calcolato nel passo 2.5 più precisamente la formula (2.21) si può andare ad aggiungere il nuovo termine della funzione obiettivo in quando non avrebbe portato nessun cambiamento nel calcolo della formula fino a questo passaggio:
+	Per decidere quali nodi servire e quali no, si applica lo stesso procedimento basato sul rilassamento lagrangiano già eseguito in precedenza per le variabili $x$ e $e$.
+	Si riprende dunque il lagrangiano ottenuto al punto 2.5 (equazione (2.21)) e vi si aggiunge il nuovo termine della funzione obiettivo in quanto non altera i calcoli già effettuati:
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 		\end{split}
 	\end{equation}
-	Da qui si può separare la prima parte dalla seconda in quando la prima serve per calcolare le condizioni per la $x$ e la $e$:
+	Si isola dunque la seconda parte dell'equazione, contenente la nuova variabile, per ottenere la condizione di attivazione di $y$:
 	\begin{equation}
 		\min P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 	\end{equation}
-	Si espandono i casi della $b^k_i$ e si applicano le prime moltiplicazioni:
+	Si separano i nodi nelle diverse tipologie e si sviluppano i prodotti con le corrispondenti $\lambda$:
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{o \in NodoOrigine_k}\lambda^k_ {o} b^k_{o}+\sum_{t \in NodiTarget_k}\lambda^k_{t} b^k_{t})
@@ -662,11 +661,11 @@
 			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
 		\end{split}
 	\end{equation}
-	(3.5)$\rightarrow$(3.6): Nel passaggio tra le 2 funzioni, le $b$ per i Broker si annullano in quanto valenti 0 e per ogni NodoOrigine dell'informazione $k$ viene aggiunto il valore dettato dalla definizione di $b$ cioè la sommatoria delle $y$ attive per quell'informazione.
+	(3.6)$\rightarrow$(3.7): Nel passaggio tra le due funzioni, si sostituiscono le variabili $b$ con i valori stabiliti dalla definizione.
 	\begin{equation}
 		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
 	\end{equation}
-	(3.7): La sommatoria dei generatori per l'informazione $k$ viene rimossa in quanto per ogni informazione possediamo un solo nodo di origine mentre si effettuano contemporaneamente raccoglimenti.
+	(3.8): La sommatoria sui nodi di origine viene rimossa perché, per ogni $k$, esiste un unico nodo che genera l'informazione.
 	\begin{equation}
 		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}) 
 	\end{equation}
@@ -674,11 +673,12 @@
 	\begin{equation}
 		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}P-y^k_t(\lambda^k_ {o} -\lambda^k_{t}+P)
 	\end{equation}
-	Questo ci fa capire come la scelta per attivare $y$ sta nella condizione che dove sia attiva costi di meno di quello in cui è disattiva.
+	La condizione di attivazione di $y^k_t$ si ottiene confrontando il costo nel caso in cui il nodo target $t$ sia servito ($y^k_t=1$) rispetto al caso in cui non lo sia ($y^k_t=0$).
+	Nel momento in cui il costo associato col caso servito risulta minore si ha un guadagno e quindi si attiva $y^k_t$:
 	\begin{equation}
-	 \text{(caso attivo) }	P-\lambda^k_ {o} +\lambda^k_{t}-P \rightarrow \lambda^k_{t}-\lambda^k_ {o}<P \text{ (caso disattivo)}
+	 P-\lambda^k_ {o} +\lambda^k_{t}-P< P \rightarrow \lambda^k_{t}-\lambda^k_ {o}< P
 	\end{equation}
-	$y$ conviene sia attivo quando $ \lambda^k_{t}-\lambda^k_ {o}<P$ con $t$ nodo target e $o$ nodo origine.
+	Pertanto $y^k_t=1$ quando $\lambda^k_{t}-\lambda^k_ {o}< P$, con $t$ nodo target e $o$ nodo origine di $k$.
 	\section{Problema della Formulazione}
 	Questo nuovo modello presenta un problema subdolo ma importante e cioè quello di avere una formulazione del vincolo debole.
 	Il nuovo vincolo si presenta in questa forma: 	\begin{align}
