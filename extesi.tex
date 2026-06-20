@@ -679,18 +679,15 @@
 	 P-\lambda^k_ {o} +\lambda^k_{t}-P< P \rightarrow \lambda^k_{t}-\lambda^k_ {o}< P
 	\end{equation}
 	Pertanto $y^k_t=1$ quando $\lambda^k_{t}-\lambda^k_ {o}< P$, con $t$ nodo target e $o$ nodo origine di $k$.
-	\section{Problema della Formulazione}
-	Questo nuovo modello presenta un problema subdolo ma importante e cioè quello di avere una formulazione del vincolo debole.
-	Il nuovo vincolo si presenta in questa forma: 	\begin{align}
-		e^k_{ij}\leq x^k_{ij}\leq e^k_{ij} \sum_{t \in NodiTarget_k}y^k_t && \forall k \in K, \forall (i,j) \in A
+	\section{Mancata Convergenza del Lower Bound alla Soluzione Intera}
+	La nuova formulazione presenta una criticità sottile ma rilevante: il vincolo (2.11) modificato si configura come un classico esempio di formulazione debole (1.4.3): 	\begin{align}
+		e^k_{ij}\leq x^k_{ij}\leq e^k_{ij} \sum_{t \in NodiTarget_k}y^k_t && \forall k \in K, (i,j) \in A
 	\end{align}
-	\subsection{Definizione di Formulazione Debole}
-	Il vincolo lega la variabile $x^k_{ij}$ alla binaria di attivazione $e^k_{ij}$. L?idea alla base viene spiegato nel punto (2.11).
-	Il problema emerge durante la risoluzione del vincolo in quanto se ribaltato presenta dei casi interessanti.
-	Normalmente il vincolo dovrebbe ragionare con se non passa informazione allora $0\leq e\sum_{t \in NodiTarget_k}y^k_t$ quindi $e=0$ mentre se $x>0$ allora $e=1$.
-	Quello che in realtà succede è che se per esempio i nodi target sono due e $x=1$ allora il vincolo mi dà che $e=1/2$ e dato che può avere per definizione della variabile solo valore zero o uno allora prende 1 ma tiene salvato matematicamente nei lambda l'idea di voler essere 0,5.
-	Per mettere in pratica questa idea cosa va a fare con i nostri lambda, li aggiorna in modo da 1 arco spegnerlo e 1 accenderlo invertendoli a ogni iterazione portando così la media degli archi accesi rispetto a spenti proprio a 0,5.
-	Questo ovviamente in questo caso è un problema perchè non permette di far salire il lower bound dopo una certa soglia perché per il problema non sarà fattibile attivare due archi in contemporanea.
+	La presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ è la causa diretta di tale debolezza.
+	\subsection{Analisi del Problema nel Dettaglio}
+	Il vincolo lega la variabile $x^k_{ij}$ alla variabile binaria di attivazione $e^k_{ij}$. Seguendo la logica del vincolo ci si aspetterebbe che se non transita alcuna informazione ($x=0$) allora il vincolo imponga $e=0$, mentre nel caso contrario costringa $e=1$. 
+	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t1 \text{ e } t2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
+	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco acceso e a favorire quello spento, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
 	
 	\subsection{Scrittura in Formulazione Forte}
 	
