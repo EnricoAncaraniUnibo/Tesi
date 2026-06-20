@@ -687,20 +687,27 @@
 	\subsection{Analisi del Problema nel Dettaglio}
 	Il vincolo lega la variabile $x^k_{ij}$ alla variabile binaria di attivazione $e^k_{ij}$. Seguendo la logica del vincolo ci si aspetterebbe che se non transita alcuna informazione ($x=0$) allora il vincolo imponga $e=0$, mentre nel caso contrario costringa $e=1$. 
 	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t1 \text{ e } t2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
-	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco acceso e a favorire quello spento, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
-	
+	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco attivo e a favorire quello disattivo, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
 	\subsection{Scrittura in Formulazione Forte}
-	
-	Per costringere il nostro vincolo a essere rispettato rimanendo nell'opzione di acceso e spendo dobbiamo andare a ridefinire le variabili del nostro problema per distinguerle in casi isolati basandoci sul nodo che vogliono raggiungere.
-	Da qui nascono 2 variabili: $x^{kt}_{ij}$ e $b^{kt}_i$ con $\lambda^{kt}_i$g
+	Per eliminare la debolezza del vincolo, si ridefiniscono le variabili $x$, $b$ e $\lambda$ in modo da distinguere il nodo target che l'informazione deve raggiungere.
+	Nascono così le variabili $x^{kt}_{ij}$, $b^{kt}_i$ e $\lambda^{kt}_i$.\\
 	I nuovi vincoli derivanti sono:
 	\begin{align}
-		x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, \forall t \in NodiTarget_k, \forall (i,j) \in A
+		x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, t \in NodiTarget_k, (i,j) \in A
 	\end{align}
 	\begin{align}
 		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N,\forall t \in NodiTarget_k, k \in K
 	\end{align}
-	Questo costringe l'arco a venire attivato se si vuole far passare l'informazione dallo stesso e costringe l'informazioni passanti a essere 0 o 1 dipendenti dall'attivazione dell'arco.
+	e la definizione di $b^{kt}_i$:
+	\begin{equation}
+		b^{kt}_i =
+		\begin{cases}
+			y^k_i & \text{se } i \text{ Publisher dell'informazione } k \text{ diretta al target } t\\
+			-y^k_i & \text{se } i \text{ Subscriber}\\
+			0 & \text{se } i \text{ Broker} 
+		\end{cases}
+	\end{equation}
+	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo se l'arco è disattivato l'informazione passante è nulla e se acceso è massima una, questo rimuove le oscillazione descritte in precedenza.
 	\subsection{Nuovo Modo di Decidere}
 	\[
 	b^{kt}_i =
