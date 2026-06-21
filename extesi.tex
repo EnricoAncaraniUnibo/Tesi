@@ -745,11 +745,14 @@
 	\end{align}
 	
 	\chapter{Implementazione Algoritmica}
-	In questo capitolo si definisce la meccanica di funzionamento reale dell'algoritmo e come è stato implementato.
-	Innanzitutto bisogna definire che l'obiettivo è partendo da un UpperBound scelto euristicamente in quando ottimale richiederebbe tempi di calcolo computazionalmente elevati.
-	Questo Bound viene utilizzato per il calcolo del Lower bound ottimo e quindi la risoluzione del problema.
-	Principalmente si presentano 3 tipologie di algoritmi:
-	Algoritmi Cplex (linguaggio cplex e python), algoritmo lagrangiano (python) e algoritmo dijkstra(python).
+	In questo capitolo vengono presentati e spiegati i vari algoritmi sviluppati. La procedura adottata come punto di partenza si basa sul calcolo di un Upper Bound per via euristica.
+	La ricerca di un Upper Bound ottimo richiederebbe costi computazionali elevati. Tale valore viene successivamente impiegato per guidare la ricerca del Lower Bound ottimale.
+	Nel dettaglio, la metodologia proposta si articola in tre componenti principali:
+	\begin{itemize}
+		\item Solutore Cplex: Il modello matematico viene direttamente implementato sfruttando l'ambiente di sviluppo di Cplex o di python, questo viene poi utilizzato per il calcolo della soluzione ottima usata di confronto con gli altri algoritmi.
+		\item Algoritmo Lagrangiano: algoritmo implementato su python seguendo la teoria del rilassamento lagrangiano per il calcolo del Lower Bound ottimo.
+		\item Algoritmo di Upper Bound con logica Dijkstra: Algoritmo euristico, concepito con la logica di dijkstra, per la ricerca rapida di un Upper Bound ammissibile.
+	\end{itemize}
 	\section{Formulazioni senza scelte parziali}
 	\subsection{Dijkstra imparziale}
 	\subsection{Prima Formulazione}
