@@ -12,6 +12,12 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepackage{listings}
+\lstset{frame=tb,
+	aboveskip=3mm,
+	belowskip=3mm,
+	tabsize=3
+}
 \makeatletter
 % Capitoli numerati
 \def\@makechapterhead#1{%
@@ -378,7 +384,6 @@
 	Di conseguenza per un $s\neq 0$ e per un passo $\theta > 0$ il valore risultante sarà sicuramente positivo e porterà ad una $\lambda$ maggiore rispetto a $\bar{\lambda}$. \smallskip \\
 	Anche la scelta del parametro $\theta$ è fondamentale, un passo troppo grande potrebbe far saltare la soluzione ottima portando alla divergenza, mentre un passo troppo corto potrebbe convergere alla soluzione ottima troppo lentamente.
 	\subsection{Formulazione Matematica del Problema}
-	\textbf{TODO controllare se va bene}
 	Nei problemi di ottimizzazione, uno degli aspetti più cruciali risiede nel modo in cui le relazioni tra le variabili vengono tradotte in vincoli.
 	Uno stesso problema può essere modellato attraverso diversi insiemi di vincoli, ciascuno dei quali si definisce come una formulazione del problema. \medskip \\
 	Due formulazioni si definiscono equivalenti se possiedono lo stesso identico insieme di soluzioni ammissibili intere. Tuttavia, nonostante l'equivalenza sull'insieme delle soluzioni, le loro prestazioni computazionali possono differire di molto, rendendo la scelta della formulazione un fattore chiave per la qualità del modello matematico creato.
@@ -387,7 +392,7 @@
 	È proprio durante questa fase di calcolo che si distinguono due tipologie di formulazioni diverse:
 	\begin{itemize}
 		\item Formulazione debole: Dopo aver effettuato il rilassamento, il risolutore è libero di assegnare alle variabili valori frazionari molto distanti dai limiti interi reali. Di conseguenza il modello può ottenere un valore ottimo rilassato anche molto distante dall'ottimo intero.
-		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie, favorendo l'ottenimento di valori interi per le variabili e, di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
+		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie favorendo l'ottenimento di valori interi per le variabili e di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
 	\end{itemize}
 	\section{Ambiente di Sviluppo}
 	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
@@ -413,7 +418,6 @@
 	\end{figure}
 	\chapter{Descrizione del Problema e delle Formulazioni}
 	\section{Scenario del Problema}
-	\textbf{TODO, controllare se va bene}
 	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
 	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
 	L'obiettivo della tesi è sviluppare, a partire dal lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. L'algoritmo dovrà essere in grado di gestire sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti. \smallskip \\
@@ -449,7 +453,7 @@
 		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
 		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
 		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
-		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.\textbf{TODO controlla}
+		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
 		\item $M$, è una variabile di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
 	\end{itemize}
 	\section{Prima Formulazione}
@@ -468,7 +472,6 @@
 		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	\textbf{TODO controllare se va bene}
 	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
 	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
 	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
@@ -498,7 +501,6 @@
 		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	\textbf{TODO controlla}
 	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
 	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
 	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
@@ -643,7 +645,7 @@
 			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
 		\end{split}
 	\end{equation}
-	(3.6)$\rightarrow$(3.7): Nel passaggio tra le due funzioni, si sostituiscono le variabili $b$ con i valori stabiliti dalla definizione.
+	(3.6)$\rightarrow$(3.7): Nel passaggio tra le due equazioni, si sostituiscono le variabili $b$ con i valori stabiliti dalla definizione.
 	\begin{equation}
 		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
 	\end{equation}
@@ -745,18 +747,265 @@
 	\end{align}
 	
 	\chapter{Implementazione Algoritmica}
-	In questo capitolo vengono presentati e spiegati i vari algoritmi sviluppati. La procedura adottata come punto di partenza si basa sul calcolo di un Upper Bound per via euristica.
-	La ricerca di un Upper Bound ottimo richiederebbe costi computazionali elevati. Tale valore viene successivamente impiegato per guidare la ricerca del Lower Bound ottimale.
-	Nel dettaglio, la metodologia proposta si articola in tre componenti principali:
+	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi.
+	Nella prima fase si calcola un Upper Bound mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità della soluzione ottenuta e la sua distanza dall'ottimo.\medskip \\
+	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
-		\item Solutore Cplex: Il modello matematico viene direttamente implementato sfruttando l'ambiente di sviluppo di Cplex o di python, questo viene poi utilizzato per il calcolo della soluzione ottima usata di confronto con gli altri algoritmi.
-		\item Algoritmo Lagrangiano: algoritmo implementato su python seguendo la teoria del rilassamento lagrangiano per il calcolo del Lower Bound ottimo.
-		\item Algoritmo di Upper Bound con logica Dijkstra: Algoritmo euristico, concepito con la logica di dijkstra, per la ricerca rapida di un Upper Bound ammissibile.
+		\item Algoritmo Cplex: Il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
+		\item Algoritmo Lagrangiano: Algoritmo implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
+		\item Algoritmo euristico per l'Upper Bound: Algoritmo euristico inspirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
 	\end{itemize}
-	\section{Formulazioni senza scelte parziali}
-	\subsection{Dijkstra imparziale}
+	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
+	\subsection{Upper Bound Euristico}
+	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
+	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
+	Ad ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e per ciascuna di esse viene eseguita una variante dell'algoritmo di Dijkstra. Questo integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target, aggiornando dinamicamente le capacità residue della rete e rimuovendo gli archi che risultano completamente saturi. L'algoritmo, infine, restituisce i percorsi che hanno il costo totale complessivo minimo.
+
+	{\footnotesize \begin{lstlisting}
+		Input: N, A, K, u, C, a, NodoOrigine, NodiTarget, Lr
+		Output: costoTot, percorsoOttimo
+		
+		Inizio
+		percorsoOttimo <- [ ]
+		costoTot <- +inf
+		Ripeti per x volte:
+			costo <- 0.0
+			strade <- copia di A
+			CapacitaUsata <- copia di u
+			informazioni <- copia di K
+			MescolaCasualmente(informazioni)
+			percorsi <- [ ]
+			Per ogni informazione in informazioni:
+				Capacita <- copia di CapacitaUsata
+				unvisitedNodes <- copia di N
+				Per ogni (nodo, listaNodiPrecedenti) in Lr:
+					Se Lunghezza(listaNodiPrecedenti) == 0 allora:
+						Rimuovi nodo da unvisitedNodes
+				nodoDiPartenza <- NodoOrigine[informazione]
+				Se nodoDiPartenza not in unvisitedNodes allora:
+					Aggiungi nodoDiPartenza a unvisitedNodes
+				Per ogni i in N:
+					Distanza[i] <- +inf
+					Predecessore[i] <- Nullo
+				Distanza[nodoDiPartenza] <- 0
+				nodoProtagonista <- nodoDiPartenza
+				Mentre unvisitedNodes non è vuoto:
+					Per ogni (i, j) in strade:
+						Se (i == nodoProtagonista) and (se j in unvisitedNodes) allora:
+							Se Distanza[j] > Distanza[i] + C[i, j] allora:
+								Distanza[j] <- Distanza[i] + C[i, j]
+								Predecessore[j] <- nodoProtagonista
+					Rimuovi nodoProtagonista da unvisitedNodes
+					indiceProssimoNodo <- nullo
+					Per ogni nodo in unvisitedNodes:
+						pretarget <- Predecessore[nodo]
+						Se (pretarget, nodo) esiste in Capacità allora:
+							Se Capacità[(pretarget, nodo)] - a[commodity] >= 0 allora:
+								Se (indiceProssimoNodo è nullo) or 
+								(Distanza[nodo] < Distanza[indiceProssimoNodo]) allora:
+									indiceProssimoNodo <- nodo
+					Se indiceProssimoNodo è nullo allora:
+						unvisitedNodes <- [ ]
+					Altrimenti:
+						pretarget <- Predecessore[indiceProssimoNodo]
+						Capacita[(pretarget, indiceProssimoNodo)] <- 
+						Capacita[(pretarget, indiceProssimoNodo)] - a[commodity]
+						nodoProtagonista <- indiceProssimoNodo
+				nodiFinali <- copia di NodiTarget[informazione]
+				MescolaCasualmente(nodiFinali)
+				Per ogni nodoFinale in nodiFinali:
+					percorso <- [ nodoFinale ]
+					Se Predecessore[nodoFinale] == nullo allora:
+						costo <- +inf
+						Interrompi ciclo
+					Mentre se Predecessore[nodoFinale] != nullo:
+						preFinale <- Predecessore[nodoFinale]
+						Aggiungi preFinale all'inizio di percorso
+						CapacitaUsata[(preFinale, nodoFinale)] <- 
+						CapacitaUsata[(preFinale, nodoFinale)] - a[commodity]
+						Se CapacitaUsata[(preFinale, nodoFinale)] == 0 allora:
+							Rimuovi (preFinale, nodoFinale) da strade
+					costo <- costo + C[preFinale, nodoFinale]
+					nodoFinale <- preFinale
+					Aggiungi [informazione, percorso] a percorsi
+			Se costo < costoTot allora:
+				costoTot <- costo
+				percorsoOttimo <- percorsi
+		Ritorna costoTot, percorsoOttimo
+		Fine
+	\end{lstlisting}}
 	\subsection{Prima Formulazione}
+	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in python senza l'implementazione della metodologia basata sul rilassamento lagrangiano.
+	{\footnotesize \begin{lstlisting}
+		minimize
+		sum(k in K, i in N, j in Lr[i]) Costi[j][i] * x[k][j][i]; 
+		subject to {
+			forall(k in K, t in NodiTarget[k]) 
+			sum(j in Lr[t]) x[k][j][t] == 1; 
+			
+			forall(k in K, i in Brokers)
+			sum(j in Lr[i]) x[k][j][i] == sum(j in Lt[i]) x[k][i][j];
+			
+			forall(k in K, <i,j> in A)
+			bigM*e[k][i][j] >= x[k][i][j]; 
+			
+			forall(i in N, j in Lt[i])
+			sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
+		}									 
+		
+	\end{lstlisting}}
 	\subsection{Seconda Formulazione}
+	La seconda formulazione vede una prima implementazione di quelli che sono i metodi per codificare le condizioni estrapolate dal rilassamento lagrangiano e del rispetto dei vincoli.
+	\subsubsection{Calcolo Costi Penalizzati}
+	{\footnotesize \begin{lstlisting}
+		Input: moltiplicatori lam, costi d, lista ePerKnapsack
+		Inizio
+		Per ogni (k, i, j) in d:
+		d[k, i, j] <- C[i, j] + (lam[k, i] - lam[k, j])
+		Se d[k, i, j] < 0 allora:
+		Aggiungi (k, i, j) a ePerKnapsack
+		
+		Se (lam[k, i] - lam[k, j]) < 0 allora:
+		d[k, i, j] <- C[i, j] + ((lam[k, i] - lam[k, j]) * Lunghezza(NodiTarget[k]))
+		Fine
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+	def KnapSack(ePerKnapsack,d,e,x):
+		kPerArco = {}
+		for (k,i,j) in ePerKnapsack:
+		if (i,j) not in kPerArco:
+		kPerArco[(i,j)] = []
+		kPerArco[(i,j)].append(k)
+		for (i,j) in kPerArco.keys():
+		valoriD = []
+		peso = u[(i,j)]
+		pesi = []
+		valoriD.append(0)
+		pesi.append(0)
+		listaK = []
+		listaK.append(None)
+		for k in kPerArco[(i,j)]:
+		valoriD.append(-1*d[(k,i,j)])
+		pesi.append(a[k])
+		listaK.append(k)
+		tabella = []
+		for z in range(len(valoriD)):
+		riga= []
+		for y in range(peso+1):
+		riga.append(0)
+		tabella.append(riga)
+		for z in range(1,len(valoriD)):
+		for y in range(1,peso+1):
+		if(y>=pesi[z]):
+		tabella[z][y]=max(tabella[z-1][y],tabella[z-1][y-pesi[z]]+valoriD[z])
+		else:
+		tabella[z][y]=tabella[z-1][y]
+		migliore = tabella[len(valoriD)-1][peso]
+		rigaDelMigliore = len(valoriD)-1
+		colonnaDelMigliore = peso
+		while(rigaDelMigliore>0):
+		if(migliore!=tabella[rigaDelMigliore-1][colonnaDelMigliore]):
+		k = listaK[rigaDelMigliore]
+		e[(k,i,j)] = 1.0
+		if(lam[k,i]-lam[k,j]>=0):
+		x[(k,i,j)]=1
+		else:
+		x[(k,i,j)]=len(NodiTarget[k])
+		colonnaDelMigliore = colonnaDelMigliore-pesi[rigaDelMigliore]
+		rigaDelMigliore = rigaDelMigliore-1
+		migliore=tabella[rigaDelMigliore][colonnaDelMigliore]
+		else:
+		rigaDelMigliore = rigaDelMigliore-1
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+		def CalcolaCostiPenalizzati(lam,d,ePerKnapsack):
+		for (k,i,j) in d:
+		d[(k,i,j)] = C[i,j]+(lam[(k,i)]-lam[(k,j)])
+		if(d[(k,i,j)]<0):
+		ePerKnapsack.append((k,i,j))
+		if(lam[(k,i)]-lam[(k,j)])<0:
+		d[(k,i,j)]=C[i,j]+((lam[(k,i)]-lam[(k,j)])*len(NodiTarget[k]))
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+		def calcolaValoreDiCambio(lastLb,k,subGradient,Ub,alpha):
+		listaSubGradienti = []
+		for i in N:
+		listaSubGradienti.append( subGradient[(k,i)])
+		norma = np.linalg.norm(listaSubGradienti)
+		norma = norma.item()
+		if(norma!=0):
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1])/(norma**2))
+		else:
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1]))
+		return valoreDiCambio,alpha
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+		def calcolaMin(lam):
+		Lb=0.0
+		for (i,j) in A:
+		for k in K:
+		Lb += d[(k,i,j)]*e[(k,i,j)]
+		for k in K:
+		for i in N:
+		Lb -= lam[(k,i)]*b[k][i]
+		return Lb
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+		def aggiornaLambda(lam,lastLb,Ub,alpha):
+		subGradienti = {(k,i):0.0 for k in K for i in N}
+		for k in K:
+		for i in N:
+		Sommatoria1 = 0.0
+		Sommatoria2 = 0.0
+		for j in Lt[i]:
+		Sommatoria1 += x[(k,i,j)]
+		for j in Lr[i]:
+		Sommatoria2 += x[(k,j,i)]
+		subGradienti[(k,i)]=Sommatoria1-Sommatoria2-b[k][i]
+		for k in K:
+		valoreDiCambio,alpha = calcolaValoreDiCambio(lastLb,k,subGradienti,Ub,alpha)
+		for i in N:
+		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
+		return alpha
+	\end{lstlisting}}
+	{\footnotesize \begin{lstlisting}
+		lam = {(k,i):0.0 for k in K for i in N}
+		d = {(k,i,j):0 for k in K for (i,j) in A}
+		e = {(k,i,j):0 for k in K for (i,j) in A}
+		x = {(k,i,j):0.0 for k in K for (i,j) in A}
+		ePerKnapsack = []
+		ultimiLowerBounds = [0]
+		Lb=0.0
+		alpha = 0.1
+		it_max=10000
+		alphaterazioni=0
+		iterazioni=0
+		UbOld = DijkstraEuristicoOld()
+		UbTest = DijkstraEuristicoTest()
+		Ub,percorso = DijkstraEuristico()
+		while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
+		iterazioni+=1
+		ePerKnapsack=[]
+		e = {(k,i,j):0 for k in K for (i,j) in A}
+		x = {(k,i,j):0 for k in K for (i,j) in A}
+		CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
+		KnapSack(ePerKnapsack,d,e,x)
+		Lb = calcolaMin(lam)
+		ultimiLowerBounds.append(Lb)
+		if(ultimiLowerBounds[len(ultimiLowerBounds)-1]<=ultimiLowerBounds[len(ultimiLowerBounds)-2]):
+		alphaterazioni+=1
+		if(alphaterazioni>20):
+		alphaterazioni=0
+		alpha=alpha/2
+		else:
+		alphaterazioni=0
+		alpha=aggiornaLambda(lam,ultimiLowerBounds,Ub,alpha)
+		print(f"Upper bound = {Ub}")
+		print(f"Upper bound old = {UbOld}")
+		print(f"Upper bound test = {UbTest}")
+		print(f"Percorso ottimo Upper bound = {percorso}")
+		print(f"Lower bound = {max(ultimiLowerBounds)}")
+	\end{lstlisting}}
 	\subsection{Lagrangiano}
 	\section{Formulazione Con scelta parziale}
 	\subsection{Meccanica del upper che scende}

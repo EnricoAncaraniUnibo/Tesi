@@ -1,0 +1,689 @@
+\documentclass[12pt,a4paper,twoside]{report}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{amsthm}
+\oddsidemargin=30pt \evensidemargin=20pt
+\hyphenation{sil-la-ba-zio-ne pa-ren-te-si}
+\usepackage{tgtermes}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\makeatletter
+% Capitoli numerati
+\def\@makechapterhead#1{%
+	\vspace*{-80pt}% spazio dall'alto pagina
+	{\parindent \z@ \raggedright \normalfont
+		\Huge\bfseries
+		\thechapter\quad #1\par\nobreak
+		\vskip 20pt
+}}
+
+% Capitoli NON numerati
+\def\@makeschapterhead#1{%
+	\vspace*{-80pt}% spazio dall'alto pagina
+	{\parindent \z@ \raggedright
+		\normalfont
+		\Huge\bfseries
+		#1\par\nobreak
+		\vskip 20pt
+}}
+
+\makeatother
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			
+			% Nome ufficiale dell'Ateneo: NON modificare.
+			{{\Large{\textsc{Alma Mater Studiorum $\cdot$ Universit\`a di
+							Bologna}}}} \rule[0.1cm]{15.8cm}{0.1mm}
+			\rule[0.5cm]{15.8cm}{0.6mm}
+			
+			% ------------------------------------------------------------------
+			% DIPARTIMENTO / CORSO DI LAUREA
+			% ------------------------------------------------------------------
+			% Selezionare il corso di Laurea di riferimento, cancellando le opzioni non necessarie.
+			%
+			{\small{\bf Dipartimento di Informatica --- Scienza e Ingegneria\\
+					Corso di Laurea Triennale in Ingegneria e Scienze informatiche}}
+		\end{center}
+		
+		\vspace{15mm}
+		\begin{center}
+			% ------------------------------------------------------------------
+			% TITOLO DELLA TESI
+			% ------------------------------------------------------------------
+			% Sostituire "TITOLO DELLA TESI" con il titolo completo della propria tesi.
+			% Suggerimenti:
+			% - Usare MAIUSCOLO per il titolo principale, se richiesto dalle linee guida.
+			% - Evitare abbreviazioni non standard.
+			{\LARGE{\bf TODO}}\\
+			\vspace{3mm}
+			
+			\vspace{19mm}
+			% ------------------------------------------------------------------
+			% SETTORE SCIENTIFICO DI RIFERIMENTO (OPZIONALE)
+			% ------------------------------------------------------------------
+			% Questa riga è opzionale. Puoi:
+			% - Sostituire "Settore Scientifico di Riferimento" con il nome dell'insegnamento
+			%   o ambito disciplinare da cui nasce la tesi (es. "Machine Learning", "Calcolo Numerico").
+			% - Oppure, se non richiesto dal tuo Corso di Laurea, puoi COMMENTARE
+			%   l'intera riga anteponendo un % all'inizio.
+			{\large{\bf TODO}}
+		\end{center}
+		
+		\vspace{30mm}
+		\par
+		\noindent
+		\begin{minipage}[t]{0.50\textwidth}
+			% ------------------------------------------------------------------
+			% RELATORE
+			% ------------------------------------------------------------------
+			% Sostituire:
+			% - "Chiar.ma Prof." con il titolo corretto del relatore:
+			%    * "Chiar.mo Prof." / "Chiar.ma Prof.ssa"
+			%    * oppure "Prof." / "Prof.ssa" / "Dott." / "Dott.ssa"
+			%   a seconda di quanto concordato con il/la relatore/relatrice.
+			% - "NOME RELATORE" con Nome e Cognome del relatore.
+			{\large{\bf Relatore:\\
+					Chiar.ma Prof.\\
+					Marco Antonio Boschetti}} \\[5mm]
+			
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.47\textwidth}\raggedleft
+			% ------------------------------------------------------------------
+			% NOME DELLAUREANDO / LAUREANDA
+			% ------------------------------------------------------------------
+			% Sostituire "NOME LAUREANDO" con:
+			%   Nome Cognome
+			% esattamente come compare nei documenti ufficiali.
+			{\large{\bf Presentata da:\\
+					Enrico Ancarani}}
+		\end{minipage}
+		
+		\vspace{10mm}
+		\begin{center}
+			% ------------------------------------------------------------------
+			% APPELLO, DATA E ANNO ACCADEMICO
+			% ------------------------------------------------------------------
+			% "NUMERO Appello":
+			%   - Sostituire con il numero dell'appello di laurea (es. "I Appello", "II Appello")
+			%     secondo le indicazioni della Segreteria/CdS.
+			%
+			% "Sessione MESE ANNO":
+			%   - Sostituire con la data ufficiale della seduta di laurea
+			%
+			% "Anno Accademico 20xx/20xx":
+			%   - Sostituire con l'Anno Accademico corretto (es. "Anno Accademico 2025/2026").
+			{\large{\bf Sessione Luglio 2026 \\}}
+			{\large{\bf Anno Accademico 2025/2026\\}}
+		\end{center}
+	\end{titlepage}
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	\cleardoublepage
+	\tableofcontents
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	
+	\chapter*{Sommario}
+	%	\setcounter{page}{5}
+	\thispagestyle{plain}
+	TODO
+	\chapter{Introduzione}     
+	\vspace{-0.5cm}        
+	\section{Iot (Internet of Things)}    
+	\vspace{-0.3cm}          
+	Il termine Iot nasce come acronimo per indicare quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti". Quest'ultima ha avuto particolare rilevanza nell'ultimo periodo storico, andando a rivoluzionare il modo in cui si raccolgono e si processano le informazioni sia in ambito domestico sia industriale. \smallskip \\
+	Un dispositivo definito intelligente o più comunemente chiamato "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni in cui tra le più importanti è presente lo scambio di informazioni. \smallskip \\
+	In questa tesi ci si sofferma particolarmente sui "sensori", dispositivi chiave per lo scambio di messaggi in una rete IoT.
+	Un sensore è un dispositivo che rileva un cambiamento nel mondo fisico, lo traduce in un segnale digitale e poi lo diffonde ad altri dispositivi, i quali lo utilizzeranno per prendere decisioni. \smallskip \\
+	Una possibile criticità risiede proprio in questa parte del funzionamento, se una decisione deve essere presa con tempestività, anche la rete di trasmissione dovrà essere veloce e efficiente.
+	\vspace{-0.5cm}
+	\section{Publish/Subscribe}
+	\vspace{-0.3cm}   
+	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
+	In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
+	Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
+	Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{publish-subscribe}
+		\caption[Immagine di funzionamento di una rete Publish/Subscribe]{Immagine di funzionamento di una rete Publish/Subscribe}
+		\label{fig:publish-subscribe}
+	\end{figure}
+	\section{La Difficoltà del Percorso Ottimo}
+	In un sistema moderno, per garantire la velocità di una rete è cruciale trovare il percorso ottimo per la trasmissione dei dati, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale.
+	\subsection{Grafo}
+	Uno dei metodi migliori per poter descrivere una rete di dispositivi connessi è tramite un grafo. Usando questa struttura, i dispositivi vengono rappresentati tramite dei nodi e i collegamenti tramite degli archi. \begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Grafo}
+		\caption[Immagine di un grafo con costi e capacità degli archi]{Immagine di un grafo con costi e capacità degli archi}
+		\label{fig:grafo}
+	\end{figure}\newpage 
+	\noindent L'uso di un grafo risulta una scelta efficiente perché, per reti semplici, consente di mostrare in modo naturale sia i componenti della rete sia le relazioni tra essi e grazie alla sua flessibilità permette inoltre di aggiungere varie proprietà agli elementi rappresentati, rendendo possibile modellare scenari complessi con facilità.
+	\subsection{Centralizzazione}
+	Un altro aspetto fondamentale del problema riguarda la centralizzazione dell'elaborazione della rete.
+	In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
+	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
+	\subsubsection{Peer-To-Peer}
+	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
+	
+	\section{Problema di Ottimizzazione}
+	Il problema descritto è così definito come un problema di ottimizzazione, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
+	Questo tipo di problema è descrivibile utilizzando un modello matematico:
+	\begin{equation}
+		min/max\ \sum_i c_ix_i
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		Ax \geq  b
+	\end{equation}
+	\vspace{-0.6cm}
+	\begin{equation}
+		Bx \geq  d 
+	\end{equation}
+	\vspace{-0.6cm}
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ e $B$ le matrici dei coefficienti del problema, $b$ e $d$ i vettori delle costanti per i vincoli.\smallskip \\
+	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo un limite inferiore per la soluzione del problema originale.
+	\subsection{Rilassamento Continuo}
+	Il rilassamento più intuitivo è quello continuo, dove se il problema presenta la variabile decisionale come intera, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza della variabile e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
+	Questo approccio trasforma il problema intero in un problema di programmazione lineare continua, per il quale esistono algoritmi efficienti. Lo spazio delle soluzioni ammissibili, tuttavia, è più ampio e il valore ottimo del problema rilassato potrebbe non essere sempre applicabile al problema originale.
+	\begin{equation}
+		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
+	\end{equation}
+	\subsection{Rilassamento Lagrangiano}
+	Un rilassamento particolarmente utile è quello lagrangiano, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange. Quest'ultimo funge da penalità: più ci si allontana dal rispetto del vincolo, maggiore sarà il peggioramento del valore della funzione obiettivo, allontanandolo dall'ottimo. Il risultato è una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
+	\subsubsection{Spiegazione Matematica}
+	Si considera un problema di minimizzazione P:
+	\begin{equation}
+		z(P)=min\ cx 
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		Ax \geq  b
+	\end{equation}
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Con $c$ il vettore dei costi, x la variabile decisionale, A la matrice dei coefficienti del problema, b il vettore delle costanti per il vincolo. \smallskip \\
+	Con il rilassamento lagrangiano si rilassa il vincolo $Ax \geq b$ aggiungendo una penalità $\lambda$ non negativa e inserendolo all'interno della funzione obiettivo.
+	\begin{equation}
+		z(P)=min\ cx,\ Ax-b \geq 0
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)=min\ cx-\lambda(Ax-b)
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Il motivo del segno $-$ è dovuto al fatto che il vincolo è soddisfatto quando assume un valore maggiore o uguale a 0, quindi dato che $\lambda$ è definita non negativa, se il vincolo non viene soddisfatto come nel caso in cui sia negativo, sottrarlo dalla funzione obiettivo ne aumenta il valore, allontanandolo dal minimo ricercato.\vspace{0.15cm}  \\  Il valore ottimale del problema originale $z(P)$ sarà maggiore o al massimo uguale al valore ottimale del problema rilassato $L(\lambda)$. 
+	\begin{align}
+		z(P)\geq L(\lambda),\ \ \ \ \forall \lambda \geq 0
+	\end{align}
+	Questo perché non avendo l'obbligo di rispettare il vincolo, che è stato rilassato, lo spazio delle soluzioni ammissibili è più ampio e quindi si possono trovare soluzioni che il problema originale non può considerare corrette, le quali, avendo meno costrizioni, avranno un valore più basso o al massimo uguale alla soluzione dell'originale. 
+	\begin{enumerate}
+		\item Si prende una $x^*$ che è soluzione ottima di $z(P)$ quindi è ammissibile e il vincolo è rispettato.
+		\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha: \begin{equation}
+			cx^* \geq cx^* - \lambda(ax^*-b)
+		\end{equation}
+		\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore di $x^*$:
+		\begin{equation}
+			L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)
+		\end{equation}\vspace{-0.75cm}
+		\item Unendo le diseguaglianze: \begin{equation}
+			z(P)=cx^* \geq cx^* - \lambda(ax^*-b)\geq L(\lambda) \rightarrow z(P)\geq L(\lambda)
+		\end{equation}
+		
+	\end{enumerate}
+	%
+	%In ogni caso dove il vincolo è rispettato, il valore di $\lambda(Ax-b)$ è non negativo:
+	%\begin{equation}
+	%	z(P)=cx \geq cx-\lambda(Ax-b)=L(\lambda)
+	%\end{equation}
+	%In caso invece non fosse rispettato i due risultati non sarebbero confrontabili in quanto non esisterebbe una soluzione ammissibile per l'originale. \smallskip \\
+	Grazie a questa proprietà, si può pensare di massimizzare la funzione lagrangiana per ottenere il migliore limite inferiore possibile per il problema originale e si può descrivere con la formula del duale lagrangiano:
+	\begin{equation}
+		z(D_L)=\max_{\lambda\geq0}\ [L(\lambda)]
+	\end{equation}
+	Una delle tecniche che può essere usata per la ricerca della soluzione del duale lagrangiano è il metodo del subgradiente.
+	\subsubsection{Metodo del Subgradiente}
+	Il metodo del subgradiente è un metodo iterativo usato per massimizzare una funzione concava, come quella lagrangiana, con lo scopo di ottenere il migliore limite inferiore per il problema originale. Nello specifico, si può utilizzare per calcolare i moltiplicatori di Lagrange associati ai vincoli rilassati che forniscono il risultato $L(\lambda)$ più alto. \smallskip \\
+	La funzione lagrangiana non è perfettamente una curva liscia ma è composta di segmenti, ciascuno corrispondente a una soluzione ottima $\bar{x}$ per il $\lambda$ specificato.
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[
+				axis lines=left,
+				xlabel={$\lambda$},
+				ylabel={$L(\lambda)$},
+				xmin=0, xmax=5,
+				ymin=0, ymax=4.5,
+				xtick=\empty,
+				ytick=\empty,
+				width=8cm,
+				height=6cm,
+				clip=false
+				]
+				\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+				{-0.3667*(x-3)^2 + 3.5};
+				\addplot[red, thick, smooth] coordinates {(0.2,0.86) (1.8,3.21)};  
+				\addplot[red, thick, smooth] coordinates {(1.2,2.55) (2.8,3.72)};  
+				\addplot[red, thick, smooth] coordinates {(2.2,3.5) (3.8,3.5)};    
+				\addplot[red, thick, smooth] coordinates {(3.2,3.72) (4.8,2.55)};   
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Immagine di una funzione lagrangiana con inviluppo}
+		\label{fig:lagrangiana_inviluppo}
+	\end{figure}
+	\newpage
+	\noindent 
+	Data una lambda, si ottiene una $\bar{x}$ tale che:
+	\begin{equation}
+		L(\bar{\lambda})=\min (cx-\bar{\lambda}(Ax-b))=c\bar{x}-\bar{\lambda}(A\bar{x}-b)
+	\end{equation}
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[
+				axis lines=left,
+				xlabel={$\lambda$},
+				ylabel={$L(\lambda)$},
+				xmin=0, xmax=5,
+				ymin=0, ymax=4.5,
+				xtick=\empty,
+				ytick=\empty,
+				width=8cm,
+				height=6cm,
+				clip=false
+				]
+				\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+				{-0.3667*(x-3)^2 + 3.5};
+				\addplot[black, densely dotted, thin] coordinates {(1.4,0) (1.4,2.561)};
+				\addplot[black, densely dotted, thin] coordinates {(0,2.561) (1.4,2.561)};
+				\node at (axis cs:1.4, 2.561) [anchor=south, yshift=4pt] {$L(\bar{\lambda})$};
+				\node at (axis cs:1.4, 0) [anchor=north, yshift=-4pt] {$\bar{\lambda}$};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Valore di $L(\bar{\lambda})$ corrispondente a una $\bar{\lambda}$ scelta}
+		\label{fig:Determinisco di L scelta una lambda}
+	\end{figure} \\
+	Riprendendo la soluzione $\bar{x}$ derivata dalla $\bar{\lambda}$ data, si può ridefinire $L(\lambda)$, cioè il valore ottimo in una qualsiasi altra lambda generica, come o minore o uguale della soluzione trovata ora:
+	\begin{equation}
+		L(\lambda)=\min (cx-\lambda(Ax-b))\leq c\bar{x}-\lambda(A\bar{x}-b)
+	\end{equation}
+	Questo perché la disequazione confronta elementi diversi, nel lato sinistro è presente una $x$ ottima per la nuova $\lambda$, mentre nel lato destro è presente la $\bar{x}$, ottima per $\bar{\lambda}$ ma non necessariamente per $\lambda$. Poiché le si stanno valutando con la stessa $\lambda$, allora per definizione, la $x$ ottima darà un valore minore o, nel caso in cui anche $\bar{x}$ sia ottima per $\lambda$, uguale.\smallskip \\
+	Sottraendo ora l'equazione (1.17) dalla (1.18) si ottiene:
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq c\bar{x}-\lambda(A\bar{x}-b)-(c\bar{x}-\bar{\lambda}(A\bar{x}-b))
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq -\lambda(A\bar{x}-b)+\bar{\lambda}(A\bar{x}-b)
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq (A\bar{x}-b)(-\lambda+\bar{\lambda})
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)\leq L(\bar{\lambda})+(A\bar{x}-b)(-\lambda+\bar{\lambda})
+	\end{equation}
+	Si definisce $s=-(A\bar{x}-b)$ e si trasforma l'equazione: \\
+	\begin{equation}
+		L(\lambda)\leq L(\bar{\lambda})+s(\lambda-\bar{\lambda})
+	\end{equation}
+	\smallskip \\
+	L'obiettivo della risoluzione del duale lagrangiano è, a ogni iterazione, di far crescere $L(\lambda)$ fino a trovare il valore massimo.
+	In termini matematici si vuole che $L(\lambda)$ sia maggiore di $L(\bar{\lambda})$ e che quindi la loro differenza sia positiva.
+	L'unico modo di ottenere questo risultato è di avere il termine: $s(\lambda-\bar{\lambda})>0$ e che quindi sommandolo a $L(\bar{\lambda})$ ne aumenti il valore. Per garantire che ciò accada si opta per spostare $\lambda$ rispetto a $\bar{\lambda}$ usando lo stesso verso del subgradiente $s$ in modo che:
+	\begin{equation}
+		\lambda = \bar{\lambda}+\theta s
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\lambda - \bar{\lambda} = \theta s
+	\end{equation}
+	\begin{equation}
+		s(\lambda-\bar{\lambda})=s(\theta s)=\theta s^2
+	\end{equation}
+	Di conseguenza per un $s\neq 0$ e per un passo $\theta > 0$ il valore risultante sarà sicuramente positivo e porterà ad una $\lambda$ maggiore rispetto a $\bar{\lambda}$. \smallskip \\
+	Anche la scelta del parametro $\theta$ è fondamentale, un passo troppo grande potrebbe far saltare la soluzione ottima portando alla divergenza, mentre un passo troppo corto potrebbe convergere alla soluzione ottima troppo lentamente.
+	\subsection{Formulazione Matematica del Problema}
+	Nei problemi di ottimizzazione, uno degli aspetti più cruciali risiede nel modo in cui le relazioni tra le variabili vengono tradotte in vincoli.
+	Uno stesso problema può essere modellato attraverso diversi insiemi di vincoli, ciascuno dei quali si definisce come una formulazione del problema. \medskip \\
+	Due formulazioni si definiscono equivalenti se possiedono lo stesso identico insieme di soluzioni ammissibili intere. Tuttavia, nonostante l'equivalenza sull'insieme delle soluzioni, le loro prestazioni computazionali possono differire di molto, rendendo la scelta della formulazione un fattore chiave per la qualità del modello matematico creato.
+	\subsubsection{Debole Contro Forte}
+	I risolutori, nel cercare la soluzione ottima, non operano direttamente con le variabili intere, ma applicano il rilassamento continuo permettendo loro di assumere valori frazionari.
+	È proprio durante questa fase di calcolo che si distinguono due tipologie di formulazioni diverse:
+	\begin{itemize}
+		\item Formulazione debole: Dopo aver effettuato il rilassamento, il risolutore è libero di assegnare alle variabili valori frazionari molto distanti dai limiti interi reali. Di conseguenza il modello può ottenere un valore ottimo rilassato anche molto distante dall'ottimo intero.
+		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie, favorendo l'ottenimento di valori interi per le variabili e, di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
+	\end{itemize}
+	\section{Ambiente di Sviluppo}
+	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
+	CPLEX Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
+	Per garantire semplicità è richiesta solamente la struttura del problema, i dati e la configurazione di avvio.
+	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano al suo interno è complesso. \smallskip \\
+	Google Colab invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
+	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo CPLEX con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
+	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx e Matplotlib.pyplot.
+	\begin{figure}[h]
+		\centering
+		\begin{minipage}{0.75\textwidth}
+			\includegraphics[width=1\linewidth]{Cplex}
+			\caption[Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio]{Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio\\}
+			\label{fig:cplex}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.75\textwidth}
+			\includegraphics[width=1\linewidth]{GoogleColab}
+			\caption[Immagine dell'ambiente di sviluppo di Google Colab]{Immagine dell'ambiente di sviluppo di Google Colab}
+			\label{fig:google}
+		\end{minipage}
+	\end{figure}
+	\chapter{Descrizione del Problema e delle Formulazioni}
+	\section{Scenario del Problema}
+	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
+	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
+	L'obiettivo della tesi è sviluppare, a partire dal lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. L'algoritmo dovrà essere in grado di gestire sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti. \smallskip \\
+	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
+	\begin{itemize}
+		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
+		\item Costo del canale (quanto è dispendioso in termini economici o computazionali utilizzare quel determinato percorso).
+		\item Peso di un'informazione (quanta banda occupa la singola informazione all'interno del canale).
+	\end{itemize}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Rete}
+		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
+		\label{fig:rete}
+	\end{figure}
+	
+	\section{Simboli Globali}
+	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
+	è necessario mappare le variabili reali in un contesto informatico/matematico:
+	\begin{itemize}
+		\item $K$, è l'insieme contenente le informazioni da inviare o ricevere.
+		\item $N$, è l'insieme contenente tutti i nodi della rete.
+		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe fanno parte dei generatori delle informazioni.
+		\item $Broker$, è l'insieme contenente i nodi di mezzo che non devono nè generare nè consumare le informazioni ma solo ritrasmettere.
+		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe devono ricevere le informazioni.
+		\item $A$, è l'insieme contenente gli archi della rete quindi i canali di comunicazione.
+		\item $NodoOrigine_k$, è l'insieme contenente per ogni informazione $k$ il suo nodo di origine.
+		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
+		\item $b^k_i$, è una variabile che, a seconda del nodo $i$ e della informazione $k$, indica il ruolo di $i$ rispetto a $k$: se è maggiore di $0$ allora $i$ è un generatore e produce $b^k_i$ informazioni $k$, se è uguale a $0$ allora $i$ è un nodo di trasmissione e invece se è uguale a $-1$ allora $i$ è un nodo richiedente di $k$.
+		\item $a_k$, è una variabile che indica per ogni informazione $k$ quanta banda occupa all'interno di un canale.
+		\item $c_{ij}$, è l'insieme contenente per ogni arco $i,j$ il suo costo.
+		\item $u_{ij}$, è l'insieme contenente per ogni arco $i,j$ la sua capacità.
+		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
+		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
+		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
+		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
+		\item $M$, è una variabile di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
+	\end{itemize}
+	\section{Prima Formulazione}
+	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
+	\end{equation}
+	\smallskip \\
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K\\[3ex]
+		& \sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K\\[3ex]
+		& Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K\\[3ex]
+		& \sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i\\[3ex]
+		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
+	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
+	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
+	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
+	Questo vincolo permette di garantire che ogni Subscriber riceva l'informazione che ha richiesto, né di meno né di più. 
+	Questo deve valere per ogni Subscriber e per ogni informazione richiesta.\smallskip \\
+	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
+	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
+	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $i,j$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
+	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo. La scelta di $M$ ricade sul numero totale dei nodi poiché $x$, potendo assumere al massimo un valore pari al numero di nodi Subscriber, non potrà mai superare tale soglia.\smallskip \\
+	(2.5): Per ogni arco $i,j$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
+	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
+	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
+	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
+	\section{Seconda Formulazione}
+	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
+	\end{equation}
+	\smallskip \\
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K\\[3ex]
+		& \sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A\\[3ex]
+		& e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K\\[3ex]
+		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
+	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
+	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
+	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.\\
+	(2.10): Per ogni arco $i,j$ si verifica che la somma della banda occupata dalle informazioni passanti non sia mai maggiore della capacità massima.	
+	La differenza del vincolo rispetto alla versione della prima formulazione (2.5) risiede nella gestione delle capacità: anziché considerare ogni arco come singolo e bidirezionale con una capacità condivisa tra le due direzioni, ora si considera come due archi distinti monodirezionali con capacità indipendenti. Questa scelta viene effettuata per semplificare il rilassamento lagrangiano, rendendo il vincolo dipendente dal singolo arco.\\
+	(2.11): Per ogni arco $i,j$ e per ogni informazione $k$, il valore della variabile $x$ è legato alla variabile $e$: se l'arco è disattivato nessuna informazione può transitarvi, altrimenti se è attivo il numero di informazioni può essere scelto in un intervallo da uno fino al numero di Subscriber richiedenti.
+	Questo vincolo garantisce un legame tra l'attivazione di un arco e il numero di informazioni che passano al suo interno.\\
+	I vincoli (2.12) e (2.13) sono analoghi ai vincoli (2.6) e (2.7). 
+	\section{Rilassamento Lagrangiano della Seconda Formulazione}
+	La seconda formulazione, con le modifiche apportate ai vincoli rispetto alla prima, risulta facilmente rilassabile usando il metodo lagrangiano, permettendo dunque di ottenere una funzione obiettivo separabile in sotto-problemi indipendenti, uno per ogni arco della rete. \smallskip \\
+	Prima di procedere col rilassamento si definiscono $k \times i$ penalità lagrangiane: $\lambda^k_i$ con $k$ informazione e $i$ nodo. Il numero corrisponde a quanti vincoli sono stati rilassati e in questo caso corrisponde al vincolo (2.9) che deve essere rispettato per ogni possibile combinazione di $i$ e $k$. \smallskip \\
+	Si riscrive il vincolo nella forma di uguaglianza a zero:
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	Questo viene successivamente incorporato nella funzione obiettivo insieme alle penalità:
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
+	\end{equation}
+	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che il vincolo rilassato venga rispettato su tutte le combinazioni di $k$ e $i$ come da esso definito (2.9).\\
+	(2.15): Il $+$ prima delle sommatorie è una scelta di comodità. In caso di violazione del vincolo, il segno di $\lambda$ si adatta al segno del termine $(\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)$ usando il metodo del subgradiente. Ciò tenderà a rendere il prodotto tra i due positivo e allontanerà la soluzione dal minimo, penalizzando il mancato rispetto del vincolo. \smallskip \\
+	Si ha quindi:
+	\begin{equation}
+		\begin{split}
+			L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij} & \\ - \sum_{k \in K}\sum_{i \in N} \lambda^k_i\sum_{j \in Lr_i}x^k_{ji} -\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+			L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\  -\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		\end{split}
+	\end{equation}
+	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà della linearità della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $i,j$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{i,j \in A}$. \smallskip \\
+	Successivamente, il termine $\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}$ viene rinominato cambiando $j \rightarrow i$ e $i \rightarrow j$:
+	\begin{equation}
+		\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}
+	\end{equation}
+	Ne consegue:
+	\begin{equation}
+		\begin{split}
+			L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\-\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}- \sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} (\lambda^k_i - \lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N} \lambda^k_i b^k_i
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+	\end{equation}
+	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà della linearità. \smallskip \\
+	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non influenza il risultato.
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sotto-problema indipendente definito $LR$.
+	\begin{equation}
+		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	\begin{equation}
+		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
+	\end{equation}
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sotto-problema per l'arco su cui è definita.\\
+	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per l'informazione $k$:
+	\begin{equation}
+		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	Si presentano due casi: se l'arco è disattivato, il costo è pari a 0, poiché $e^k_{ij}=0$ implica $x^k_{ij}=0$ per il vincolo (2.11).
+	Se invece è attivato, $d^k_{ij}$ rappresenta il costo dell'attivazione. Nel caso in cui $d^k_{ij}$ sia minore di 0 conviene attivare l'arco in quanto si ha un guadagno. \smallskip \\
+	Per calcolare $d^k_{ij}$ si hanno già tutti i valori necessari: $c_{ij}$ è noto, si pone $e^k_{ij}=1$ poiché si vuole confrontare se si ha un guadagno dall'attivazione dell'arco e
+	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$. Poiché l'obiettivo è minimizzare, se il termine $(\lambda^k_i-\lambda^k_j)$ fosse positivo allontanerebbe dalla soluzione ottima e quindi $x^k_{ij}$ assume il valore minimo consentito dal vincolo (2.11). Se invece fosse negativo contribuirebbe alla minimizzazione e quindi $x^k_{ij}$ assume il valore massimo consentito che è pari a $NodiTarget_k$. \smallskip \\
+	Determinati quali archi attivare e per quali informazioni, si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
+	Questo problema è riconducibile al classico problema del Knapsack in cui l'arco rappresenta lo zaino con capacità $u_{ij}$ e le informazioni $k$ sono gli oggetti con peso $a_k$ e valore $-d^k_{ij}$ che si vuole inserire all'interno.
+	Poiché il Knapsack massimizza il valore degli oggetti inseriti e il mio guadagno è rappresentato in negativo da $d^k_{ij}$, invertendone il segno rendo compatibili i due problemi.
+	\subsection{Aggiornamento delle Penalità Lagrangiane}
+	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente come descritto nella sezione (1.4.2). \smallskip \\
+	Si prende il vincolo rilassato e da esso si definisce il subgradiente:
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		s^k_i=\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i
+	\end{equation}
+	La variabile $s^k_i$ rappresenta quanto il vincolo rilassato (2.9) viene violato nella soluzione corrente e dipende da $k$ e $i$ poiché il vincolo stesso è definito per ogni combinazione di informazione $k$ e nodo $i$.
+	Definito il subgradiente, lo si calcola insieme alle variabili $x^k_{ij}$ e si aggiornano le penalità $\lambda^k_i$ secondo la formula $\lambda^k_i=\lambda^k_i+ \theta s^k_i$. \smallskip \\
+	Per scegliere $\theta$ si utilizza l'equazione: 
+	\begin{equation}
+		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s||^2}
+	\end{equation}
+	I parametri sono scelti in modo da garantire passi ampi in caso di lontananza dall'ottimo, favorendo una convergenza rapida, e passi più piccoli nelle iterazioni vicine all'ottimo, evitando la divergenza dalla soluzione.
+	\begin{itemize}
+		\item $\alpha$ è un moltiplicatore che viene dimezzato ogni volta che il LowerBound non migliora per un numero prefissato di iterazioni. Se il LowerBound non migliora è probabile si stia lavorando con passi troppo elevati.
+		\item $\text{UpperBound}-\text{LowerBound}$ rappresenta l'ampiezza dell'intervallo in cui si trova la soluzione ottima. Se i due bound sono distanti si consiglia di effettuare passi più grandi mentre al contrario bisogna lavorare con passi più piccoli e una maggiore precisione.
+		\item $||s||^2$ è la norma al quadrato del vettore dei subgradienti. Un valore elevato indica una violazione significativa del vincolo e dividendo per esso si riduce il passo, evitando aggiornamenti eccessivi di $\lambda$. Al contrario, una norma di valore piccolo indica che si è vicini all'ottimo e quindi dividendo per esso si aumenta il passo evitando una convergenza troppo lenta.
+	\end{itemize}
+	
+	
+
+	%Ora vediamo un elenco numerato:         %crea un elenco numerato
+	%\begin{enumerate}
+	%\item primo oggetto
+	%\item secondo oggetto
+	%\item terzo oggetto
+	%\item quarto oggetto
+	%\end{enumerate}
+	%
+	%\begin{figure}[h]                       %crea l'ambiente figura; [h] sta
+	%                                        %   per here, cioè la figura va qui
+	%\begin{center}                          %centra nel mezzo della pagina
+	%                                        %   la figura
+	%%\includegraphics[width=5cm]{figura.eps}%inserisce una figura larga 5cm
+	%                                        %se si vuole usare va scommentata
+	%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%inserisce la legenda ed etichetta
+	%                                        %   la figura con \label{fig:prima}
+	%\caption[legenda elenco figure]{legenda sotto la figura}\label{fig:prima}
+	%\end{center}
+	%\end{figure}
+	%
+	%\section{Seconda Sezione}
+	%Ora vediamo un elenco puntato:
+	%\begin{itemize}                         %crea un elenco puntato
+	%\item primo oggetto
+	%\item secondo oggetto
+	%\end{itemize}
+	%
+	%\section{Altra Sezione}
+	%Vediamo un elenco descrittivo:
+	%\begin{description}                     %crea un elenco descrittivo
+	%  \item[OGGETTO1] prima descrizione;
+	%  \item[OGGETTO2] seconda descrizione;
+	%  \item[OGGETTO3] terza descrizione.
+	%\end{description}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%crea una sottosezione
+	%\subsection{Altra SottoSezione}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%crea una sottosottosezione
+	%\subsubsection{SottoSottoSezione}Questa sottosottosezione non viene
+	%numerata, ma \`e solo scritta in grassetto.
+	%\section{Altra Sezione}                 %crea una sottosezione
+	%Vediamo la creazione di una tabella; la tabella \ref{tab:uno}
+	%(richiamo il nome della tabella utilizzando la label che ho messo sotto):
+	%la facciamo di tre righe e tre colonne, la prima colonna
+	%``incolonnata'' a destra (r) e le altre centrate (c):\\
+	%\begin{table}[h]                        %ambiente tabella
+	%                                        %(serve per avere la legenda)
+	%\begin{center}                          %centra nella pagina la tabella
+	%\begin{tabular}{r|c|c}                  %tre colonne con righe verticali
+	%                                        %   prodotte con |
+	%\hline \hline                           %inserisce due righe orizzontali
+	%$(1,1)$ & $(1,2)$ & $(1,3)$\\           %& separa le colonne e con
+	%\hline                                  %inserisce una riga orizzontale
+	%$(2,1)$ & $(2,2)$ & $(2,3)$\\           %  \\ va a capo
+	%\hline                                  %inserisce una riga orizzontale
+	%$(3,1)$ & $(3,2)$ & $(3,3)$\\
+	%\hline \hline                           %inserisce due righe orizzontali
+	%\end{tabular}
+	%\caption[legenda elenco tabelle]{legenda tabella}\label{tab:uno}
+	%\end{center}
+	%\end{table}
+	%\section{Altra Sezione}\label{sec:prova}%posso mettere le label anche
+	%                                        %   alle section
+	%\subsection{Listati dei programmi}
+	%\subsubsection{Primo Listato}
+	%\begin{verbatim}
+	%        In questo ambiente     posso scrivere      come voglio,
+	%lasciare gli spazi che voglio e non % commentare quando voglio
+	%e ci sarà scritto tutto.
+	%Quando lo uso è meglio che disattivi il Wrap del WinEdt
+	%\end{verbatim}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%non numera l'ultima pagina sinistra
+	%\clearpage{\pagestyle{empty}\cleardoublepage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%per fare le conclusioni
+	%\chapter*{Conclusioni}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%aggiunge la voce Conclusioni
+	%                                        %   nell'indice
+	%\addcontentsline{toc}{chapter}{Conclusioni} Queste sono le
+	%conclusioni.\\
+	%In queste conclusioni voglio fare un riferimento alla
+	%bibliografia: questo \`e il mio riferimento \cite{K3,K4}.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\renewcommand{\chaptermark}[1]{\markright{\thechapter \ #1}{}}
+	%\appendix                               %imposta le appendici
+	%\chapter{Prima Appendice}               %crea l'appendice
+	%In questa Appendice non si \`e utilizzato il comando:\\
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\verb"" è equivalente all'
+	%                                        %   ambiente verbatim,
+	%                                        %   ma si utilizza all'interno
+	%                                        %   di un discorso.
+	%\verb"\clearpage{\pagestyle{empty}\cleardoublepage}", ed infatti
+	%l'ultima pagina 8 ha l'intestazione con il numero di pagina in
+	%alto.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\chapter{Seconda Appendice}             %crea l'appendice
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\begin{thebibliography}{90}             %crea l'ambiente bibliografia
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%aggiunge la voce Bibliografia
+	%                                        %   nell'indice
+	%\addcontentsline{toc}{chapter}{Bibliografia}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%provare anche questo comando:
+	%%%%%%%%%%%%\addcontentsline{toc}{chapter}{\numberline{}{Bibliografia}}
+	%\end{thebibliography}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%non numera l'ultima pagina sinistra
+	%\clearpage{\pagestyle{empty}\cleardoublepage}
+	%\chapter*{Ringraziamenti}
+	%\thispagestyle{empty}
+	%Qui possiamo ringraziare il mondo intero!!!!!!!!!!\\
+	%Ovviamente solo se uno vuole, non \`e obbligatorio.
+\end{document}
