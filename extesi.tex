@@ -454,29 +454,19 @@
 	\end{itemize}
 	\section{Prima Formulazione}
 	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
-	Funzione Obiettivo:
+	Funzione Obiettivo:\\
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
 	\end{equation}
 	\smallskip \\
-	Vincoli:
+	Vincoli:\\
 	\begin{align}
-		\sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K
-	\end{align}
-	\begin{align}
-		\sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K
-	\end{align}
-	\begin{align}
-		Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K
-	\end{align}
-	\begin{align}
-		\sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i
-	\end{align}
-	\begin{align}
-		x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K
-	\end{align}
-	\begin{align}
-		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+		& \sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K\\[3ex]
+		& \sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K\\[3ex]
+		& Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K\\[3ex]
+		& \sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i\\[3ex]
+		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
 	\textbf{TODO controllare se va bene}
 	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
@@ -488,33 +478,25 @@
 	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
 	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
 	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $i,j$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
-	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo.\smallskip \\
+	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo. La scelta di $M$ ricade sul numero totale dei nodi poiché $x$, potendo assumere al massimo un valore pari al numero di nodi Subscriber, non potrà mai superare tale soglia.\smallskip \\
 	(2.5): Per ogni arco $i,j$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
 	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
 	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
 	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
 	\section{Seconda Formulazione}
-	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sottoproblemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
-	Funzione Obiettivo:
+	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
+	Funzione Obiettivo:\\
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
 	\end{equation}
 	\smallskip \\
-	Vincoli:
+	Vincoli:\\
 	\begin{align}
-		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K
-	\end{align}
-	\begin{align}
-		\sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A
-	\end{align}
-	\begin{align}
-		e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K
-	\end{align}
-	\begin{align}
-		x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K
-	\end{align}
-	\begin{align}
-		e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+		& \sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K\\[3ex]
+		& \sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A\\[3ex]
+		& e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K\\[3ex]
+		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
 	\textbf{TODO controlla}
 	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
@@ -527,7 +509,7 @@
 	Questo vincolo garantisce un legame tra l'attivazione di un arco e il numero di informazioni che passano al suo interno.\\
 	I vincoli (2.12) e (2.13) sono analoghi ai vincoli (2.6) e (2.7). 
 	\section{Rilassamento Lagrangiano della Seconda Formulazione}
-	La seconda formulazione, con le modifiche apportate ai vincoli rispetto alla prima, risulta facilmente rilassabile usando il metodo lagrangiano, permettendo dunque di ottenere una funzione obiettivo separabile in sottoproblemi indipendenti, uno per ogni arco della rete. \smallskip \\
+	La seconda formulazione, con le modifiche apportate ai vincoli rispetto alla prima, risulta facilmente rilassabile usando il metodo lagrangiano, permettendo dunque di ottenere una funzione obiettivo separabile in sotto-problemi indipendenti, uno per ogni arco della rete. \smallskip \\
 	Prima di procedere col rilassamento si definiscono $k \times i$ penalità lagrangiane: $\lambda^k_i$ con $k$ informazione e $i$ nodo. Il numero corrisponde a quanti vincoli sono stati rilassati e in questo caso corrisponde al vincolo (2.9) che deve essere rispettato per ogni possibile combinazione di $i$ e $k$. \smallskip \\
 	Si riscrive il vincolo nella forma di uguaglianza a zero:
 	\begin{equation}
@@ -575,14 +557,14 @@
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
-	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sottoproblema indipendente definito $LR$.
+	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sotto-problema indipendente definito $LR$.
 	\begin{equation}
 		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
 	\begin{equation}
 		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
 	\end{equation}
-	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sottoproblema per l'arco su cui è definita.\\
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sotto-problema per l'arco su cui è definita.\\
 	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per l'informazione $k$:
 	\begin{equation}
 		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
@@ -696,7 +678,7 @@
 		x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, t \in NodiTarget_k, (i,j) \in A
 	\end{align}
 	\begin{align}
-		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N,\forall t \in NodiTarget_k, k \in K
+		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N, t \in NodiTarget_k, k \in K
 	\end{align}
 	La definizione di $b^{kt}_i$ diventa:
 	\begin{equation}
@@ -710,7 +692,7 @@
 	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
 	\subsection{Nuove Condizioni di Attivazione}
 	A seguito della ridefinizione delle variabili decisionali, occorre riformulare le condizioni di scelta per l'attivazione degli archi, l'instradamento delle informazioni e la selezione dei nodi da servire.\\
-	Tali condizioni si ricalcolano seguendo lo stesso procedimento del rilassamento lagrangiano svolto in precedenza:
+	Tali condizioni vengono ricalcolate seguendo il medesimo procedimento di rilassamento lagrangiano descritto in precedenza (2.5 e 3.1):
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
@@ -722,41 +704,66 @@
 			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
 		\end{split}
 	\end{equation}
-	Poiché per ogni informazione $k$ e per ogni target $t$ esiste un unico nodo di origine $o$ e un unico target $ta$ che è pari a $t$ stesso:
+	Essendo unici il nodo di origine $o$ e il nodo target $ta$, per ogni informazione $k$ e target $t$, le rispettive sommatorie presentano un unico termine, e possono quindi essere rimosse. Inoltre, poiché $ta$ e $t$ indicano lo stesso nodo, è possibile sostituire $ta$ con $t$: 
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
-	Da qui la funzione obiettivo si può dividere in due parti indipendenti, ognuna utilizzata per ricavare la condizione di attivazione delle relative variabili decisionali.\\
-	La prima permette di ricavare le condizioni per $e^k_{ij}$ e $x^{kt}_{ij}$:
+	La funzione obiettivo può essere suddivisa in due sotto-problemi indipendenti, ciascuno utilizzato per ricavare le condizioni di attivazione delle relative variabili decisionali al loro interno.\\
+	Il primo sotto-problema permette di ricavare le condizioni per $e^k_{ij}$ e $x^{kt}_{ij}$:
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}\sum_{i,j \in A}( c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij})
 		\end{split}
 	\end{equation}
-	Per l'attivazione di $e^k_{ij}$ occorre avere un guadagno nella funzione obiettivo nel caso in cui l'arco sia attivo rispetto al caso in cui rimanga disattivato:
+	Al fine di attivare $e^k_{ij}$ si confronta il caso attivo con quello disattivo, mirando a una riduzione del valore della funzione obiettivo:
 	\begin{equation}
 		c_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}<0
 	\end{equation}
-	Nello specifico, se $(\lambda^{kt}_i-\lambda^{kt}_j)<0$, poiché genera un guadagno, si pone $x^{kt}_{ij}=1$ altrimenti $x^{kt}_{ij}=0$. \\
-	La seconda permette di ricavare la condizione per $y^k_t$:
+	Nello specifico, se $(\lambda^{kt}_i-\lambda^{kt}_j)<0$, si pone $x^{kt}_{ij}=1$ altrimenti $x^{kt}_{ij}=0$.\\
+	Il secondo sotto-problema permette di ricavare la condizione per $y^k_t$:
 	\begin{equation}
 		\begin{split}
 			\min \sum_{k \in K}(\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
-	Sviluppando l'equazione essa porta alla condizione descritta in precedenza, rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$.
+	Lo sviluppo dell'equazione porta alla condizione descritta in precedenza (3.11), rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$. \newpage
+	\subsection{Formulazione Completa}
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+	\end{equation}
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N, t \in NodiTarget_k, k \in K\\[3ex]
+		& \sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A\\[3ex]
+		& x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, t \in NodiTarget_k, (i,j) \in A\\[3ex]
+		& x^{kt}_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} && \forall (i,j) \in A, k \in K\\[3ex]
+		& y^k_t \in \{0,1\} && \forall k \in K, t \in NodiTarget_k
+	\end{align}
 	
-	\chapter{Implementazione}
-	\section{Parlare di come viene scelta M}
-	M è scelto come il numero totale dei nodi perché è impossibile in quanto nodi loro stessi che il numero di subscribers siano maggiori
-	della somma dei nodi (N $\geq$ numero subscribers in quanto loro nodi stessi).
-	\section{Upper bound}
+	\chapter{Implementazione Algoritmica}
+	In questo capitolo si definisce la meccanica di funzionamento reale dell'algoritmo e come è stato implementato.
+	Innanzitutto bisogna definire che l'obiettivo è partendo da un UpperBound scelto euristicamente in quando ottimale richiederebbe tempi di calcolo computazionalmente elevati.
+	Questo Bound viene utilizzato per il calcolo del Lower bound ottimo e quindi la risoluzione del problema.
+	Principalmente si presentano 3 tipologie di algoritmi:
+	Algoritmi Cplex (linguaggio cplex e python), algoritmo lagrangiano (python) e algoritmo dijkstra(python).
+	\section{Formulazioni senza scelte parziali}
+	\subsection{Dijkstra imparziale}
+	\subsection{Prima Formulazione}
+	\subsection{Seconda Formulazione}
+	\subsection{Lagrangiano}
+	\section{Formulazione Con scelta parziale}
+	\subsection{Meccanica del upper che scende}
+	\subsection{Dijkstra a scenari}
+	\subsection{Formulazione Cplex}
+	\subsection{Lagrangiano}
+	\subsection{Dijkstra a costi pesati}
 	\section{Knapsack}
-	\section{Scelta step}
-	\section{Possibile algoritmo di mostraggio risultato o distribuito o correzione di quello del tipo}
-	\section{errore lagrangiano}
+	\chapter{Analisi Risultati}
+	\section{Caso rotto e ricalcolo}
 	K= [0]
 	
 	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -778,6 +785,10 @@
 	C= {(0, 3): 8, (0, 1): 9, (0, 2): 2, (0, 6): 1, (0, 4): 2, (0, 7): 7, (0, 5): 8, (1, 2): 8, (2, 5): 7, (2, 4): 1, (3, 7): 5, (3, 2): 1, (3, 6): 1, (5, 3): 5, (5, 1): 3, (6, 3): 9, (7, 3): 9, (7, 2): 7, (1, 8): 7, (3, 8): 3, (2, 8): 7, (6, 8): 1, (7, 8): 1, (6, 9): 10}
 	
 	u= {(0, 3): 16, (0, 1): 11, (0, 2): 20, (0, 6): 20, (0, 4): 13, (0, 7): 23, (0, 5): 7, (1, 2): 1, (2, 5): 16, (2, 4): 18, (3, 7): 25, (3, 2): 12, (3, 6): 6, (5, 3): 5, (5, 1): 9, (6, 3): 9, (7, 3): 12, (7, 2): 4, (1, 8): 21, (3, 8): 24, (2, 8): 8, (6, 8): 25, (7, 8): 1, (6, 9): 13}
+	\section{caso x}
+	\section{Modifica di alpha}
+	\section{Modifica di variabile x}
+	\chapter{Conclusioni}
 	%Ora vediamo un elenco numerato:         %crea un elenco numerato
 	%\begin{enumerate}
 	%\item primo oggetto
