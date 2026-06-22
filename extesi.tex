@@ -1367,19 +1367,19 @@ for k in K:
 		b[k][t][t] = -y[(k, t)]
 \end{lstlisting}}
 \subsubsection{Calcolo Costi Penalizzati}
-\noindent La funzione per il calcolo dei costi penalizzati viene modificata in modo da restare coerente con l'aggiornamento della formula decisionale per l'attivazione degli archi (3.2.3), la quale si aspetta un controllo su tutti i nodi target che si vogliono raggiungere e non solo sull'informazione $k$ e il nodo $i$ corrente.
+\noindent La funzione per il calcolo dei costi penalizzati viene modificata in modo da restare conforme con l'aggiornamento della formula decisionale per l'attivazione degli archi (3.2.3). Quest'ultima, infatti, in aggiunta alla versione precedente, richiede un controllo di tutti i nodi target che si intendono raggiungere.
 {\footnotesize \begin{lstlisting}[language=Python]
-		for (k,i,j) in d:
-		costo = C[i,j]
-		for t in NodiTarget[k]:
+for (k,i,j) in d:
+	costo = C[i,j]
+	for t in NodiTarget[k]:
 		if(lam[(k,t,i)]-lam[(k,t,j)])<0:
-		costo += (lam[(k,t,i)]-lam[(k,t,j)])
-		d[(k,i,j)] = costo
-		if(d[(k,i,j)]<0):
+			costo += (lam[(k,t,i)]-lam[(k,t,j)])
+	d[(k,i,j)] = costo
+	if(d[(k,i,j)]<0):
 		ePerKnapsack.append((k,i,j))
 \end{lstlisting}}
 \subsubsection{Knapsack}
-All'interno del metodo implementato per la risoluzione del problema dello zaino, l'unico aggiornamento riguarda la determinazione del valore associato alle $x$ che in caso di attivazione dell'arco dovranno assumere valore binario in relazione al valore delle $\lambda$.
+All'interno del metodo implementato per la risoluzione del problema dello zaino, l'unico aggiornamento riguarda la determinazione del valore delle $x$ che, in caso di attivazione dell'arco, dovranno assumere un valore binario dipendente dalle penalità lagrangiane.
 {\footnotesize \begin{lstlisting}[language=Python]
 		...
 		e[(k,i,j)] = 1.0
@@ -1389,7 +1389,7 @@ All'interno del metodo implementato per la risoluzione del problema dello zaino,
 		...
 \end{lstlisting}}
 \subsubsection{Calcolo del Lower Bound Attuale}
-\noindent L'algoritmo per il calcolo del Lower Bound viene riscritto per riflettere la nuova funzione obiettivo lagrangiana (3.22) derivante dal rilassamento della terza formulazione.
+\noindent L'algoritmo per il calcolo del Lower Bound viene riscritto per riflettere la nuova funzione obiettivo lagrangiana (3.22), derivata dal rilassamento della terza formulazione.
 {\footnotesize \begin{lstlisting}[language=Python]
 		Lb=0.0
 		for (i,j) in A:
