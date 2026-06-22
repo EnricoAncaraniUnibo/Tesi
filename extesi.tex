@@ -1346,23 +1346,23 @@ for soluzioneTemp in soluzioniTemp:
 	\end{lstlisting}}
 	\subsection{Terza formulazione}
 	\subsubsection{Lagrangiano}
-	La terza formulazione viene implementata espandendo le funzioni già sviluppate per la seconda. In particolare, sono stati aggiunti i blocchi logici per la gestione della nuova variabile decisionale $y$, rispettando le modalità proposte dalla teoria(3.2.3). \\
+	L'implementazione della terza formulazione usa come base le funzioni già sviluppate per la seconda, adattandole per consentire la gestione sia della variabile decisionale nuova sia di quelle vecchie modificate, in accordo con la teoria (3.2.2). \\
 \subsubsection{Calcola Y}
-A tale scopo, è stata introdotta una nuova funzione usata per determinare l'attivazione di $y$. Essa segue il ragionamento descritto nel paragrafo (3.2.3).
+A tale scopo, è stata definita una nuova funzione usata per determinare l'attivazione della variabile $y$, seguendo la condizione estrapolata dal rilassamento lagrangiano (3.2.3).
 {\footnotesize \begin{lstlisting}[language=Python]
-		for k in K:
-		for t in NodiTarget[k]:
+for k in K:
+	for t in NodiTarget[k]:
 		if lam[(k,t,t)]-lam[(k,t,NodoOrigine[k])]< P:
-		y[(k,t)]=1
+			y[(k,t)]=1
 		else:
-		y[(k,t)]=0
+			y[(k,t)]=0
 \end{lstlisting}}
 \subsubsection{Calcola B}
-Per rispettare la definizione teorica della variabile $b$ (3.15), si implementa un metodo di aggiornamento che opera in funzione dei valori assunti da $y$ e lo si richiama a ogni iterazione in modo da avere sempre le $b$ concordanti con i valori di $y$.
+Per rispettare la definizione teorica della variabile $b$ (3.15), si implementa un metodo di aggiornamento che opera in funzione dei valori assunti da $y$. Tale metodo viene richiamato a ogni iterazione, garantendo la coerenza tra le due variabili durante l'esecuzione dell'algoritmo.
 {\footnotesize \begin{lstlisting}[language=Python]
-		b = {k: {t: {i: 0 for i in N} for t in NodiTarget[k]} for k in K}
-		for k in K:
-		for t in NodiTarget[k]:
+b = {k: {t: {i: 0 for i in N} for t in NodiTarget[k]} for k in K}
+for k in K:
+	for t in NodiTarget[k]:
 		b[k][t][NodoOrigine[k]] = y[(k, t)]
 		b[k][t][t] = -y[(k, t)]
 \end{lstlisting}}
