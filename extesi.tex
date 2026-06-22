@@ -1381,65 +1381,65 @@ for (k,i,j) in d:
 \subsubsection{Knapsack}
 All'interno del metodo implementato per la risoluzione del problema dello zaino, l'unico aggiornamento riguarda la determinazione del valore delle $x$ che, in caso di attivazione dell'arco, dovranno assumere un valore binario dipendente dalle penalità lagrangiane.
 {\footnotesize \begin{lstlisting}[language=Python]
-		...
-		e[(k,i,j)] = 1.0
-		for t in NodiTarget[k]:
-		if(lam[(k,t,i)]-lam[(k,t,j)])< 0:
+...
+e[(k,i,j)] = 1.0
+for t in NodiTarget[k]:
+	if(lam[(k,t,i)]-lam[(k,t,j)])< 0:
 		x[(k,t,i,j)]=1
-		...
+...
 \end{lstlisting}}
 \subsubsection{Calcolo del Lower Bound Attuale}
 \noindent L'algoritmo per il calcolo del Lower Bound viene riscritto per riflettere la nuova funzione obiettivo lagrangiana (3.22), derivata dal rilassamento della terza formulazione.
 {\footnotesize \begin{lstlisting}[language=Python]
-		Lb=0.0
-		for (i,j) in A:
-		for k in K:
+Lb=0.0
+for (i,j) in A:
+	for k in K:
 		Lb += C[i,j]*e[(k,i,j)]
 		for t in NodiTarget[k]:
-		Lb += (lam[(k,t,i)]-lam[(k,t,j)])*x[(k,t,i,j)]
-		for k in K:
-		for t in NodiTarget[k]:
+			Lb += (lam[(k,t,i)]-lam[(k,t,j)])*x[(k,t,i,j)]
+for k in K:
+	for t in NodiTarget[k]:
 		Lb += P*(1-y[(k,t)])
 		for i in N:
-		Lb -= lam[(k,t,i)]*b[k][t][i]
+			Lb -= lam[(k,t,i)]*b[k][t][i]
 \end{lstlisting}}
 \subsubsection{Calcolo dello Step e Aggiornamento delle Penalità}
-Per quanto riguarda il calcolo dello step e il successivo aggiornamento delle penalità lagrangiane, la logica algoritmica rimane invariata. L'unica modifica introdotta, riguarda la dimensionalità delle variabili coinvolte, le quali saranno indicizzate su tre parametri al posto dei precedenti due.
+Per quanto riguarda il calcolo dello step e il successivo aggiornamento delle penalità lagrangiane, la logica dell'algoritmo rimane invariata. L'unica modifica introdotta, riguarda la dimensione delle variabili coinvolte, le quali saranno indicizzate su tre parametri al posto dei precedenti due.
 {\footnotesize \begin{lstlisting}[language=Python]
-		subGradienti = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
-		...
-		lam[(k,t,i)] = lam[(k,t,i)] + valoreDiCambio *subGradienti[(k,t,i)]
+subGradienti = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
+...
+lam[(k,t,i)] = lam[(k,t,i)] + valoreDiCambio *subGradienti[(k,t,i)]
 \end{lstlisting}}
 \subsubsection{Main Loop}
 Il ciclo principale, invece, si modifica per gestire le chiamate alle varie funzioni descritte precedentemente oltre all'introduzione della nuova variabile decisionale $y$ all'interno della logica del problema.
 {\footnotesize \begin{lstlisting}[language=Python]
-		y = {(k,t):0 for k in K for t in NodiTarget[k]}
-		lam = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
-		d = {(k,i,j):0 for k in K for (i,j) in A}
-		e = {(k,i,j):0 for k in K for (i,j) in A}
-		x = {(k,t,i,j):0.0 for k in K for t in NodiTarget[k] for (i,j) in A}
-		b = calcolaB(y)
-		ePerKnapsack = []
-		ultimiLowerBounds = [0]
-		Lb=0.0
-		alpha = 0.1
-		it_max=10000
-		alphaterazioni=0
-		iterazioni=0
-		UbEuristicoFormattato = TrovaSoluzioniEuristiche()
-		while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
-		iterazioni+=1
-		ePerKnapsack=[]
-		e = {(k,i,j):0 for k in K for (i,j) in A}
-		x = {(k,t,i,j):0 for k in K for t in NodiTarget[k] for (i,j) in A}
-		CalcolaY(lam, y)
-		b = calcolaB(y)
-		CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
-		KnapSack(ePerKnapsack,d,e,x,lam)
-		Lb = calcolaMin(lam,b,y,e,x)
-		ultimiLowerBounds.append(Lb)
-		...
-		aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
+y = {(k,t):0 for k in K for t in NodiTarget[k]}
+lam = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
+d = {(k,i,j):0 for k in K for (i,j) in A}
+e = {(k,i,j):0 for k in K for (i,j) in A}
+x = {(k,t,i,j):0.0 for k in K for t in NodiTarget[k] for (i,j) in A}
+b = calcolaB(y)
+ePerKnapsack = []
+ultimiLowerBounds = [0]
+Lb=0.0
+alpha = 0.1
+it_max=10000
+alphaterazioni=0
+iterazioni=0
+UbEuristicoFormattato = TrovaSoluzioniEuristiche()
+while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
+	iterazioni+=1
+	ePerKnapsack=[]
+	e = {(k,i,j):0 for k in K for (i,j) in A}
+	x = {(k,t,i,j):0 for k in K for t in NodiTarget[k] for (i,j) in A}
+	CalcolaY(lam, y)
+	b = calcolaB(y)
+	CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
+	KnapSack(ePerKnapsack,d,e,x,lam)
+	Lb = calcolaMin(lam,b,y,e,x)
+	ultimiLowerBounds.append(Lb)
+	...
+	aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
 \end{lstlisting}}
 \subsubsection{Cplex}
 \subsubsection{Python}
