@@ -1,0 +1,1659 @@
+\documentclass[12pt,a4paper,twoside]{report}
+\usepackage[italian]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{amsthm}
+\oddsidemargin=30pt \evensidemargin=20pt
+\hyphenation{sil-la-ba-zio-ne pa-ren-te-si}
+\usepackage{tgtermes}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{listings}
+\lstset{frame=tb,
+	aboveskip=3mm,
+	belowskip=3mm,
+	tabsize=3
+}
+\makeatletter
+% Capitoli numerati
+\def\@makechapterhead#1{%
+	\vspace*{-80pt}% spazio dall'alto pagina
+	{\parindent \z@ \raggedright \normalfont
+		\Huge\bfseries
+		\thechapter\quad #1\par\nobreak
+		\vskip 20pt
+}}
+
+% Capitoli NON numerati
+\def\@makeschapterhead#1{%
+	\vspace*{-80pt}% spazio dall'alto pagina
+	{\parindent \z@ \raggedright
+		\normalfont
+		\Huge\bfseries
+		#1\par\nobreak
+		\vskip 20pt
+}}
+
+\makeatother
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			
+			% Nome ufficiale dell'Ateneo: NON modificare.
+			{{\Large{\textsc{Alma Mater Studiorum $\cdot$ Universit\`a di
+							Bologna}}}} \rule[0.1cm]{15.8cm}{0.1mm}
+			\rule[0.5cm]{15.8cm}{0.6mm}
+			
+			% ------------------------------------------------------------------
+			% DIPARTIMENTO / CORSO DI LAUREA
+			% ------------------------------------------------------------------
+			% Selezionare il corso di Laurea di riferimento, cancellando le opzioni non necessarie.
+			%
+			{\small{\bf TODO Dipartimento di Informatica --- Scienza e Ingegneria\\
+					Corso di Laurea Triennale in Ingegneria e Scienze informatiche}}
+		\end{center}
+		
+		\vspace{15mm}
+		\begin{center}
+			% ------------------------------------------------------------------
+			% TITOLO DELLA TESI
+			% ------------------------------------------------------------------
+			% Sostituire "TITOLO DELLA TESI" con il titolo completo della propria tesi.
+			% Suggerimenti:
+			% - Usare MAIUSCOLO per il titolo principale, se richiesto dalle linee guida.
+			% - Evitare abbreviazioni non standard.
+			{\LARGE{\bf TODO}}\\
+			\vspace{3mm}
+			
+			\vspace{19mm}
+			% ------------------------------------------------------------------
+			% SETTORE SCIENTIFICO DI RIFERIMENTO (OPZIONALE)
+			% ------------------------------------------------------------------
+			% Questa riga è opzionale. Puoi:
+			% - Sostituire "Settore Scientifico di Riferimento" con il nome dell'insegnamento
+			%   o ambito disciplinare da cui nasce la tesi (es. "Machine Learning", "Calcolo Numerico").
+			% - Oppure, se non richiesto dal tuo Corso di Laurea, puoi COMMENTARE
+			%   l'intera riga anteponendo un % all'inizio.
+			{\large{\bf TODO}}
+		\end{center}
+		
+		\vspace{30mm}
+		\par
+		\noindent
+		\begin{minipage}[t]{0.50\textwidth}
+			% ------------------------------------------------------------------
+			% RELATORE
+			% ------------------------------------------------------------------
+			% Sostituire:
+			% - "Chiar.ma Prof." con il titolo corretto del relatore:
+			%    * "Chiar.mo Prof." / "Chiar.ma Prof.ssa"
+			%    * oppure "Prof." / "Prof.ssa" / "Dott." / "Dott.ssa"
+			%   a seconda di quanto concordato con il/la relatore/relatrice.
+			% - "NOME RELATORE" con Nome e Cognome del relatore.
+			{\large{\bf Relatore:\\
+					Chiar.ma Prof.\\
+					TODO}} \\[5mm]
+			
+			% ------------------------------------------------------------------
+			% CORRELATORE (FACOLTATIVO)
+			% ------------------------------------------------------------------
+			% Se HAI un correlatore:
+			%   - Sostituisci "Chiar.mo Prof." con il titolo accademico corretto.
+			%   - Sostituisci "NOME CORRELATORE" con Nome e Cognome del correlatore.
+			%
+			% Se NON hai un correlatore:
+			%   - Commenta il blocco qui sotto anteponendo % a ciascuna riga,
+			%     oppure cancellalo.
+			\large{\bf Correlatore: \\
+				Chiar.mo Prof. \\
+				TODO}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.47\textwidth}\raggedleft
+			% ------------------------------------------------------------------
+			% NOME DELLAUREANDO / LAUREANDA
+			% ------------------------------------------------------------------
+			% Sostituire "NOME LAUREANDO" con:
+			%   Nome Cognome
+			% esattamente come compare nei documenti ufficiali.
+			{\large{\bf Presentata da:\\
+					TODO}}
+		\end{minipage}
+		
+		\vspace{10mm}
+		\begin{center}
+			% ------------------------------------------------------------------
+			% APPELLO, DATA E ANNO ACCADEMICO
+			% ------------------------------------------------------------------
+			% "NUMERO Appello":
+			%   - Sostituire con il numero dell'appello di laurea (es. "I Appello", "II Appello")
+			%     secondo le indicazioni della Segreteria/CdS.
+			%
+			% "Sessione MESE ANNO":
+			%   - Sostituire con la data ufficiale della seduta di laurea
+			%
+			% "Anno Accademico 20xx/20xx":
+			%   - Sostituire con l'Anno Accademico corretto (es. "Anno Accademico 2025/2026").
+			{\large{\bf Sessione MESE ANNO \\}}
+			{\large{\bf Anno Accademico 20TODO/20xx\\}}
+		\end{center}
+	\end{titlepage}
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	\cleardoublepage
+	\tableofcontents
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	
+	\chapter*{Sommario}
+%	\setcounter{page}{5}
+	\thispagestyle{plain}
+	TODO
+	IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica che ha alla base l'utilizzo di oggetti intelligenti. 
+	Per oggetti intelligenti si intendono quei dispositivi, macchine o attrezzature che si possono connettere a internet per trasmettere, ricevere dati o elaborarli.
+	All'interno di questa sfera, uno dei metodi di comunicazione più utilizzati è quello basato su un modello Publish/Subscribe che consente lo scambio di dati tra dispositivi della rete senza la necessità di connessioni dirette tra loro.
+	Per funzionare si utilizza il protocollo MQTT, uno dei protocolli più diffusi per lo scambio di messaggi, il quale si basa su una struttura con 3 tipologie di dispositivi connessi: Publisher, Subscriber e Broker.
+	I Publisher una volta ottenuti dei dati tramite sensori di vario genere, li pubblica, rendendoli disponibili nella rete. I dati per spostarsi all'interno della rete utilizzano i broker cioè vari punti/server di connessione, i quali permettono il passaggio di dati per poi infine arrivare ai Subscribers per la lettura e l'elaborazione.
+	Questa tesi riprende il lavoro effettuato da un collega nell'anno 21-22 approfondendo e sviluppando i casi di test con particolare attenzione a quelle che sono le caratteristiche che 
+	possono portare criticità al calcolo della soluzione ottima di percorso per il flusso dei dati.
+	La tesi del collega si basa sull'idea di costruire un sistema distribuito sfruttando le proprietà matematiche del rilassamento Lagrangiano, dove ogni nodo conosce solamente i propri vicini.
+	\chapter{Introduzione}     
+	\vspace{-0.5cm}        
+	\section{Iot (Internet of Things)}    
+	\vspace{-0.3cm}          
+	Il termine Iot nasce come acronimo per indicare quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti". Quest'ultima ha avuto particolare rilevanza nell'ultimo periodo storico, andando a rivoluzionare il modo in cui si raccolgono e si processano le informazioni sia in ambito domestico sia industriale. \smallskip \\
+	Un dispositivo definito intelligente o più comunemente chiamato "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni in cui tra le più importanti è presente lo scambio di informazioni. \smallskip \\
+	In questa tesi ci si sofferma particolarmente sui "sensori", dispositivi chiave per lo scambio di messaggi in una rete IoT.
+	Un sensore è un dispositivo che rileva un cambiamento nel mondo fisico, lo traduce in un segnale digitale e poi lo diffonde ad altri dispositivi, i quali lo utilizzeranno per prendere decisioni. \smallskip \\
+	Una possibile criticità risiede proprio in questa parte del funzionamento, se una decisione deve essere presa con tempestività, anche la rete di trasmissione dovrà essere veloce e efficiente.
+	\vspace{-0.5cm}
+	\section{Publish/Subscribe}
+	\vspace{-0.3cm}   
+	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
+	In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
+	Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
+	Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\linewidth]{publish-subscribe}
+		\caption[Immagine di funzionamento di una rete Publish/Subscribe]{Immagine di funzionamento di una rete Publish/Subscribe}
+		\label{fig:publish-subscribe}
+	\end{figure}
+	\section{La Difficoltà del Percorso Ottimo}
+	In un sistema moderno, per garantire la velocità di una rete è cruciale trovare il percorso ottimo per la trasmissione dei dati, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale.
+	\subsection{Grafo}
+	Uno dei metodi migliori per poter descrivere una rete di dispositivi connessi è tramite un grafo. Usando questa struttura, i dispositivi vengono rappresentati tramite dei nodi e i collegamenti tramite degli archi. \begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Grafo}
+		\caption[Immagine di un grafo con costi e capacità degli archi]{Immagine di un grafo con costi e capacità degli archi}
+		\label{fig:grafo}
+	\end{figure}\newpage 
+	\noindent L'uso di un grafo risulta una scelta efficiente perché, per reti semplici, consente di mostrare in modo naturale sia i componenti della rete sia le relazioni tra essi e grazie alla sua flessibilità permette inoltre di aggiungere varie proprietà agli elementi rappresentati, rendendo possibile modellare scenari complessi con facilità.
+	\subsection{Centralizzazione}
+	Un altro aspetto fondamentale del problema riguarda la centralizzazione dell'elaborazione della rete.
+	In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
+	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
+	\subsubsection{Peer-To-Peer}
+	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
+	
+	\section{Problema di Ottimizzazione}
+	Il problema descritto è così definito come un problema di ottimizzazione, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
+	Questo tipo di problema è descrivibile utilizzando un modello matematico:
+	\begin{equation}
+		min/max\ \sum_i c_ix_i
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		Ax \geq  b
+	\end{equation}
+	\vspace{-0.6cm}
+	\begin{equation}
+		Bx \geq  d 
+	\end{equation}
+	\vspace{-0.6cm}
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ e $B$ le matrici dei coefficienti del problema, $b$ e $d$ i vettori delle costanti per i vincoli.\smallskip \\
+	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo un limite inferiore per la soluzione del problema originale.
+	\subsection{Rilassamento Continuo}
+	Il rilassamento più intuitivo è quello continuo, dove se il problema presenta la variabile decisionale come intera, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza della variabile e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
+	Questo approccio trasforma il problema intero in un problema di programmazione lineare continua, per il quale esistono algoritmi efficienti. Lo spazio delle soluzioni ammissibili, tuttavia, è più ampio e il valore ottimo del problema rilassato potrebbe non essere sempre applicabile al problema originale.
+	\begin{equation}
+		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
+	\end{equation}
+	\subsection{Rilassamento Lagrangiano}
+	Un rilassamento particolarmente utile è quello lagrangiano, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange. Quest'ultimo funge da penalità: più ci si allontana dal rispetto del vincolo, maggiore sarà il peggioramento del valore della funzione obiettivo, allontanandolo dall'ottimo. Il risultato è una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
+	\subsubsection{Spiegazione Matematica}
+	Si considera un problema di minimizzazione P:
+	\begin{equation}
+		z(P)=min\ cx 
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		Ax \geq  b
+	\end{equation}
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Con $c$ il vettore dei costi, x la variabile decisionale, A la matrice dei coefficienti del problema, b il vettore delle costanti per il vincolo. \smallskip \\
+	Con il rilassamento lagrangiano si rilassa il vincolo $Ax \geq b$ aggiungendo una penalità $\lambda$ non negativa e inserendolo all'interno della funzione obiettivo.
+	\begin{equation}
+		z(P)=min\ cx,\ Ax-b \geq 0
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)=min\ cx-\lambda(Ax-b)
+	\end{equation}
+	vincoli:
+	\begin{equation}
+		x \in \{0, 1\}
+	\end{equation}
+	Il motivo del segno $-$ è dovuto al fatto che il vincolo è soddisfatto quando assume un valore maggiore o uguale a 0, quindi dato che $\lambda$ è definita non negativa, se il vincolo non viene soddisfatto come nel caso in cui sia negativo, sottrarlo dalla funzione obiettivo ne aumenta il valore, allontanandolo dal minimo ricercato.\vspace{0.15cm}  \\  Il valore ottimale del problema originale $z(P)$ sarà maggiore o al massimo uguale al valore ottimale del problema rilassato $L(\lambda)$. 
+	\begin{align}
+		z(P)\geq L(\lambda),\ \ \ \ \forall \lambda \geq 0
+	\end{align}
+	Questo perché non avendo l'obbligo di rispettare il vincolo, che è stato rilassato, lo spazio delle soluzioni ammissibili è più ampio e quindi si possono trovare soluzioni che il problema originale non può considerare corrette, le quali, avendo meno costrizioni, avranno un valore più basso o al massimo uguale alla soluzione dell'originale. 
+	\begin{enumerate}
+		\item Si prende una $x^*$ che è soluzione ottima di $z(P)$ quindi è ammissibile e il vincolo è rispettato.
+		\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha: \begin{equation}
+			cx^* \geq cx^* - \lambda(ax^*-b)
+		\end{equation}
+		\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore di $x^*$:
+		\begin{equation}
+			L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)
+		\end{equation}\vspace{-0.75cm}
+		\item Unendo le diseguaglianze: \begin{equation}
+			z(P)=cx^* \geq cx^* - \lambda(ax^*-b)\geq L(\lambda) \rightarrow z(P)\geq L(\lambda)
+		\end{equation}
+		
+	\end{enumerate}
+	%
+	%In ogni caso dove il vincolo è rispettato, il valore di $\lambda(Ax-b)$ è non negativo:
+	%\begin{equation}
+	%	z(P)=cx \geq cx-\lambda(Ax-b)=L(\lambda)
+	%\end{equation}
+	%In caso invece non fosse rispettato i due risultati non sarebbero confrontabili in quanto non esisterebbe una soluzione ammissibile per l'originale. \smallskip \\
+	Grazie a questa proprietà, si può pensare di massimizzare la funzione lagrangiana per ottenere il migliore limite inferiore possibile per il problema originale e si può descrivere con la formula del duale lagrangiano:
+	\begin{equation}
+		z(D_L)=\max_{\lambda\geq0}\ [L(\lambda)]
+	\end{equation}
+	Una delle tecniche che può essere usata per la ricerca della soluzione del duale lagrangiano è il metodo del subgradiente.
+	\subsubsection{Metodo del Subgradiente}
+	Il metodo del subgradiente è un metodo iterativo usato per massimizzare una funzione concava, come quella lagrangiana, con lo scopo di ottenere il migliore limite inferiore per il problema originale. Nello specifico, si può utilizzare per calcolare i moltiplicatori di Lagrange associati ai vincoli rilassati che forniscono il risultato $L(\lambda)$ più alto. \smallskip \\
+	La funzione lagrangiana non è perfettamente una curva liscia ma è composta di segmenti, ciascuno corrispondente a una soluzione ottima $\bar{x}$ per il $\lambda$ specificato.
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[
+				axis lines=left,
+				xlabel={$\lambda$},
+				ylabel={$L(\lambda)$},
+				xmin=0, xmax=5,
+				ymin=0, ymax=4.5,
+				xtick=\empty,
+				ytick=\empty,
+				width=8cm,
+				height=6cm,
+				clip=false
+				]
+				\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+				{-0.3667*(x-3)^2 + 3.5};
+				\addplot[red, thick, smooth] coordinates {(0.2,0.86) (1.8,3.21)};  
+				\addplot[red, thick, smooth] coordinates {(1.2,2.55) (2.8,3.72)};  
+				\addplot[red, thick, smooth] coordinates {(2.2,3.5) (3.8,3.5)};    
+				\addplot[red, thick, smooth] coordinates {(3.2,3.72) (4.8,2.55)};   
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Immagine di una funzione lagrangiana con inviluppo}
+		\label{fig:lagrangiana_inviluppo}
+	\end{figure}
+	\newpage
+	\noindent 
+	Data una lambda, si ottiene una $\bar{x}$ tale che:
+	\begin{equation}
+		L(\bar{\lambda})=\min (cx-\bar{\lambda}(Ax-b))=c\bar{x}-\bar{\lambda}(A\bar{x}-b)
+	\end{equation}
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[
+				axis lines=left,
+				xlabel={$\lambda$},
+				ylabel={$L(\lambda)$},
+				xmin=0, xmax=5,
+				ymin=0, ymax=4.5,
+				xtick=\empty,
+				ytick=\empty,
+				width=8cm,
+				height=6cm,
+				clip=false
+				]
+				\addplot[blue, very thick, smooth, domain=0.5:4.7, samples=100]
+				{-0.3667*(x-3)^2 + 3.5};
+				\addplot[black, densely dotted, thin] coordinates {(1.4,0) (1.4,2.561)};
+				\addplot[black, densely dotted, thin] coordinates {(0,2.561) (1.4,2.561)};
+				\node at (axis cs:1.4, 2.561) [anchor=south, yshift=4pt] {$L(\bar{\lambda})$};
+				\node at (axis cs:1.4, 0) [anchor=north, yshift=-4pt] {$\bar{\lambda}$};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Valore di $L(\bar{\lambda})$ corrispondente a una $\bar{\lambda}$ scelta}
+		\label{fig:Determinisco di L scelta una lambda}
+	\end{figure} \\
+	Riprendendo la soluzione $\bar{x}$ derivata dalla $\bar{\lambda}$ data, si può ridefinire $L(\lambda)$, cioè il valore ottimo in una qualsiasi altra lambda generica, come o minore o uguale della soluzione trovata ora:
+	\begin{equation}
+		L(\lambda)=\min (cx-\lambda(Ax-b))\leq c\bar{x}-\lambda(A\bar{x}-b)
+	\end{equation}
+	Questo perché la disequazione confronta elementi diversi, nel lato sinistro è presente una $x$ ottima per la nuova $\lambda$, mentre nel lato destro è presente la $\bar{x}$, ottima per $\bar{\lambda}$ ma non necessariamente per $\lambda$. Poiché le si stanno valutando con la stessa $\lambda$, allora per definizione, la $x$ ottima darà un valore minore o, nel caso in cui anche $\bar{x}$ sia ottima per $\lambda$, uguale.\smallskip \\
+	Sottraendo ora l'equazione (1.17) dalla (1.18) si ottiene:
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq c\bar{x}-\lambda(A\bar{x}-b)-(c\bar{x}-\bar{\lambda}(A\bar{x}-b))
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq -\lambda(A\bar{x}-b)+\bar{\lambda}(A\bar{x}-b)
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)-L(\bar{\lambda})\leq (A\bar{x}-b)(-\lambda+\bar{\lambda})
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)\leq L(\bar{\lambda})+(A\bar{x}-b)(-\lambda+\bar{\lambda})
+	\end{equation}
+	Si definisce $s=-(A\bar{x}-b)$ e si trasforma l'equazione: \\
+	\begin{equation}
+		L(\lambda)\leq L(\bar{\lambda})+s(\lambda-\bar{\lambda})
+	\end{equation}
+	\smallskip \\
+	L'obiettivo della risoluzione del duale lagrangiano è, a ogni iterazione, di far crescere $L(\lambda)$ fino a trovare il valore massimo.
+	In termini matematici si vuole che $L(\lambda)$ sia maggiore di $L(\bar{\lambda})$ e che quindi la loro differenza sia positiva.
+	L'unico modo di ottenere questo risultato è di avere il termine: $s(\lambda-\bar{\lambda})>0$ e che quindi sommandolo a $L(\bar{\lambda})$ ne aumenti il valore. Per garantire che ciò accada si opta per spostare $\lambda$ rispetto a $\bar{\lambda}$ usando lo stesso verso del subgradiente $s$ in modo che:
+	\begin{equation}
+		\lambda = \bar{\lambda}+\theta s
+	\end{equation}
+		$$\downarrow$$
+	\begin{equation}
+		\lambda - \bar{\lambda} = \theta s
+	\end{equation}
+	\begin{equation}
+		s(\lambda-\bar{\lambda})=s(\theta s)=\theta s^2
+	\end{equation}
+	Di conseguenza per un $s\neq 0$ e per un passo $\theta > 0$ il valore risultante sarà sicuramente positivo e porterà ad una $\lambda$ maggiore rispetto a $\bar{\lambda}$. \smallskip \\
+	Anche la scelta del parametro $\theta$ è fondamentale, un passo troppo grande potrebbe far saltare la soluzione ottima portando alla divergenza, mentre un passo troppo corto potrebbe convergere alla soluzione ottima troppo lentamente.
+	\subsection{Formulazione Matematica del Problema}
+	Nei problemi di ottimizzazione, uno degli aspetti più cruciali risiede nel modo in cui le relazioni tra le variabili vengono tradotte in vincoli.
+	Uno stesso problema può essere modellato attraverso diversi insiemi di vincoli, ciascuno dei quali si definisce come una formulazione del problema. \smallskip \\
+	Due formulazioni si definiscono equivalenti se possiedono lo stesso identico insieme di soluzioni ammissibili intere. Tuttavia, nonostante l'equivalenza sull'insieme delle soluzioni, le loro prestazioni computazionali possono differire di molto, rendendo la scelta della formulazione un fattore chiave per la qualità del modello matematico creato.
+	\subsubsection{Debole Contro Forte}
+	I risolutori, nel cercare la soluzione ottima, non operano direttamente con le variabili intere, ma applicano il rilassamento continuo permettendo loro di assumere valori frazionari.
+	È proprio durante questa fase di calcolo che si distinguono due tipologie di formulazioni diverse:
+	\begin{itemize}
+		\item Formulazione debole: Dopo aver effettuato il rilassamento, il risolutore è libero di assegnare alle variabili valori frazionari molto distanti dai limiti interi reali. Di conseguenza il modello può ottenere un valore ottimo rilassato anche molto distante dall'ottimo intero.
+		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie favorendo l'ottenimento di valori interi per le variabili e di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
+	\end{itemize}
+	\section{Ambiente di Sviluppo}
+	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
+	CPLEX Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
+	Per garantire semplicità è richiesta solamente la struttura del problema, i dati e la configurazione di avvio.
+	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano al suo interno è complesso. \smallskip \\
+	Google Colab invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
+	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo CPLEX con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
+	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx e Matplotlib.pyplot.
+	\begin{figure}[h]
+		\centering
+		\begin{minipage}{0.75\textwidth}
+			\includegraphics[width=1\linewidth]{Cplex}
+			\caption[Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio]{Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio\\}
+			\label{fig:cplex}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.75\textwidth}
+			\includegraphics[width=1\linewidth]{GoogleColab}
+			\caption[Immagine dell'ambiente di sviluppo di Google Colab]{Immagine dell'ambiente di sviluppo di Google Colab}
+			\label{fig:google}
+		\end{minipage}
+	\end{figure}
+	\chapter{Descrizione del Problema e delle Formulazioni}
+	\section{Scenario del Problema}
+	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
+	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
+	L'obiettivo della tesi è sviluppare, a partire dal lavoro di un collega, un algoritmo efficiente per il calcolo del costo del percorso ottimale. L'algoritmo dovrà essere in grado di gestire sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti. \smallskip \\
+	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
+	\begin{itemize}
+		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
+		\item Costo del canale (quanto è dispendioso in termini economici o computazionali utilizzare quel determinato percorso).
+		\item Peso di un'informazione (quanta banda occupa la singola informazione all'interno del canale).
+	\end{itemize}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Rete}
+		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
+		\label{fig:rete}
+	\end{figure}
+	
+	\section{Simboli Globali}
+	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
+	è necessario mappare le variabili reali in un contesto informatico/matematico:
+	\begin{itemize}
+		\item $K$, è l'insieme contenente le informazioni da inviare o ricevere.
+		\item $N$, è l'insieme contenente tutti i nodi della rete.
+		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe fanno parte dei generatori delle informazioni.
+		\item $Broker$, è l'insieme contenente i nodi di mezzo che non devono nè generare nè consumare le informazioni ma solo ritrasmettere.
+		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe devono ricevere le informazioni.
+		\item $A$, è l'insieme contenente gli archi della rete quindi i canali di comunicazione.
+		\item $NodoOrigine_k$, è l'insieme contenente per ogni informazione $k$ il suo nodo di origine.
+		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
+		\item $b^k_i$, è una variabile che, a seconda del nodo $i$ e della informazione $k$, indica il ruolo di $i$ rispetto a $k$: se è maggiore di $0$ allora $i$ è un generatore e produce $b^k_i$ informazioni $k$, se è uguale a $0$ allora $i$ è un nodo di trasmissione e invece se è uguale a $-1$ allora $i$ è un nodo richiedente di $k$.
+		\item $a_k$, è una variabile che indica per ogni informazione $k$ quanta banda occupa all'interno di un canale.
+		\item $c_{ij}$, è l'insieme contenente per ogni arco $i,j$ il suo costo.
+		\item $u_{ij}$, è l'insieme contenente per ogni arco $i,j$ la sua capacità.
+		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
+		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
+		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
+		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
+		\item $M$, è una variabile di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
+	\end{itemize}
+	\section{Prima Formulazione}
+	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
+	\end{equation}
+	\smallskip \\
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lr_i} x^k_{jt} = 1 && \forall t \in NodiTarget_k, k \in K\\[3ex]
+		& \sum_{j \in Lr_i}x^k_{ji}=\sum_{j \in Lt_i}x^k_{ij} && \forall i \in Broker, k \in K\\[3ex]
+		& Me^k_{ij}\geq x^k_{ij} && \forall(i,j) \in A, k \in K\\[3ex]
+		& \sum_{k \in K}a^k(e^k_{ij}+e^k_{ji})\leq u_{ij} && \forall i \in N, j \in Lt_i\\[3ex]
+		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
+	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
+	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
+	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
+	Questo vincolo permette di garantire che ogni Subscriber riceva l'informazione che ha richiesto, né di meno né di più. 
+	Questo deve valere per ogni Subscriber e per ogni informazione richiesta.\smallskip \\
+	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
+	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
+	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $i,j$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
+	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo. La scelta di $M$ ricade sul numero totale dei nodi poiché $x$, potendo assumere al massimo un valore pari al numero di nodi Subscriber, non potrà mai superare tale soglia.\smallskip \\
+	(2.5): Per ogni arco $i,j$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
+	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
+	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
+	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
+	\section{Seconda Formulazione}
+	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
+	\end{equation}
+	\smallskip \\
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i} x^k_{ji}=b^k_i && \forall i \in N-\{NodoOrigine_k\}, k \in K\\[3ex]
+		& \sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A\\[3ex]
+		& e^k_{ij}\leq x^k_{ij} \leq e^k_{ij}|NodiTarget_k| && \forall(i,j) \in A, k \in K\\[3ex]
+		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
+	\end{align}
+	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
+	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
+	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
+	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.\\
+	(2.10): Per ogni arco $i,j$ si verifica che la somma della banda occupata dalle informazioni passanti non sia mai maggiore della capacità massima.	
+	La differenza del vincolo rispetto alla versione della prima formulazione (2.5) risiede nella gestione delle capacità: anziché considerare ogni arco come singolo e bidirezionale con una capacità condivisa tra le due direzioni, ora si considera come due archi distinti monodirezionali con capacità indipendenti. Questa scelta viene effettuata per semplificare il rilassamento lagrangiano, rendendo il vincolo dipendente dal singolo arco.\\
+	(2.11): Per ogni arco $i,j$ e per ogni informazione $k$, il valore della variabile $x$ è legato alla variabile $e$: se l'arco è disattivato nessuna informazione può transitarvi, altrimenti se è attivo il numero di informazioni può essere scelto in un intervallo da uno fino al numero di Subscriber richiedenti.
+	Questo vincolo garantisce un legame tra l'attivazione di un arco e il numero di informazioni che passano al suo interno.\\
+	I vincoli (2.12) e (2.13) sono analoghi ai vincoli (2.6) e (2.7). 
+	\section{Rilassamento Lagrangiano della Seconda Formulazione}
+	La seconda formulazione, con le modifiche apportate ai vincoli rispetto alla prima, risulta facilmente rilassabile usando il metodo lagrangiano, permettendo dunque di ottenere una funzione obiettivo separabile in sotto-problemi indipendenti, uno per ogni arco della rete. \smallskip \\
+	Prima di procedere col rilassamento si definiscono $k \times i$ penalità lagrangiane: $\lambda^k_i$ con $k$ informazione e $i$ nodo. Il numero corrisponde a quanti vincoli sono stati rilassati e in questo caso corrisponde al vincolo (2.9) che deve essere rispettato per ogni possibile combinazione di $i$ e $k$. \smallskip \\
+	Si riscrive il vincolo nella forma di uguaglianza a zero:
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	Questo viene successivamente incorporato nella funzione obiettivo insieme alle penalità:
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
+	\end{equation}
+	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che il vincolo rilassato venga rispettato su tutte le combinazioni di $k$ e $i$ come da esso definito (2.9).\\
+	(2.15): Il $+$ prima delle sommatorie è una scelta di comodità. In caso di violazione del vincolo, il segno di $\lambda$ si adatta al segno del termine $(\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)$ usando il metodo del subgradiente. Ciò tenderà a rendere il prodotto tra i due positivo e allontanerà la soluzione dal minimo, penalizzando il mancato rispetto del vincolo. \smallskip \\
+	Si ha quindi:
+	\begin{equation}
+		\begin{split}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij} & \\ - \sum_{k \in K}\sum_{i \in N} \lambda^k_i\sum_{j \in Lr_i}x^k_{ji} -\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\  -\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		\end{split}
+	\end{equation}
+	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà della linearità della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $i,j$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{i,j \in A}$. \smallskip \\
+	Successivamente, il termine $\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}$ viene rinominato cambiando $j \rightarrow i$ e $i \rightarrow j$:
+	\begin{equation}
+		\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}
+	\end{equation}
+	Ne consegue:
+	\begin{equation}
+		\begin{split}
+			L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\-\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}- \sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} (\lambda^k_i - \lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N} \lambda^k_i b^k_i
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+	\end{equation}
+	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà della linearità. \smallskip \\
+	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non influenza il risultato.
+	\begin{equation}
+		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sotto-problema indipendente definito $LR$.
+	\begin{equation}
+		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	\begin{equation}
+		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
+	\end{equation}
+	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sotto-problema per l'arco su cui è definita.\\
+	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per l'informazione $k$:
+	\begin{equation}
+		\min c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+	\end{equation}
+	Si presentano due casi: se l'arco è disattivato, il costo è pari a 0, poiché $e^k_{ij}=0$ implica $x^k_{ij}=0$ per il vincolo (2.11).
+	Se invece è attivato, $d^k_{ij}$ rappresenta il costo dell'attivazione. Nel caso in cui $d^k_{ij}$ sia minore di 0 conviene attivare l'arco in quanto si ha un guadagno. \smallskip \\
+	Per calcolare $d^k_{ij}$ si hanno già tutti i valori necessari: $c_{ij}$ è noto, si pone $e^k_{ij}=1$ poiché si vuole confrontare se si ha un guadagno dall'attivazione dell'arco e
+	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$. Poiché l'obiettivo è minimizzare, se il termine $(\lambda^k_i-\lambda^k_j)$ fosse positivo allontanerebbe dalla soluzione ottima e quindi $x^k_{ij}$ assume il valore minimo consentito dal vincolo (2.11). Se invece fosse negativo contribuirebbe alla minimizzazione e quindi $x^k_{ij}$ assume il valore massimo consentito che è pari a $NodiTarget_k$. \smallskip \\
+	Determinati quali archi attivare e per quali informazioni, si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
+	Questo problema è riconducibile al classico problema del Knapsack in cui l'arco rappresenta lo zaino con capacità $u_{ij}$ e le informazioni $k$ sono gli oggetti con peso $a_k$ e valore $-d^k_{ij}$ che si vuole inserire all'interno.
+	Poiché il Knapsack massimizza il valore degli oggetti inseriti e il mio guadagno è rappresentato in negativo da $d^k_{ij}$, invertendone il segno rendo compatibili i due problemi.
+	\subsection{Aggiornamento delle Penalità Lagrangiane}
+	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente come descritto nella sezione (1.4.2). \smallskip \\
+	Si prende il vincolo rilassato e da esso si definisce il subgradiente:
+	\begin{equation}
+		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		s^k_i=\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i
+	\end{equation}
+	La variabile $s^k_i$ rappresenta quanto il vincolo rilassato (2.9) viene violato nella soluzione corrente e dipende da $k$ e $i$ poiché il vincolo stesso è definito per ogni combinazione di informazione $k$ e nodo $i$.
+	Definito il subgradiente, lo si calcola insieme alle variabili $x^k_{ij}$ e si aggiornano le penalità $\lambda^k_i$ secondo la formula $\lambda^k_i=\lambda^k_i+ \theta s^k_i$. \smallskip \\
+	Per scegliere $\theta$ si utilizza l'equazione: 
+	\begin{equation}
+		\theta = \alpha\frac{\text{UpperBound}-\text{LowerBound}}{||s||^2}
+	\end{equation}
+	I parametri sono scelti in modo da garantire passi ampi in caso di lontananza dall'ottimo, favorendo una convergenza rapida, e passi più piccoli nelle iterazioni vicine all'ottimo, evitando la divergenza dalla soluzione.
+	\begin{itemize}
+		\item $\alpha$ è un moltiplicatore che viene dimezzato ogni volta che il LowerBound non migliora per un numero prefissato di iterazioni. Se il LowerBound non migliora è probabile si stia lavorando con passi troppo elevati.
+		\item $\text{UpperBound}-\text{LowerBound}$ rappresenta l'ampiezza dell'intervallo in cui si trova la soluzione ottima. Se i due bound sono distanti si consiglia di effettuare passi più grandi mentre al contrario bisogna lavorare con passi più piccoli e una maggiore precisione.
+		\item $||s||^2$ è la norma al quadrato del vettore dei subgradienti. Un valore elevato indica una violazione significativa del vincolo e dividendo per esso si riduce il passo, evitando aggiornamenti eccessivi di $\lambda$. Al contrario, una norma di valore piccolo indica che si è vicini all'ottimo e quindi dividendo per esso si aumenta il passo evitando una convergenza troppo lenta.
+	\end{itemize}
+	\chapter{Miglioramento della Formulazione Rispetto ai Percorsi Parziali}
+	\section{Nuova Formulazione}
+	Le formulazioni descritte in precedenza presentano un limite nel fondamento logico: i vincoli (2.2) e (2.9) impongono che ogni Subscriber riceva l'informazione richiesta. Di conseguenza, se anche un solo destinatario non è raggiungibile, tali vincoli risultano violati, il problema non ammette soluzioni e non è possibile perciò calcolare una soluzione parziale, ovvero una in cui solo un sottoinsieme di riceventi viene soddisfatto.
+	Per superare questa limitazione si introduce una nuova variabile decisionale binaria $y^k_i \in \{0,1\}$ che indica se un determinato nodo $i$ va servito con l'informazione $k$.
+	Questa variabile ricopre un ruolo chiave in due aspetti del problema: la funzione obiettivo del problema e la definizione di $b^k_i$.\smallskip \\
+	Per la sua integrazione si aggiorna la seconda formulazione:
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+	\end{equation}
+	dove P è la penalità per la mancata consegna a un nodo richiedente.
+	\begin{equation}
+	b^k_i =
+	\begin{cases}
+		\sum_{t \in NodiTarget_k}y^k_t & \text{se } i \text{ Publisher}\\
+		-y^k_i & \text{se } i \text{ Subscriber}\\
+		0 & \text{se } i \text{ Broker} 
+	\end{cases}
+	\end{equation}
+	P è scelto con un valore sufficientemente grande affinché, se un nodo è raggiungibile, risulti sempre più conveniente servirlo piuttosto che pagare la penalità. Idealmente si può pensare a P come il costo complessivo di tutti gli archi della rete sommato a uno. In questo modo, anche un percorso che utilizza tutti gli archi risulta preferibile al mancato servizio del nodo. 
+	\begin{equation}
+		P = (\sum_{i,j \in A} c_{ij})+1
+	\end{equation}
+	Per decidere quali nodi servire e quali no, si applica lo stesso procedimento basato sul rilassamento lagrangiano già eseguito in precedenza per le variabili $x$ e $e$.
+	Si riprende dunque il lagrangiano ottenuto al punto 2.5 (equazione (2.21)) e vi si aggiunge il nuovo termine della funzione obiettivo in quanto non altera i calcoli già effettuati:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+		\end{split}
+	\end{equation}
+	Si isola dunque la seconda parte dell'equazione, contenente la nuova variabile, per ottenere la condizione di attivazione di $y$:
+	\begin{equation}
+		\min P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+	\end{equation}
+	Si separano i nodi nelle diverse tipologie e si sviluppano i prodotti con le corrispondenti $\lambda$:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{o \in NodoOrigine_k}\lambda^k_ {o} b^k_{o}+\sum_{t \in NodiTarget_k}\lambda^k_{t} b^k_{t})
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
+		\end{split}
+	\end{equation}
+	(3.6)$\rightarrow$(3.7): Nel passaggio tra le due equazioni, si sostituiscono le variabili $b$ con i valori stabiliti dalla definizione.
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
+	\end{equation}
+	(3.8): La sommatoria sui nodi di origine viene rimossa perché, per ogni $k$, esiste un unico nodo che genera l'informazione.
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}) 
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}P-y^k_t(\lambda^k_ {o} -\lambda^k_{t}+P)
+	\end{equation}
+	La condizione di attivazione di $y^k_t$ si ottiene confrontando il costo nel caso in cui il nodo target $t$ sia servito ($y^k_t=1$) rispetto al caso in cui non lo sia ($y^k_t=0$).
+	Nel momento in cui il costo associato col caso servito risulta minore si ha un guadagno e quindi si attiva $y^k_t$:
+	\begin{equation}
+	 P-\lambda^k_ {o} +\lambda^k_{t}-P< P \rightarrow \lambda^k_{t}-\lambda^k_ {o}< P
+	\end{equation}
+	Pertanto $y^k_t=1$ quando $\lambda^k_{t}-\lambda^k_ {o}< P$, con $t$ nodo target e $o$ nodo origine di $k$.
+	\section{Mancata Convergenza del Lower Bound alla Soluzione Intera}
+	La nuova formulazione presenta una criticità sottile ma rilevante: il vincolo (2.11) modificato si configura come un classico esempio di formulazione debole (1.4.3): 	\begin{align}
+		e^k_{ij}\leq x^k_{ij}\leq e^k_{ij} \sum_{t \in NodiTarget_k}y^k_t && \forall k \in K, (i,j) \in A
+	\end{align}
+	La presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ è la causa diretta di tale debolezza.
+	\subsection{Analisi del Problema nel Dettaglio}
+	Il vincolo lega la variabile $x^k_{ij}$ alla variabile binaria di attivazione $e^k_{ij}$. Seguendo la logica del vincolo ci si aspetterebbe che se non transita alcuna informazione ($x=0$) allora il vincolo imponga $e=0$, mentre nel caso contrario costringa $e=1$. 
+	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t_1 \text{ e } t_2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
+	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco attivo e a favorire quello disattivo, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
+	\subsection{Scrittura in Formulazione Forte}
+	Per eliminare la debolezza del vincolo, si ridefiniscono le variabili $x$, $b$ e $\lambda$ in modo da distinguere il nodo target che l'informazione deve raggiungere.
+	Nascono così le variabili $x^{kt}_{ij}$, $b^{kt}_i$ e $\lambda^{kt}_i$.\\
+	I nuovi vincoli derivanti sono:
+	\begin{align}
+		x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, t \in NodiTarget_k, (i,j) \in A
+	\end{align}
+	\begin{align}
+		\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N, t \in NodiTarget_k, k \in K
+	\end{align}
+	La definizione di $b^{kt}_i$ diventa:
+	\begin{equation}
+		b^{kt}_i =
+		\begin{cases}
+			y^k_i & \text{se } i \text{ Publisher dell'informazione } k \text{ diretta al target } t\\
+			-y^k_i & \text{se } i \text{ Subscriber}\\
+			0 & \text{se } i \text{ Broker} 
+		\end{cases}
+	\end{equation}
+	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
+	\subsection{Nuove Condizioni di Attivazione}
+	A seguito della ridefinizione delle variabili decisionali, occorre riformulare le condizioni di scelta per l'attivazione degli archi, l'instradamento delle informazioni e la selezione dei nodi da servire.\\
+	Tali condizioni vengono ricalcolate seguendo il medesimo procedimento di rilassamento lagrangiano descritto in precedenza (2.5 e 3.1):
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+		\end{split}
+	\end{equation}
+	$$\downarrow$$
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
+		\end{split}
+	\end{equation}
+	Essendo unici il nodo di origine $o$ e il nodo target $ta$, per ogni informazione $k$ e target $t$, le rispettive sommatorie presentano un unico termine, e possono quindi essere rimosse. Inoltre, poiché $ta$ e $t$ indicano lo stesso nodo, è possibile sostituire $ta$ con $t$: 
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+		\end{split}
+	\end{equation}
+	La funzione obiettivo può essere suddivisa in due sotto-problemi indipendenti, ciascuno utilizzato per ricavare le condizioni di attivazione delle relative variabili decisionali al loro interno.\\
+	Il primo sotto-problema permette di ricavare le condizioni per $e^k_{ij}$ e $x^{kt}_{ij}$:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}\sum_{i,j \in A}( c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij})
+		\end{split}
+	\end{equation}
+	Al fine di attivare $e^k_{ij}$ si confronta il caso attivo con quello disattivo, mirando a una riduzione del valore della funzione obiettivo:
+	\begin{equation}
+		c_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}<0
+	\end{equation}
+	Nello specifico, se $(\lambda^{kt}_i-\lambda^{kt}_j)<0$, si pone $x^{kt}_{ij}=1$ altrimenti $x^{kt}_{ij}=0$.\\
+	Il secondo sotto-problema permette di ricavare la condizione per $y^k_t$:
+	\begin{equation}
+		\begin{split}
+			\min \sum_{k \in K}(\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+		\end{split}
+	\end{equation}
+	Lo sviluppo dell'equazione porta alla condizione descritta in precedenza (3.11), rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$. \newpage
+	\subsection{Terza Formulazione Completa}
+	Funzione Obiettivo:\\
+	\begin{equation}
+		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+	\end{equation}
+	Vincoli:\\
+	\begin{align}
+		& \sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}=b^{kt}_i && \forall i \in N, t \in NodiTarget_k, k \in K\\[3ex]
+		& \sum_{k \in K}a^ke^k_{ij}\leq u_{ij} && \forall (i,j) \in A\\[3ex]
+		& x^{kt}_{ij}\leq e^k_{ij} && \forall k \in K, t \in NodiTarget_k, (i,j) \in A\\[3ex]
+		& x^{kt}_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
+		& e^k_{ij} \in \{0,1\} && \forall (i,j) \in A, k \in K\\[3ex]
+		& y^k_t \in \{0,1\} && \forall k \in K, t \in NodiTarget_k
+	\end{align}
+	
+	\chapter{Implementazione Algoritmica}
+	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi.
+	Nella prima fase si calcola un Upper Bound mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità della soluzione ottenuta e la sua distanza dall'ottimo.\smallskip \\
+	Le principali classi di algoritmi implementate sono:
+	\begin{itemize}
+		\item Algoritmo Cplex: Il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
+		\item Algoritmo Lagrangiano: Algoritmo implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
+		\item Algoritmo euristico per l'Upper Bound: Algoritmo euristico inspirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
+	\end{itemize}
+	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
+	\subsection{Upper Bound Euristico}
+	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
+	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
+	Ad ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e per ciascuna di esse viene eseguita una variante dell'algoritmo di Dijkstra. Questo integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target, aggiornando dinamicamente le capacità residue della rete e rimuovendo gli archi che risultano completamente saturi. L'algoritmo, infine, restituisce i percorsi che hanno il costo totale complessivo minimo.\smallskip \\
+	Le variabili in input coincidono con quelle definite nel paragrafo (2.2).\\
+	Nella prima parte di codice si definiscono le strutture globali utilizzate per memorizzare il cammino ottimo e il corrispondente costo.
+	{\footnotesize \begin{lstlisting}[language=Python]
+percorsoOttimo=[]
+costoTot = np.inf
+	\end{lstlisting}}
+	\noindent All'inizio di ogni iterazione dell'algoritmo viene creata una copia delle strutture necessarie per i calcoli oltre al mescolamento dell'ordine di elaborazione delle informazioni.
+	{\footnotesize \begin{lstlisting}[language=Python]
+costo = 0.0
+strade = A.copy()
+CapacitàUsata = u.copy()
+informazioni = K.copy()
+random.shuffle(informazioni)
+percorsi = []
+	\end{lstlisting}}
+	\noindent L'algoritmo procede iterando su ogni informazione e ad ogni iterazione salva le capacità residue oltre all'insieme di nodi da visitare filtrati per raggiungibilità.
+	{\footnotesize \begin{lstlisting}[language=Python]
+Capacità=CapacitàUsata.copy()
+unvisitedNodes = [i for i in N]
+for g,l in Lr.items():
+	if len(l)==0:
+		unvisitedNodes.remove(g)
+nodoDiPartenza = NodoOrigine[informazione]
+if nodoDiPartenza not in unvisitedNodes:
+	unvisitedNodes.append(nodoDiPartenza)
+	\end{lstlisting}}
+	\noindent Successivamente viene applicata una variante dell'algoritmo di Dijkstra con controllo sulle capacità per determinare l'albero dei cammini minimi. Per l'elaborazione viene utilizzata una tabella in grado di memorizzare il costo del cammino minimo temporaneo e il relativo nodo predecessore. In caso di nodi non raggiungibili l'algoritmo viene fermato forzatamente.
+	{\footnotesize \begin{lstlisting}[language=Python]
+while(len(unvisitedNodes)>0):
+	for (i,j) in strade:
+		if(i==nodoProtagonista and j in unvisitedNodes):
+			if(tabella[j][1]>tabella[i][1]+C[i,j]):
+				tabella[j][1]=tabella[i][1]+C[i,j]
+				tabella[j][2]=nodoProtagonista
+	unvisitedNodes.remove(nodoProtagonista)
+	indiceProssimoNodo = -1
+	for j in unvisitedNodes:
+		pretarget = tabella[j][2]
+		if (pretarget,j) in Capacità:
+			if Capacità[(pretarget,j)]-a[informazione]>=0:
+				if(tabella[j][1]<tabella[indiceProssimoNodo][1]) or 
+				indiceProssimoNodo == -1:
+					indiceProssimoNodo = j
+	if indiceProssimoNodo==-1:
+		unvisitedNodes=[]
+	else:
+		pretarget = tabella[indiceProssimoNodo][2]
+		Capacità[(pretarget,indiceProssimoNodo)]-=a[informazione]
+		nodoProtagonista = indiceProssimoNodo
+	\end{lstlisting}}
+	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target. Con l'obiettivo di velocizzare i calcoli viene effettuato un controllo e rimozione degli archi risultanti saturi.
+	{\footnotesize \begin{lstlisting}[language=Python]
+nodiFinali = NodiTarget[informazione].copy()
+random.shuffle(nodiFinali)
+for nodoFinale in nodiFinali:
+	percorso=[]
+	percorso.append(nodoFinale)
+	if(tabella[nodoFinale][2]==None):
+		costo=np.inf
+		break
+	while(tabella[nodoFinale][2]!=None):
+		preFinale= tabella[nodoFinale][2]
+		percorso.append(preFinale)
+		CapacitàUsata[(preFinale,nodoFinale)]=CapacitàUsata[(preFinale
+		,nodoFinale)]-a[informazione]
+		if(CapacitàUsata[(preFinale,nodoFinale)]==0):
+			strade.remove((preFinale,nodoFinale))
+		costo += C[preFinale,nodoFinale]
+		nodoFinale = preFinale
+	percorsi.append(informazione)
+	percorsi.append(percorso)
+	\end{lstlisting}}
+	Al termine del ciclo di controllo su tutte le informazioni, se la soluzione è ammissibile viene confrontata con la precedente migliore e se la precedente risulta peggiore in termini di costo viene sostituita.
+	{\footnotesize 	\begin{lstlisting}[language=Python]
+if(costo<costoTot):
+	costoTot=costo
+	percorsoOttimo=percorsi
+	\end{lstlisting}}
+	\subsection{Prima Formulazione}
+	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in python, escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
+	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
+	{\footnotesize \begin{lstlisting}
+minimize
+sum(k in K, i in N, j in Lr[i]) Costi[j][i] * x[k][j][i]; 
+subject to {
+	forall(k in K, t in NodiTarget[k]) 
+	sum(j in Lr[t]) x[k][j][t] == 1; 
+	
+	forall(k in K, i in Brokers)
+	sum(j in Lr[i]) x[k][j][i] == sum(j in Lt[i]) x[k][i][j];
+	
+	forall(k in K, <i,j> in A)
+	bigM*e[k][i][j] >= x[k][i][j]; 
+	
+	forall(i in N, j in Lt[i])
+	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
+}	
+	\end{lstlisting}}
+	\noindent Nel codice in python la scrittura si complica e le definizioni si fanno più complesse.
+	Inizialmente vengono definite e generate le variabili decisionali con i rispettivi vincoli associati: (2.6) e (2.7).
+	{\footnotesize \begin{lstlisting}[language=Python]					 
+modello = cplex.Cplex()
+modello.objective.set_sense(modello.objective.sense.minimize)
+x = [(k,i,j)for k in K for (i,j) in A]
+modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
+lb=[0]*len(x),
+types=["I"]*len(x))
+e = [(k,i,j) for k in K for (i,j) in A]
+modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
+lb=[0]*len(e),
+ub=[1]*len(e),
+types=["B"]*len(e)) 
+	\end{lstlisting}}
+	\noindent Generate le variabili funzionali si procede con la definizione della funzione obiettivo e dei vincoli del problema.\\ Funzione Obiettivo (2.1):
+	{\footnotesize \begin{lstlisting}[language=Python]
+temp_X = []
+temp_Coeffs=[]
+for k in K:
+	for i in N:
+		for j in Lr[i]:
+			if(j,i) in A:
+				temp_Coeffs.append(C[j,i])
+				temp_X.append(f"x_{k}_{j}_{i}")
+modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
+	\end{lstlisting}}
+	\noindent Primo vincolo (2.2):
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for t in NodiTarget[k]:
+		temp_X = []
+		temp_Coeffs=[]
+		for j in Lr[t]:
+			if(j,t) in A:
+				temp_X.append(f"x_{k}_{j}_{t}")
+				temp_Coeffs.append(1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[1])
+	\end{lstlisting}}
+	\noindent Secondo vincolo (2.3):
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for i in Brokers:
+		temp_X=[]
+		temp_Coeffs=[]
+		for j in Lr[i]:
+			if(j,i) in A:
+				temp_X.append(f"x_{k}_{j}_{i}")
+				temp_Coeffs.append(1)
+		for j in Lt[i]:
+			if(i,j) in A:
+				temp_X.append(f"x_{k}_{i}_{j}")
+				temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[0])
+	\end{lstlisting}}
+	\noindent Terzo vincolo (2.4):
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(bigM)
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["G"],rhs=[0])
+	\end{lstlisting}}
+	\noindent Quarto vincolo (2.5):
+	{\footnotesize \begin{lstlisting}[language=Python]
+for i in N:
+	for j in Lt[i]:
+		temp_X=[]
+		temp_Coeffs=[]
+		for k in K:
+			if(i,j) in A:
+				temp_X.append(f"e_{k}_{i}_{j}")
+				temp_Coeffs.append(a[k])
+			if(j,i) in A:
+				temp_X.append(f"e_{k}_{j}_{i}")
+				temp_Coeffs.append(a[k])
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
+	\end{lstlisting}}
+	\subsection{Seconda Formulazione}
+	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamendo lagrangiano, strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
+	\subsubsection{Calcolo Costi Penalizzati}
+	Il calcolo dei costi penalizzati si basa sull'equazione (2.25), la quale quantifica il guadagno associato all'attivazione di un determinato arco. Qualora tale operazione determini una riduzione del valore della funzione obiettivo, l'arco viene inserito all'interno di una lista di candidati per una futura elaborazione.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for (k,i,j) in d:
+	if(lam[(k,i)]-lam[(k,j)])<0:
+		d[(k,i,j)]=C[i,j]+((lam[(k,i)]-lam[(k,j)])*len(NodiTarget[k]))
+	else:
+		d[(k,i,j)] = C[i,j]
+	if(d[(k,i,j)]<0):
+		ePerKnapsack.append((k,i,j))
+	\end{lstlisting}}
+	\subsubsection{KnapSack}
+	Al fine di garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem). La capacità massima dello zaino coincide con la capacità dell'arco, il peso degli oggetti da inserire all'interno dello zaino con la banda occupata dall'informazione e il profitto è rappresentato dal valore opposto del costo penalizzato, che viene reso positivo per consentirne l'utilizzo diretto. In caso di attivazione dell'arco la relativa variabile $x$ verrà aggiornata seguendo la logica espressa nel paragrafo (2.5).\\
+	In primo luogo, a ciascun arco vengono associate le informazioni che si ritengono candidate a transitarvi.
+	{\footnotesize \begin{lstlisting}[language=Python]
+kPerArco = {}
+for (k,i,j) in ePerKnapsack:
+	if (i,j) not in kPerArco:
+		kPerArco[(i,j)] = []
+		kPerArco[(i,j)].append(k)
+	\end{lstlisting}}
+	\noindent Successivamente si esegue l'algoritmo dello zaino per ogni arco, traducendo i parametri nelle apposite strutture dati.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for (i,j) in kPerArco.keys():
+	valoriD = []
+	peso = u[(i,j)]
+	pesi = []
+	valoriD.append(0)
+	pesi.append(0)
+	listaK = []
+	listaK.append(None)
+	for k in kPerArco[(i,j)]:
+		valoriD.append(-1*d[(k,i,j)])
+		pesi.append(a[k])
+		listaK.append(k)
+	\end{lstlisting}}
+	\noindent Si procede quindi alla generazione della matrice di programmazione dinamica all'interno della quale vengono memorizzati i valori ottimi dei relativi sotto-problemi, divisi in base alla capacità dello zaino e agli oggetti selezionabili.
+	{\footnotesize \begin{lstlisting}[language=Python]
+tabella = []
+for z in range(len(valoriD)):
+	riga= []
+	for y in range(peso+1):
+		riga.append(0)
+	tabella.append(riga)
+for z in range(1,len(valoriD)):
+	for y in range(1,peso+1):
+		if(y>=pesi[z]):
+			tabella[z][y]=max(tabella[z-1][y],tabella[z-1][y-pesi[z]]+valoriD[z])
+		else:
+			tabella[z][y]=tabella[z-1][y]
+	\end{lstlisting}}
+	\noindent Finito il riempimento della tabella, la soluzione ottima è identificata dalla cella basso a destra nella matrice. Partendo da esso si esegue un controllo a ritroso per identificare le informazioni scelte da far passare e si aggiorna la $e$ e la $x$.
+	{\footnotesize \begin{lstlisting}[language=Python]
+migliore = tabella[len(valoriD)-1][peso]
+rigaDelMigliore = len(valoriD)-1
+colonnaDelMigliore = peso
+while(rigaDelMigliore>0):
+	if(migliore!=tabella[rigaDelMigliore-1][colonnaDelMigliore]):
+		k = listaK[rigaDelMigliore]
+		e[(k,i,j)] = 1.0
+		if(lam[k,i]-lam[k,j]>=0):
+			x[(k,i,j)]=1
+		else:
+			x[(k,i,j)]=len(NodiTarget[k])
+		colonnaDelMigliore = colonnaDelMigliore-pesi[rigaDelMigliore]
+		rigaDelMigliore = rigaDelMigliore-1
+		migliore=tabella[rigaDelMigliore][colonnaDelMigliore]
+	else:
+		rigaDelMigliore = rigaDelMigliore-1
+	\end{lstlisting}}
+	\subsubsection{Calcola Step}
+	Per determinare l'importanza dell'aggiornamento da applicare alle penalità lagrangiane, viene calcolato lo step del subgradiente con la formula descritta (2.28).
+	{\footnotesize \begin{lstlisting}[language=Python]
+listaSubGradienti = []
+for i in N:
+	listaSubGradienti.append( subGradient[(k,i)])
+	norma = np.linalg.norm(listaSubGradienti)
+	norma = norma.item()
+	if(norma!=0):
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1])/(norma**2))
+	else:
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1]))
+	\end{lstlisting}}
+	\subsubsection{Calcolo del Lower Bound attuale}
+	Con l'obettivo di monitorare la convergenza dell'algoritmo e di aggiornare lo step, il valore del Lower Bound viene ricalcolato ad ogni iterazione eseguendo il calcolo della funzione obiettivo lagrangiana (2.20).
+	{\footnotesize \begin{lstlisting}[language=Python]
+Lb=0.0
+for (i,j) in A:
+	for k in K:
+		Lb += d[(k,i,j)]*e[(k,i,j)]
+for k in K:
+	for i in N:
+		Lb -= lam[(k,i)]*b[k][i]
+	\end{lstlisting}}
+	\subsubsection{Aggiornamento Penalità Lagrangiane}
+	Sfruttando lo step precedentemente calcolato, si procede all'aggiornamento delle penalità lagrangiane.
+	{\footnotesize \begin{lstlisting}[language=Python]
+subGradienti = {(k,i):0.0 for k in K for i in N}
+for k in K:
+	for i in N:
+		Sommatoria1 = 0.0
+		Sommatoria2 = 0.0
+		for j in Lt[i]:
+			Sommatoria1 += x[(k,i,j)]
+		for j in Lr[i]:
+			Sommatoria2 += x[(k,j,i)]
+		subGradienti[(k,i)]=Sommatoria1-Sommatoria2-b[k][i]
+for k in K:
+	valoreDiCambio = calcolaValoreDiCambio(lastLb,k,subGradienti,Ub,alpha)
+	for i in N:
+		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
+	\end{lstlisting}}
+	\subsubsection{Main Loop}
+	Infine, le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione il parametro alpha per la riduzione dello step viene dimezzato se non si incontra un miglioramento del Lower Bound per 20 cicli di fila.
+	{\footnotesize \begin{lstlisting}[language=Python]
+lam = {(k,i):0.0 for k in K for i in N}
+d = {(k,i,j):0 for k in K for (i,j) in A}
+e = {(k,i,j):0 for k in K for (i,j) in A}
+x = {(k,i,j):0.0 for k in K for (i,j) in A}
+ePerKnapsack = []
+ultimiLowerBounds = [0]
+Lb=0.0
+alpha = 0.1
+it_max=10000
+alphaterazioni=0
+iterazioni=0
+Ub,percorso = DijkstraEuristico()
+while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
+	iterazioni+=1
+	ePerKnapsack=[]
+	e = {(k,i,j):0 for k in K for (i,j) in A}
+	x = {(k,i,j):0 for k in K for (i,j) in A}
+	CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
+	KnapSack(ePerKnapsack,d,e,x)
+	Lb = calcolaMin(lam)
+	ultimiLowerBounds.append(Lb)
+	if(ultimiLowerBounds[len(ultimiLowerBounds)-1]<=ultimiLowerBounds[len(
+	ultimiLowerBounds)-2]):
+		alphaterazioni+=1
+	if(alphaterazioni>20):
+		alphaterazioni=0
+		alpha=alpha/2
+	else:
+		alphaterazioni=0
+	aggiornaLambda(lam,ultimiLowerBounds,Ub,alpha)
+	\end{lstlisting}}
+	\subsubsection{Cplex}
+	Similmente alla formulazione precedente, l'ambiente Cplex consente una scrittura del codice lineare. In particolare, poiché il vincolo (2.9) incorpora due vincoli distinti (2.2) e (2.3), il modello finale presenta un vincolo in meno rispetto alla prima formulazione.
+	{\footnotesize \begin{lstlisting}
+minimize
+sum(k in K, <i,j> in A) Costi[i][j] * e[k][i][j]; 
+subject to {
+	forall(k in K, i in N : i != NodoOrigine[k]) 
+	sum(j in Lt[i]) x[k][i][j] - sum(j in Lr[i]) x[k][j][i] == b[k][i]; 
+	
+	forall(<i,j> in A)
+	sum(k in K) a[k] * e[k][i][j] <= Capacita[i][j];
+	
+	forall(k in K, <i,j> in A) {
+		e[k][i][j] <= x[k][i][j];
+		x[k][i][j] <= card(NodiTarget[k]) * e[k][i][j];
+	}
+}									 
+	\end{lstlisting}}
+	\subsubsection{Python}
+	Per quanto riguarda l'implementazione in python tramite le API di cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
+	Inizialmente, vengono inizializzate le variabili decisionali con i relativi vincoli associati (2.12) e (2.13).
+	{\footnotesize 	\begin{lstlisting}[language=Python]
+modello = cplex.Cplex()
+modello.objective.set_sense(modello.objective.sense.minimize)
+x = [(k,i,j)for k in K for (i,j) in A] 
+modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
+lb=[0]*len(x),
+types=["I"]*len(x))
+e = [(k,i,j) for k in K for (i,j) in A]
+modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
+lb=[0]*len(e),
+ub=[1]*len(e),
+types=["B"]*len(e))
+	\end{lstlisting}}
+	\noindent Istanziate le variabili, si procede con la definizione della funzione obiettivo e dei vincoli della formulazione.
+	Funzione Obiettivo (2.8):
+	{\footnotesize \begin{lstlisting}[language=Python]
+temp_X = []
+temp_Coeffs=[]
+for k in K:
+	for (i,j) in A:
+		temp_Coeffs.append(C[i,j])
+		temp_X.append(f"e_{k}_{i}_{j}")
+modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
+	\end{lstlisting}}
+	Primo vincolo (2.9):
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for i in N:
+		if i != NodoOrigine[k]:
+			temp_X = []
+			temp_Coeffs=[]
+			for j in Lt[i]:
+				if(i,j) in A:
+					temp_X.append(f"x_{k}_{i}_{j}")
+					temp_Coeffs.append(1)
+			for j in Lr[i]:
+				if(j,i) in A:
+					temp_X.append(f"x_{k}_{j}_{i}")
+					temp_Coeffs.append(-1)
+			modello.linear_constraints.add
+			(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],
+			senses=["E"],rhs=[b[k][i]])
+	\end{lstlisting}}
+	Secondo vincolo (2.10)
+	{\footnotesize \begin{lstlisting}[language=Python]
+for (i,j) in A:
+	temp_X = []
+	temp_Coeffs=[]
+	for k in K:
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(a[k])
+	modello.linear_constraints.add
+	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
+	\end{lstlisting}}
+	Terzo vincolo (2.11)
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(1)
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
+
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(1)
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(-len(NodiTarget[k]))
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])	
+	\end{lstlisting}}
+	\section{Implementazione della Formulazione Con Soluzioni Parziali}
+	\subsection{Dijkstra a Scenari e Meccanismo di Discesa dell'Upper Bound}
+	Per quando riguarda la nuova formulazione, l'approccio alla ricerca di un Upper Bound ammissibile è stato radicalmente cambiato al fine di superare i limiti della precedente versione. Nel modello antecedente dell'algoritmo, l'impossibilità di raggiungere anche un solo nodo target da parte della rispettiva informazioni decretava il fallimento dell'intera esecuzione. Nella nuova versione, divisa in funzioni, il calcolo di un Upper Bound euristico è composto da una base logica che segue la procedura di Dijkstra per i cammini minimi unita con un controllo sulla capacità residua degli archi della rete. La definizione di euristica deriva dalla valutazione, da parte dell'algoritmo, di un sottoinsieme di permutazioni scelte casualmente sia delle informazioni, sia dei target da raggiungere. Le due principali innovazioni introdotte in questa versione consistono nella gestione di scenari multipli di esplorazione delle soluzioni e del meccanismo di stringimento dell'Upper Bound. \smallskip \\
+	La prima novità riguarda la strutturazione di soluzioni seguendo scenari alternativi per la scelta del percorso.
+	Qualora l'algoritmo incontri più strade per il raggiungimento di un nodo target di pari costo, non sceglie casualmente quale memorizzare e utilizzare ma, al contrario, crea uno scenario distinto per ogni strada ottima individuata. Con questa modalità la ricerca del percorso ottimo per le informazioni e target successivi non risente di una decisione casuale, ma viene testata in parallelo insieme agli altri scenari possibili. Al termine del processo vengono estrapolati gli scenari migliori individuati e i relativi costi associati. Al fine di rimanere in linea con l'ideologia di un algoritmo rapido e euristico viene imposto un limite massimo sia alle soluzioni finali sia agli scenari da mantenere attivi durante l'esecuzione.\smallskip \\
+	La seconda novità risiede nella convergenza dell'Upper Bound verso la soluzione ottima. Poiché la determinazione dell'Upper Bound migliore risulta particolarmente dispendiosa nella prima iterazione sebbene si utilizzi una procedura euristica, si adotta una strategia di aggiornamento ripetuto. A intervalli prefissati di iterazioni, l'Upper Bound viene ricalcolato utilizzando il medesimo codice ma aggiungendo una penalizzazione ai costi degli archi sfruttando le penalità lagrangiane.
+	\subsubsection{Algoritmo di Dijkstra con Controllo Capacità}
+	Questa versione dell'algoritmo è stata ottimizzata utilizzando la libreria heapq di python, la quale implementa una struttura dati con priorità per semplificare il codice.
+	{\footnotesize \begin{lstlisting}[language=Python]
+tabella={}
+nodiDaVisitare=[]
+for nodo in N:
+	if nodo == sorgente:
+		tabella[sorgente]=[0,[]]
+	else:
+		tabella[nodo]=[math.inf,[]]
+heapq.heappush(nodiDaVisitare,(0,sorgente))
+nodiVisitati=[]
+while len(nodiDaVisitare)>0:
+	costo,nodo = heapq.heappop(nodiDaVisitare)
+	nodiVisitati.append(nodo)
+	archi = [(i, j) for i, j in A if i == nodo]
+	for i,j in archi:
+		if capacità[(i,j)]>=banda:
+			if tabella[j][0] > tabella[i][0]+costi[(i,j)]:
+				tabella[j][0] = tabella[i][0]+costi[(i,j)]
+				tabella[j][1]=[]
+				tabella[j][1].append(i)
+	if(j not in nodiVisitati):
+		heapq.heappush(nodiDaVisitare,(tabella[j][0],j))
+	else:
+		if tabella[j][0] == tabella[i][0]+costi[(i,j)]:
+			tabella[j][1].append(nodo)
+if tabella[target][0]==math.inf:
+	return []
+costo = tabella[target][0]
+percorsi = ricostruisciPercorsi(target,sorgente,tabella,k)
+return [(costo,percorso) for percorso in percorsi]
+	\end{lstlisting}}
+	\noindent La chiamata alla funzione di Dijkstra modificata viene gestita da un metodo centrale che richiede in ingresso una permutazione delle informazioni. Per ciascuna di esse, la funzione itera su un numero prefissato di sottoinsiemi di target da raggiungere, mescolati casualmente, gestendo in contemporanea i diversi scenari attivi. Nello specifico, all'interno del metodo è stato inserito un meccanismo di controllo per garantire il passaggio gratuito attraverso un arco se esso, per la stessa informazione, è già stato attivato nello scenario corrente.\smallskip \\
+	Per la creazione si procede alla copia della capacità originale della rete e alla definizione della struttura che conterrà i diversi scenari. \\La struttura è pensata in modo da avere per ogni soluzione: 
+	{\footnotesize \begin{lstlisting}[language=Python]
+capacità = u.copy()
+soluzioni = [[0,[],capacità,[],[]]]
+	\end{lstlisting}}
+	La struttura è pianificata in modo da contenere per ogni scenario:
+	\begin{itemize}
+		\item Costo complessivo
+		\item Archi attivi
+		\item Capacità della rete residua
+		\item Target raggiunti
+		\item Target irraggiungibili
+	\end{itemize}
+	Successivamente, l'algoritmo itera su ogni informazione $k$ e su ciascuna permutazione dei nodi target per la relativa informazione. Durante l'iterazione, il metodo considera tutti gli scenari precedentemente memorizzati e, per ogni target, cerca di espanderli. Se il cammino minimo verso il target è univoco, lo scenario corrente viene aggiornato e si prosegue altrimenti, si crea un numero di scenari pari alle alternative ottime individuate. Qualora invece il target risulti non raggiungibile, il nodo viene catalogato come inarrivabile all'interno dello scenario.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in permutazione:
+	soluzioniPerPermutazione = []
+	for permutazioneTarget in permutazioniTarget:
+		for soluzione in soluzioni:
+			soluzioniTemp=[]
+			soluzioniTemp.append(soluzione.copy())
+			for target in permutazioneTarget:
+				nuoviTemp=[]
+				for soluzioneTemp in soluzioniTemp:
+					valori = copy.deepcopy(soluzioneTemp)
+					costiConsiderandoArchiAttivi = copy.deepcopy(C)
+					capacitàConsiderandoArchiAttivi = copy.deepcopy(soluzioneTemp[2])
+					archiAttivi = []
+					for kArco,i,j in soluzioneTemp[1]:
+						if k==kArco:
+							costiConsiderandoArchiAttivi[(i,j)]=0
+							capacitàConsiderandoArchiAttivi[(i,j)] += a[k]
+							archiAttivi.append((i,j))
+					percorsi = Dijkstra(NodoOrigine[k],target,
+					capacitàConsiderandoArchiAttivi,a[k],k,
+					costiConsiderandoArchiAttivi)
+					if len(percorsi)==0:
+						copia = copy.deepcopy(valori)
+						copia[4].append((k,target))
+						nuoviTemp.append
+						([copia[0],copia[1],copia[2],copia[3],copia[4]])
+					else:
+						for i in range(len(percorsi)):
+							costo,archi = percorsi[i]
+							cap = nuovaCapacità(soluzioneTemp[2],archi,a[k]
+							,archiAttivi)
+							copia=copy.deepcopy(valori)
+							copia[1].extend(archi)
+							copia[3].append((k,target))
+							nuoviTemp.append([copia[0]+costo,copia[1],cap,copia[3]
+							,copia[4]])
+				soluzioniTemp=nuoviTemp
+			soluzioniPerPermutazione.extend(soluzioniTemp)
+	soluzioniPerPermutazione.sort(key=lambda s: (-len(s[3]), s[0]))
+	soluzioni=soluzioniPerPermutazione[:soluzioniDaContinuare]
+return soluzioni
+	\end{lstlisting}}
+	\noindent Per l'aggiornamento della capacità degli archi nella rete viene sviluppano una semplice funzione di riduzione dei valori.
+	{\footnotesize \begin{lstlisting}[language=Python]
+cap = capacità.copy()
+for arco in archi:
+if arco not in archiAttivi:
+arco = arco[1:3]
+cap[arco] -= banda
+	\end{lstlisting}}
+	\noindent Per la ricostruzione del percorso si è optato per l'utilizzo di una funzione generatrice ricorsiva. Il metodo risale la rete a ritroso restituendo mediante l'istruzione yield tutti i cammini minimi alternativi individuati.
+	{\footnotesize \begin{lstlisting}[language=Python]
+if nodo == sorgente:
+	yield []
+	return
+for predecessore in tabella[nodo][1]:
+	for percorso in ricostruisciPercorsi(predecessore,sorgente,tabella,k):
+		yield percorso + [(k,predecessore,nodo)]
+	\end{lstlisting}}
+	\noindent Infine, la gestione delle permutazione delle informazioni, la valutazione delle soluzioni e il corretto calcolo del costo della soluzione in caso di target non raggiunti sono coordinate una funzione che funge come punto di partenza dell'intero algoritmo:
+	{\footnotesize \begin{lstlisting}[language=Python]
+for permutazione in permutazioniInformazioni:
+	soluzioni = MainEuristico(permutazione)
+	soluzioniTotali.extend(soluzioni)
+	if len(soluzioniTotali) > soluzioniMax:
+		break
+if len(soluzioniTotali)==0:
+	return
+maxRaggiunti = max(len(soluzione[3]) for soluzione in soluzioniTotali)
+candidati = [soluzione for soluzione in soluzioniTotali if 
+len(soluzione[3])==maxRaggiunti]
+costoMin = min(soluzione[0] for soluzione in candidati)
+migliori = [soluzione for soluzione in candidati if soluzione[0]==costoMin]
+costoMinModificato = costoMin+P*len(migliori[0][4])
+	\end{lstlisting}}
+	\subsubsection{Calcolo dei Costi con Penalità Lagrangiane}
+	Per la convergenza dell'Upper Bound, il metodo centrale viene modificato per integrare nei pesi degli archi le penalità lagrangiane, calcolate dal metodo del rilassamento. È importante evidenziare che i costi utilizzati durante la fase di instradamento non sono più validi per il calcolo del costo complessivo della rete, poiché incrementati dalle $\lambda$. Risulta perciò necessario ricalcolarli per determinare il costo della soluzione.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for soluzioneTemp in soluzioniTemp:
+	costiLambda = {}
+	for i,j in A:
+	costiLambda[(i,j)] = C[(i,j)]+max(0,lam[(k,target,i)]-lam[(k,target,j)])
+	for kArco, i, j in soluzioneTemp[1]:
+		if k == kArco:
+			costiLambda[(i,j)] = 0
+	percorsi = Dijkstra(NodoOrigine[k],target,capacitàConsiderandoArchiAttivi,
+	a[k],k,costiLambda)
+	if len(percorsi)==0:
+		...
+	else:
+		for i in range(len(percorsi)):
+		costo,archi = percorsi[i]
+		costo=0 
+		for kArco, nodoI, nodoJ in archi:
+			if (nodoI,nodoJ) not in archiAttivi:
+			costo += C[(nodoI,nodoJ)]
+		nuoviTemp.append([copia[0]+costo,copia[1],cap,copia[3],copia[4]])
+	\end{lstlisting}}
+	\subsection{Terza formulazione}
+	La terza formulazione viene implementata espandendo le funzioni già sviluppate per la seconda. In particolare, sono stati aggiunti i blocchi logici per la gestione della nuova variabile decisionale $y$, rispettando le modalità proposte dalla teoria (3.2.3). \\
+	\subsubsection{Calcola Y}
+	A tale scopo, è stata introdotta una nuova funzione usata per determinare l'attivazione di $y$. Essa segue il ragionamento descritto nel paragrafo (3.2.3).
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+	for t in NodiTarget[k]:
+		if lam[(k,t,t)]-lam[(k,t,NodoOrigine[k])]< P:
+			y[(k,t)]=1
+		else:
+			y[(k,t)]=0
+	\end{lstlisting}}
+\subsubsection{Calcola B}
+	Per rispettare la definizione teorica della variabile $b$ (3.15), si implementa un metodo di aggiornamento che opera in funzione dei valori assunti da $y$ e lo si richiama a ogni iterazione in modo da avere sempre le $b$ concordanti con i valori di $y$.
+	{\footnotesize \begin{lstlisting}[language=Python]
+b = {k: {t: {i: 0 for i in N} for t in NodiTarget[k]} for k in K}
+for k in K:
+	for t in NodiTarget[k]:
+		b[k][t][NodoOrigine[k]] = y[(k, t)]
+		b[k][t][t] = -y[(k, t)]
+	\end{lstlisting}}
+\subsubsection{Calcolo Costi Penalizzati}
+	\noindent La funzione per il calcolo dei costi penalizzati viene modificata in modo da restare coerente con l'aggiornamento della formula decisionale per l'attivazione degli archi (3.2.3), la quale si aspetta un controllo su tutti i nodi target che si vogliono raggiungere e non solo sull'informazione $k$ e il nodo $i$ corrente.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for (k,i,j) in d:
+	costo = C[i,j]
+	for t in NodiTarget[k]:
+		if(lam[(k,t,i)]-lam[(k,t,j)])<0:
+		costo += (lam[(k,t,i)]-lam[(k,t,j)])
+	d[(k,i,j)] = costo
+	if(d[(k,i,j)]<0):
+		ePerKnapsack.append((k,i,j))
+	\end{lstlisting}}
+	\subsubsection{Knapsack}
+	All'interno del metodo implementato per la risoluzione del problema dello zaino, l'unico aggiornamento riguarda la determinazione del valore associato alle $x$ che in caso di attivazione dell'arco dovranno assumere valore binario in relazione al valore delle $\lambda$.
+	{\footnotesize \begin{lstlisting}[language=Python]
+...
+e[(k,i,j)] = 1.0
+for t in NodiTarget[k]:
+	if(lam[(k,t,i)]-lam[(k,t,j)])< 0:
+		x[(k,t,i,j)]=1
+...
+	\end{lstlisting}}
+	\subsubsection{Calcolo del Lower Bound Attuale}
+	\noindent L'algoritmo per il calcolo del Lower Bound viene riscritto per riflettere la nuova funzione obiettivo lagrangiana (3.22) derivante dal rilassamento della terza formulazione.
+	{\footnotesize \begin{lstlisting}[language=Python]
+Lb=0.0
+for (i,j) in A:
+	for k in K:
+		Lb += C[i,j]*e[(k,i,j)]
+		for t in NodiTarget[k]:
+			Lb += (lam[(k,t,i)]-lam[(k,t,j)])*x[(k,t,i,j)]
+for k in K:
+	for t in NodiTarget[k]:
+		Lb += P*(1-y[(k,t)])
+		for i in N:
+			Lb -= lam[(k,t,i)]*b[k][t][i]
+	\end{lstlisting}}
+	\subsubsection{Calcolo dello Step e Aggiornamento delle Penalità}
+	Per quanto riguarda il calcolo dello step e il successivo aggiornamento delle penalità lagrangiane, la logica algoritmica rimane invariata. L'unica modifica introdotta, riguarda la dimensionalità delle variabili coinvolte, le quali saranno indicizzate su tre parametri al posto dei precedenti due.
+	{\footnotesize \begin{lstlisting}[language=Python]
+subGradienti = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
+...
+lam[(k,t,i)] = lam[(k,t,i)] + valoreDiCambio *subGradienti[(k,t,i)]
+	\end{lstlisting}}
+\subsubsection{Main Loop}
+	Il ciclo principale, invece, si modifica per gestire le chiamate alle varie funzioni descritte precedentemente oltre all'introduzione della nuova variabile decisionale $y$ all'interno della logica del problema.
+	{\footnotesize \begin{lstlisting}[language=Python]
+y = {(k,t):0 for k in K for t in NodiTarget[k]}
+lam = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
+d = {(k,i,j):0 for k in K for (i,j) in A}
+e = {(k,i,j):0 for k in K for (i,j) in A}
+x = {(k,t,i,j):0.0 for k in K for t in NodiTarget[k] for (i,j) in A}
+b = calcolaB(y)
+ePerKnapsack = []
+ultimiLowerBounds = [0]
+Lb=0.0
+alpha = 0.1
+it_max=10000
+alphaterazioni=0
+iterazioni=0
+UbEuristicoFormattato = TrovaSoluzioniEuristiche()
+while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
+	iterazioni+=1
+	ePerKnapsack=[]
+	e = {(k,i,j):0 for k in K for (i,j) in A}
+	x = {(k,t,i,j):0 for k in K for t in NodiTarget[k] for (i,j) in A}
+	CalcolaY(lam, y)
+	b = calcolaB(y)
+	CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
+	KnapSack(ePerKnapsack,d,e,x,lam)
+	Lb = calcolaMin(lam,b,y,e,x)
+	ultimiLowerBounds.append(Lb)
+	...
+	aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
+	\end{lstlisting}}
+	\subsubsection{Cplex}
+	\subsubsection{Python}
+	\chapter{Analisi Risultati}
+	\section{Casi senza percorsi parziali}
+	\subsection{Caso 1}
+	K= [0]
+	N= [0, 1, 2, 3, 4]
+	A= [(0, 2), (0, 1), (0, 3), (2, 3), (1, 4), (2, 4), (3, 4)]
+	Subscribers= [4]
+	Brokers= [1, 2, 3]
+	Publishers= [0]
+	NodoOrigine= {0: 0}
+	NodiTarget= {0: [4]}
+	a= {0: 1}
+	C= {(0, 2): 52, (0, 1): 35, (0, 3): 27, (2, 3): 92, (1, 4): 74, (2, 4): 77, (3, 4): 67}
+	u= {(0, 2): 3, (0, 1): 5, (0, 3): 6, (2, 3): 7, (1, 4): 11, (2, 4): 3, (3, 4): 11}
+	\subsection{caso 2}
+	K= [0]
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+	A= [(0, 6), (0, 9), (0, 5), (0, 2), (0, 8), (0, 4), (0, 7), (0, 1), (1, 4), (1, 9), (2, 3), (2, 8), (3, 1), (4, 5), (4, 2), (5, 10), (5, 2), (6, 7), (6, 3), (7, 4), (7, 8), (8, 10), (9, 5), (9, 6), (10, 4), (6, 11), (4, 11), (10, 11), (8, 11)]
+	Subscribers= [11]
+	Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+	Publishers= [0]
+	NodoOrigine= {0: 0}
+	NodiTarget= {0: [11]}
+	a= {0: 1}
+	C= {(0, 6): 37, (0, 9): 41, (0, 5): 40, (0, 2): 77, (0, 8): 8, (0, 4): 60, (0, 7): 30, (0, 1): 54, (1, 4): 39, (1, 9): 43, (2, 3): 71, (2, 8): 69, (3, 1): 99, (4, 5): 82, (4, 2): 25, (5, 10): 44, (5, 2): 30, (6, 7): 22, (6, 3): 65, (7, 4): 59, (7, 8): 97, (8, 10): 85, (9, 5): 42, (9, 6): 86, (10, 4): 89, (6, 11): 94, (4, 11): 19, (10, 11): 36, (8, 11): 77}
+	u= {(0, 6): 6, (0, 9): 14, (0, 5): 14, (0, 2): 1, (0, 8): 1, (0, 4): 5, (0, 7): 14, (0, 1): 11, (1, 4): 12, (1, 9): 14, (2, 3): 10, (2, 8): 13, (3, 1): 4, (4, 5): 11, (4, 2): 6, (5, 10): 1, (5, 2): 3, (6, 7): 9, (6, 3): 1, (7, 4): 10, (7, 8): 13, (8, 10): 14, (9, 5): 1, (9, 6): 6, (10, 4): 15, (6, 11): 8, (4, 11): 9, (10, 11): 12, (8, 11): 5}
+	\subsection{caso 3}
+	K= [0, 1, 2]
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	A= [(0, 7), (1, 3), (1, 7), (1, 5), (1, 6), (1, 4), (2, 4), (2, 5), (2, 7), (2, 6), (3, 6), (5, 3), (6, 5), (6, 8), (7, 8), (5, 9), (7, 9), (4, 9)]
+	Subscribers= [8, 9]
+	Brokers= [3, 4, 5, 6, 7]
+	Publishers= [0, 1, 2]
+	NodoOrigine= {0: 1, 1: 2, 2: 0}
+	NodiTarget= {0: [8, 9], 1: [9], 2: [9]}
+	a= {0: 3, 1: 4, 2: 9}
+	C= {(0, 7): 90, (1, 3): 47, (1, 7): 91, (1, 5): 8, (1, 6): 17, (1, 4): 47, (2, 4): 48, (2, 5): 55, (2, 7): 16, (2, 6): 83, (3, 6): 53, (5, 3): 57, (6, 5): 52, (6, 8): 77, (7, 8): 17, (5, 9): 77, (7, 9): 50, (4, 9): 10}
+	u= {(0, 7): 4, (1, 3): 11, (1, 7): 13, (1, 5): 15, (1, 6): 1, (1, 4): 1, (2, 4): 8, (2, 5): 15, (2, 7): 12, (2, 6): 12, (3, 6): 3, (5, 3): 3, (6, 5): 11, (6, 8): 8, (7, 8): 11, (5, 9): 9, (7, 9): 7, (4, 9): 10}
+	\subsection{caso 4}
+	K= [0, 1]
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+	A= [(0, 6), (0, 2), (0, 7), (0, 8), (0, 10), (0, 5), (0, 3), (0, 9), (1, 10), (2, 3), (3, 10), (5, 2), (6, 8), (7, 9), (8, 5), (8, 9), (9, 5), (9, 8), (10, 1), (10, 9), (1, 11)]
+	Subscribers= [11]
+	Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+	Publishers= [0]
+	NodoOrigine= {0: 0, 1: 0}
+	NodiTarget= {0: [11], 1: [11]}
+	a= {0: 10, 1: 6}
+	C= {(0, 6): 1, (0, 2): 3, (0, 7): 43, (0, 1): 98, (0, 8): 29, (0, 10): 70, (0, 5): 46, (0, 3): 13, (0, 9): 64, (1, 10): 74, (2, 3): 83, (3, 10): 16, (5, 2): 36, (6, 8): 10, (7, 9): 46, (8, 5): 51, (8, 9): 87, (9, 5): 24, (9, 8): 11, (10, 1): 52, (10, 9): 24, (1, 11): 12}
+	u= {(0, 6): 13, (0, 2): 14, (0, 7): 7, (0, 1): 4, (0, 8): 11, (0, 10): 6, (0, 5): 14, (0, 3): 8, (0, 9): 15, (1, 10): 4, (2, 3): 2, (3, 10): 12, (5, 2): 6, (6, 8): 9, (7, 9): 13, (8, 5): 4, (8, 9): 14, (9, 5): 13, (9, 8): 2, (10, 1): 15, (10, 9): 9, (1, 11): 11}
+	\subsection{Caso 5}
+	K= [0, 1, 2]
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
+	A= [(0, 92), (1, 7), (2, 65), (3, 99), (4, 100), (5, 28), (6, 87), (7, 29), (8, 63), (9, 42), (10, 50), (11, 40), (12, 82), (13, 84), (14, 62), (15, 54), (16, 6), (17, 25), (18, 89), (19, 44), (20, 36), (21, 76), (22, 88), (23, 40), (24, 54), (25, 56), (26, 34), (27, 74), (28, 45), (29, 39), (30, 56), (31, 25), (32, 67), (33, 44), (34, 42), (35, 6), (36, 53), (37, 85), (38, 41), (39, 43), (40, 73), (41, 58), (42, 32), (43, 86), (44, 93), (45, 65), (46, 23), (47, 31), (48, 51), (49, 58), (50, 40), (51, 46), (52, 39), (53, 12), (54, 47), (55, 18), (56, 87), (57, 67), (58, 39), (59, 77), (60, 43), (61, 23), (62, 65), (63, 100), (64, 48), (65, 43), (66, 93), (67, 11), (68, 79), (69, 73), (70, 101), (71, 29), (72, 84), (73, 82), (74, 24), (75, 97), (76, 11), (77, 69), (78, 77), (79, 10), (80, 13), (81, 94), (82, 48), (83, 12), (84, 40), (85, 67), (86, 29), (87, 3), (88, 70), (89, 79), (90, 24), (91, 97), (92, 71), (93, 26), (94, 92), (95, 26), (96, 79), (97, 96), (98, 41), (99, 40), (100, 71), (101, 4), (67, 102), (49, 103), (69, 104)]
+	Subscribers= [102, 103, 104]
+	Brokers= [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101]
+	Publishers= [0, 1]
+	NodoOrigine= {0: 0, 1: 0, 2: 0}
+	NodiTarget= {0: [103], 1: [102], 2: [102]}
+	a= {0: 10, 1: 4, 2: 6}
+	C= {(0, 92): 86, (1, 7): 18, (2, 65): 95, (3, 99): 27, (4, 100): 50, (5, 28): 95, (6, 87): 23, (7, 29): 90, (8, 63): 23, (9, 42): 29, (10, 50): 72, (11, 40): 5, (12, 82): 37, (13, 84): 81, (14, 62): 67, (15, 54): 34, (16, 6): 64, (17, 25): 31, (18, 89): 32, (19, 44): 66, (20, 36): 72, (21, 76): 13, (22, 88): 92, (23, 40): 62, (24, 54): 84, (25, 56): 19, (26, 34): 97, (27, 74): 14, (28, 45): 55, (29, 39): 69, (30, 56): 8, (31, 25): 24, (32, 67): 27, (33, 44): 75, (34, 42): 24, (35, 6): 91, (36, 53): 47, (37, 85): 33, (38, 41): 54, (39, 43): 93, (40, 73): 59, (41, 58): 72, (42, 32): 96, (43, 86): 51, (44, 93): 63, (45, 65): 25, (46, 23): 8, (47, 31): 25, (48, 51): 31, (49, 58): 26, (50, 40): 8, (51, 46): 70, (52, 39): 27, (53, 12): 55, (54, 47): 66, (55, 18): 9, (56, 87): 59, (57, 67): 54, (58, 39): 31, (59, 77): 33, (60, 43): 99, (61, 23): 1, (62, 65): 43, (63, 100): 35, (64, 48): 71, (65, 43): 12, (66, 93): 55, (67, 11): 70, (68, 79): 48, (69, 73): 37, (70, 101): 66, (71, 29): 33, (72, 84): 97, (73, 82): 12, (74, 24): 35, (75, 97): 39, (76, 11): 64, (77, 69): 16, (78, 77): 10, (79, 10): 67, (80, 13): 63, (81, 94): 95, (82, 48): 40, (83, 12): 27, (84, 40): 61, (85, 67): 28, (86, 29): 50, (87, 3): 88, (88, 70): 89, (89, 79): 69, (90, 24): 48, (91, 97): 5, (92, 71): 61, (93, 26): 63, (94, 92): 61, (95, 26): 47, (96, 79): 12, (97, 96): 2, (98, 41): 32, (99, 40): 33, (100, 71): 48, (101, 4): 70, (67, 102): 53, (49, 103): 41, (69, 104): 49}
+	u= {(0, 92): 14, (1, 7): 9, (2, 65): 6, (3, 99): 10, (4, 100): 12, (5, 28): 5, (6, 87): 14, (7, 29): 5, (8, 63): 12, (9, 42): 3, (10, 50): 2, (11, 40): 5, (12, 82): 12, (13, 84): 12, (14, 62): 3, (15, 54): 7, (16, 6): 8, (17, 25): 15, (18, 89): 10, (19, 44): 3, (20, 36): 2, (21, 76): 1, (22, 88): 1, (23, 40): 7, (24, 54): 12, (25, 56): 3, (26, 34): 13, (27, 74): 5, (28, 45): 12, (29, 39): 6, (30, 56): 14, (31, 25): 6, (32, 67): 2, (33, 44): 15, (34, 42): 12, (35, 6): 8, (36, 53): 5, (37, 85): 1, (38, 41): 13, (39, 43): 11, (40, 73): 1, (41, 58): 8, (42, 32): 9, (43, 86): 1, (44, 93): 13, (45, 65): 1, (46, 23): 3, (47, 31): 1, (48, 51): 12, (49, 58): 1, (50, 40): 13, (51, 46): 12, (52, 39): 9, (53, 12): 9, (54, 47): 3, (55, 18): 15, (56, 87): 9, (57, 67): 6, (58, 39): 11, (59, 77): 10, (60, 43): 14, (61, 23): 8, (62, 65): 3, (63, 100): 4, (64, 48): 2, (65, 43): 6, (66, 93): 4, (67, 11): 9, (68, 79): 14, (69, 73): 6, (70, 101): 8, (71, 29): 1, (72, 84): 2, (73, 82): 15, (74, 24): 3, (75, 97): 9, (76, 11): 15, (77, 69): 12, (78, 77): 14, (79, 10): 11, (80, 13): 11, (81, 94): 13, (82, 48): 13, (83, 12): 11, (84, 40): 3, (85, 67): 9, (86, 29): 12, (87, 3): 1, (88, 70): 1, (89, 79): 10, (90, 24): 9, (91, 97): 9, (92, 71): 7, (93, 26): 14, (94, 92): 4, (95, 26): 7, (96, 79): 12, (97, 96): 9, (98, 41): 8, (99, 40): 13, (100, 71): 13, (101, 4): 12, (67, 102): 15, (49, 103): 9, (69, 104): 10}
+	5092
+	\section{Soluzioni parziali}
+	\subsection{Caso 1}
+	K= [0, 1, 2, 3, 4]
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]
+	A= [(0, 25), (1, 17), (1, 19), (2, 1), (2, 5), (3, 4), (3, 16), (4, 18), (4, 3), (5, 27), (6, 11), (7, 21), (8, 29), (8, 9), (9, 19), (10, 4), (11, 30), (11, 29), (12, 15), (12, 19), (13, 22), (13, 18), (14, 2), (15, 28), (15, 3), (16, 14), (16, 29), (17, 4), (18, 15), (18, 23), (19, 12), (20, 7), (20, 16), (21, 4), (22, 24), (22, 3), (23, 21), (23, 13), (24, 10), (24, 18), (25, 24), (26, 17), (26, 29), (27, 11), (27, 23), (28, 20), (28, 9), (29, 1), (30, 23), (11, 31), (23, 31), (14, 32), (29, 32), (1, 33), (7, 34), (23, 34), (29, 35), (15, 35)]
+	Subscribers= [31, 32, 33, 34, 35]
+	Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+	Publishers= [0]
+	NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
+	NodiTarget= {0: [31, 32, 35, 34, 33], 1: [35, 34, 31], 2: [33, 34, 31, 32], 3: [34, 33, 31], 4: [35]}
+	a= {0: 2, 1: 4, 2: 6, 3: 1, 4: 8}
+	C= {(0, 25): 26, (1, 17): 58, (1, 19): 12, (2, 1): 20, (2, 5): 49, (3, 4): 1, (3, 16): 53, (4, 18): 14, (4, 3): 89, (5, 27): 30, (6, 11): 45, (7, 21): 94, (8, 29): 38, (8, 9): 76, (9, 19): 81, (10, 4): 95, (11, 30): 54, (11, 29): 51, (12, 15): 73, (12, 19): 48, (13, 22): 17, (13, 18): 3, (14, 2): 66, (15, 28): 39, (15, 3): 98, (16, 14): 9, (16, 29): 51, (17, 4): 86, (18, 15): 92, (18, 23): 58, (19, 12): 56, (20, 7): 21, (20, 16): 90, (21, 4): 48, (22, 24): 27, (22, 3): 81, (23, 21): 99, (23, 13): 5, (24, 10): 57, (24, 18): 21, (25, 24): 79, (26, 17): 30, (26, 29): 59, (27, 11): 41, (27, 23): 1, (28, 20): 84, (28, 9): 91, (29, 1): 99, (30, 23): 82, (11, 31): 18, (23, 31): 8, (14, 32): 73, (29, 32): 29, (1, 33): 62, (7, 34): 91, (23, 34): 74, (29, 35): 72, (15, 35): 80}
+	u= {(0, 25): 2, (1, 17): 11, (1, 19): 7, (2, 1): 5, (2, 5): 15, (3, 4): 7, (3, 16): 1, (4, 18): 1, (4, 3): 15, (5, 27): 12, (6, 11): 1, (7, 21): 15, (8, 29): 14, (8, 9): 10, (9, 19): 2, (10, 4): 1, (11, 30): 14, (11, 29): 3, (12, 15): 8, (12, 19): 14, (13, 22): 14, (13, 18): 2, (14, 2): 14, (15, 28): 4, (15, 3): 1, (16, 14): 13, (16, 29): 2, (17, 4): 3, (18, 15): 14, (18, 23): 8, (19, 12): 15, (20, 7): 2, (20, 16): 13, (21, 4): 10, (22, 24): 12, (22, 3): 6, (23, 21): 3, (23, 13): 3, (24, 10): 5, (24, 18): 12, (25, 24): 10, (26, 17): 10, (26, 29): 14, (27, 11): 9, (27, 23): 9, (28, 20): 14, (28, 9): 9, (29, 1): 1, (30, 23): 14, (11, 31): 4, (23, 31): 15, (14, 32): 3, (29, 32): 7, (1, 33): 5, (7, 34): 4, (23, 34): 9, (29, 35): 5, (15, 35): 14}
+	3105
+	\section{Caso rotto e ricalcolo}
+	K= [0]
+	
+	N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	
+	A= [(0, 3), (0, 1), (0, 2), (0, 6), (0, 4), (0, 7), (0, 5), (1, 2), (2, 5), (2, 4), (3, 7), (3, 2), (3, 6), (5, 3), (5, 1), (6, 3), (7, 3), (7, 2), (1, 8), (3, 8), (2, 8), (6, 8), (7, 8), (6, 9)]
+	
+	Subscribers= [8, 9]
+	
+	Brokers= [1, 2, 3, 4, 5, 6, 7]
+	
+	Publishers= [0]
+	
+	NodoOrigine= {0: 0, 1: 0, 2: 0}
+	
+	NodiTarget= {0: [9, 8], 1: [8], 2: [8, 9]}
+	
+	a= {0: 5, 1: 2, 2: 4}
+	
+	C= {(0, 3): 8, (0, 1): 9, (0, 2): 2, (0, 6): 1, (0, 4): 2, (0, 7): 7, (0, 5): 8, (1, 2): 8, (2, 5): 7, (2, 4): 1, (3, 7): 5, (3, 2): 1, (3, 6): 1, (5, 3): 5, (5, 1): 3, (6, 3): 9, (7, 3): 9, (7, 2): 7, (1, 8): 7, (3, 8): 3, (2, 8): 7, (6, 8): 1, (7, 8): 1, (6, 9): 10}
+	
+	u= {(0, 3): 16, (0, 1): 11, (0, 2): 20, (0, 6): 20, (0, 4): 13, (0, 7): 23, (0, 5): 7, (1, 2): 1, (2, 5): 16, (2, 4): 18, (3, 7): 25, (3, 2): 12, (3, 6): 6, (5, 3): 5, (5, 1): 9, (6, 3): 9, (7, 3): 12, (7, 2): 4, (1, 8): 21, (3, 8): 24, (2, 8): 8, (6, 8): 25, (7, 8): 1, (6, 9): 13}
+	\section{caso x}
+	\section{Modifica di alpha}
+	\section{Modifica di variabile x}
+	\chapter{Conclusioni}
+	Dijkstra si basa sull'ottimo prima per andare avanti, può essere migliorato
+	%Ora vediamo un elenco numerato:         %crea un elenco numerato
+	%\begin{enumerate}
+	%\item primo oggetto
+	%\item secondo oggetto
+	%\item terzo oggetto
+	%\item quarto oggetto
+	%\end{enumerate}
+	%
+	%\begin{figure}[h]                       %crea l'ambiente figura; [h] sta
+	%                                        %   per here, cioè la figura va qui
+	%\begin{center}                          %centra nel mezzo della pagina
+	%                                        %   la figura
+	%%\includegraphics[width=5cm]{figura.eps}%inserisce una figura larga 5cm
+	%                                        %se si vuole usare va scommentata
+	%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%inserisce la legenda ed etichetta
+	%                                        %   la figura con \label{fig:prima}
+	%\caption[legenda elenco figure]{legenda sotto la figura}\label{fig:prima}
+	%\end{center}
+	%\end{figure}
+	%
+	%\section{Seconda Sezione}
+	%Ora vediamo un elenco puntato:
+	%\begin{itemize}                         %crea un elenco puntato
+	%\item primo oggetto
+	%\item secondo oggetto
+	%\end{itemize}
+	%
+	%\section{Altra Sezione}
+	%Vediamo un elenco descrittivo:
+	%\begin{description}                     %crea un elenco descrittivo
+	%  \item[OGGETTO1] prima descrizione;
+	%  \item[OGGETTO2] seconda descrizione;
+	%  \item[OGGETTO3] terza descrizione.
+	%\end{description}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%crea una sottosezione
+	%\subsection{Altra SottoSezione}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%crea una sottosottosezione
+	%\subsubsection{SottoSottoSezione}Questa sottosottosezione non viene
+	%numerata, ma \`e solo scritta in grassetto.
+	%\section{Altra Sezione}                 %crea una sottosezione
+	%Vediamo la creazione di una tabella; la tabella \ref{tab:uno}
+	%(richiamo il nome della tabella utilizzando la label che ho messo sotto):
+	%la facciamo di tre righe e tre colonne, la prima colonna
+	%``incolonnata'' a destra (r) e le altre centrate (c):\\
+	%\begin{table}[h]                        %ambiente tabella
+	%                                        %(serve per avere la legenda)
+	%\begin{center}                          %centra nella pagina la tabella
+	%\begin{tabular}{r|c|c}                  %tre colonne con righe verticali
+	%                                        %   prodotte con |
+	%\hline \hline                           %inserisce due righe orizzontali
+	%$(1,1)$ & $(1,2)$ & $(1,3)$\\           %& separa le colonne e con
+	%\hline                                  %inserisce una riga orizzontale
+	%$(2,1)$ & $(2,2)$ & $(2,3)$\\           %  \\ va a capo
+	%\hline                                  %inserisce una riga orizzontale
+	%$(3,1)$ & $(3,2)$ & $(3,3)$\\
+	%\hline \hline                           %inserisce due righe orizzontali
+	%\end{tabular}
+	%\caption[legenda elenco tabelle]{legenda tabella}\label{tab:uno}
+	%\end{center}
+	%\end{table}
+	%\section{Altra Sezione}\label{sec:prova}%posso mettere le label anche
+	%                                        %   alle section
+	%\subsection{Listati dei programmi}
+	%\subsubsection{Primo Listato}
+	%\begin{verbatim}
+	%        In questo ambiente     posso scrivere      come voglio,
+	%lasciare gli spazi che voglio e non % commentare quando voglio
+	%e ci sarà scritto tutto.
+	%Quando lo uso è meglio che disattivi il Wrap del WinEdt
+	%\end{verbatim}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%non numera l'ultima pagina sinistra
+	%\clearpage{\pagestyle{empty}\cleardoublepage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%per fare le conclusioni
+	%\chapter*{Conclusioni}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%aggiunge la voce Conclusioni
+	%                                        %   nell'indice
+	%\addcontentsline{toc}{chapter}{Conclusioni} Queste sono le
+	%conclusioni.\\
+	%In queste conclusioni voglio fare un riferimento alla
+	%bibliografia: questo \`e il mio riferimento \cite{K3,K4}.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\renewcommand{\chaptermark}[1]{\markright{\thechapter \ #1}{}}
+	%\appendix                               %imposta le appendici
+	%\chapter{Prima Appendice}               %crea l'appendice
+	%In questa Appendice non si \`e utilizzato il comando:\\
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\verb"" è equivalente all'
+	%                                        %   ambiente verbatim,
+	%                                        %   ma si utilizza all'interno
+	%                                        %   di un discorso.
+	%\verb"\clearpage{\pagestyle{empty}\cleardoublepage}", ed infatti
+	%l'ultima pagina 8 ha l'intestazione con il numero di pagina in
+	%alto.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\chapter{Seconda Appendice}             %crea l'appendice
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%imposta l'intestazione di pagina
+	%\begin{thebibliography}{90}             %crea l'ambiente bibliografia
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%aggiunge la voce Bibliografia
+	%                                        %   nell'indice
+	%\addcontentsline{toc}{chapter}{Bibliografia}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%provare anche questo comando:
+	%%%%%%%%%%%%\addcontentsline{toc}{chapter}{\numberline{}{Bibliografia}}
+	%\end{thebibliography}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%non numera l'ultima pagina sinistra
+	%\clearpage{\pagestyle{empty}\cleardoublepage}
+	%\chapter*{Ringraziamenti}
+	%\thispagestyle{empty}
+	%Qui possiamo ringraziare il mondo intero!!!!!!!!!!\\
+	%Ovviamente solo se uno vuole, non \`e obbligatorio.
+\end{document}
