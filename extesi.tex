@@ -731,7 +731,7 @@
 		\end{split}
 	\end{equation}
 	Lo sviluppo dell'equazione porta alla condizione descritta in precedenza (3.11), rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$. \newpage
-	\subsection{Formulazione Completa}
+	\subsection{Terza Formulazione Completa}
 	Funzione Obiettivo:\\
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
@@ -763,433 +763,433 @@
 	Le variabili in input coincidono con quelle definite nel paragrafo (2.2).\\
 	Nella prima parte di codice si definiscono le strutture globali utilizzate per memorizzare il cammino ottimo e il corrispondente costo.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	percorsoOttimo=[]
-	costoTot = np.inf
+percorsoOttimo=[]
+costoTot = np.inf
 	\end{lstlisting}}
 	\noindent All'inizio di ogni iterazione dell'algoritmo viene creata una copia delle strutture necessarie per i calcoli oltre al mescolamento dell'ordine di elaborazione delle informazioni.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	costo = 0.0
-	strade = A.copy()
-	CapacitàUsata = u.copy()
-	informazioni = K.copy()
-	random.shuffle(informazioni)
-	percorsi = []
+costo = 0.0
+strade = A.copy()
+CapacitàUsata = u.copy()
+informazioni = K.copy()
+random.shuffle(informazioni)
+percorsi = []
 	\end{lstlisting}}
 	\noindent L'algoritmo procede iterando su ogni informazione e ad ogni iterazione salva le capacità residue oltre all'insieme di nodi da visitare filtrati per raggiungibilità.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	Capacità=CapacitàUsata.copy()
-	unvisitedNodes = [i for i in N]
-	for g,l in Lr.items():
-		if len(l)==0:
-			unvisitedNodes.remove(g)
-	nodoDiPartenza = NodoOrigine[informazione]
-	if nodoDiPartenza not in unvisitedNodes:
-		unvisitedNodes.append(nodoDiPartenza)
+Capacità=CapacitàUsata.copy()
+unvisitedNodes = [i for i in N]
+for g,l in Lr.items():
+	if len(l)==0:
+		unvisitedNodes.remove(g)
+nodoDiPartenza = NodoOrigine[informazione]
+if nodoDiPartenza not in unvisitedNodes:
+	unvisitedNodes.append(nodoDiPartenza)
 	\end{lstlisting}}
 	\noindent Successivamente viene applicata una variante dell'algoritmo di Dijkstra con controllo sulle capacità per determinare l'albero dei cammini minimi. Per l'elaborazione viene utilizzata una tabella in grado di memorizzare il costo del cammino minimo temporaneo e il relativo nodo predecessore. In caso di nodi non raggiungibili l'algoritmo viene fermato forzatamente.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	while(len(unvisitedNodes)>0):
-		for (i,j) in strade:
-			if(i==nodoProtagonista and j in unvisitedNodes):
-				if(tabella[j][1]>tabella[i][1]+C[i,j]):
-					tabella[j][1]=tabella[i][1]+C[i,j]
-					tabella[j][2]=nodoProtagonista
-		unvisitedNodes.remove(nodoProtagonista)
-		indiceProssimoNodo = -1
-		for j in unvisitedNodes:
-			pretarget = tabella[j][2]
-			if (pretarget,j) in Capacità:
-				if Capacità[(pretarget,j)]-a[informazione]>=0:
-					if(tabella[j][1]<tabella[indiceProssimoNodo][1]) or 
-					indiceProssimoNodo == -1:
-						indiceProssimoNodo = j
-		if indiceProssimoNodo==-1:
-			unvisitedNodes=[]
-		else:
-			pretarget = tabella[indiceProssimoNodo][2]
-			Capacità[(pretarget,indiceProssimoNodo)]-=a[informazione]
-			nodoProtagonista = indiceProssimoNodo
+while(len(unvisitedNodes)>0):
+	for (i,j) in strade:
+		if(i==nodoProtagonista and j in unvisitedNodes):
+			if(tabella[j][1]>tabella[i][1]+C[i,j]):
+				tabella[j][1]=tabella[i][1]+C[i,j]
+				tabella[j][2]=nodoProtagonista
+	unvisitedNodes.remove(nodoProtagonista)
+	indiceProssimoNodo = -1
+	for j in unvisitedNodes:
+		pretarget = tabella[j][2]
+		if (pretarget,j) in Capacità:
+			if Capacità[(pretarget,j)]-a[informazione]>=0:
+				if(tabella[j][1]<tabella[indiceProssimoNodo][1]) or 
+				indiceProssimoNodo == -1:
+					indiceProssimoNodo = j
+	if indiceProssimoNodo==-1:
+		unvisitedNodes=[]
+	else:
+		pretarget = tabella[indiceProssimoNodo][2]
+		Capacità[(pretarget,indiceProssimoNodo)]-=a[informazione]
+		nodoProtagonista = indiceProssimoNodo
 	\end{lstlisting}}
 	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target. Con l'obiettivo di velocizzare i calcoli viene effettuato un controllo e rimozione degli archi risultanti saturi.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	nodiFinali = NodiTarget[informazione].copy()
-	random.shuffle(nodiFinali)
-	for nodoFinale in nodiFinali:
-		percorso=[]
-		percorso.append(nodoFinale)
-		if(tabella[nodoFinale][2]==None):
-			costo=np.inf
-			break
-		while(tabella[nodoFinale][2]!=None):
-			preFinale= tabella[nodoFinale][2]
-			percorso.append(preFinale)
-			CapacitàUsata[(preFinale,nodoFinale)]=CapacitàUsata[(preFinale
-			,nodoFinale)]-a[informazione]
-			if(CapacitàUsata[(preFinale,nodoFinale)]==0):
-				strade.remove((preFinale,nodoFinale))
-			costo += C[preFinale,nodoFinale]
-			nodoFinale = preFinale
-		percorsi.append(informazione)
-		percorsi.append(percorso)
+nodiFinali = NodiTarget[informazione].copy()
+random.shuffle(nodiFinali)
+for nodoFinale in nodiFinali:
+	percorso=[]
+	percorso.append(nodoFinale)
+	if(tabella[nodoFinale][2]==None):
+		costo=np.inf
+		break
+	while(tabella[nodoFinale][2]!=None):
+		preFinale= tabella[nodoFinale][2]
+		percorso.append(preFinale)
+		CapacitàUsata[(preFinale,nodoFinale)]=CapacitàUsata[(preFinale
+		,nodoFinale)]-a[informazione]
+		if(CapacitàUsata[(preFinale,nodoFinale)]==0):
+			strade.remove((preFinale,nodoFinale))
+		costo += C[preFinale,nodoFinale]
+		nodoFinale = preFinale
+	percorsi.append(informazione)
+	percorsi.append(percorso)
 	\end{lstlisting}}
 	Al termine del ciclo di controllo su tutte le informazioni, se la soluzione è ammissibile viene confrontata con la precedente migliore e se la precedente risulta peggiore in termini di costo viene sostituita.
 	{\footnotesize 	\begin{lstlisting}[language=Python]
-		if(costo<costoTot):
-			costoTot=costo
-			percorsoOttimo=percorsi
+if(costo<costoTot):
+	costoTot=costo
+	percorsoOttimo=percorsi
 	\end{lstlisting}}
 	\subsection{Prima Formulazione}
 	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in python, escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
-	minimize
-	sum(k in K, i in N, j in Lr[i]) Costi[j][i] * x[k][j][i]; 
-	subject to {
-		forall(k in K, t in NodiTarget[k]) 
-		sum(j in Lr[t]) x[k][j][t] == 1; 
-		
-		forall(k in K, i in Brokers)
-		sum(j in Lr[i]) x[k][j][i] == sum(j in Lt[i]) x[k][i][j];
-		
-		forall(k in K, <i,j> in A)
-		bigM*e[k][i][j] >= x[k][i][j]; 
-		
-		forall(i in N, j in Lt[i])
-		sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
-	}	
+minimize
+sum(k in K, i in N, j in Lr[i]) Costi[j][i] * x[k][j][i]; 
+subject to {
+	forall(k in K, t in NodiTarget[k]) 
+	sum(j in Lr[t]) x[k][j][t] == 1; 
+	
+	forall(k in K, i in Brokers)
+	sum(j in Lr[i]) x[k][j][i] == sum(j in Lt[i]) x[k][i][j];
+	
+	forall(k in K, <i,j> in A)
+	bigM*e[k][i][j] >= x[k][i][j]; 
+	
+	forall(i in N, j in Lt[i])
+	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
+}	
 	\end{lstlisting}}
 	\noindent Nel codice in python la scrittura si complica e le definizioni si fanno più complesse.
 	Inizialmente vengono definite e generate le variabili decisionali con i rispettivi vincoli associati: (2.6) e (2.7).
 	{\footnotesize \begin{lstlisting}[language=Python]					 
-	modello = cplex.Cplex()
-	modello.objective.set_sense(modello.objective.sense.minimize)
-	x = [(k,i,j)for k in K for (i,j) in A]
-	modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
-	lb=[0]*len(x),
-	types=["I"]*len(x))
-	e = [(k,i,j) for k in K for (i,j) in A]
-	modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
-	lb=[0]*len(e),
-	ub=[1]*len(e),
-	types=["B"]*len(e)) 
+modello = cplex.Cplex()
+modello.objective.set_sense(modello.objective.sense.minimize)
+x = [(k,i,j)for k in K for (i,j) in A]
+modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
+lb=[0]*len(x),
+types=["I"]*len(x))
+e = [(k,i,j) for k in K for (i,j) in A]
+modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
+lb=[0]*len(e),
+ub=[1]*len(e),
+types=["B"]*len(e)) 
 	\end{lstlisting}}
 	\noindent Generate le variabili funzionali si procede con la definizione della funzione obiettivo e dei vincoli del problema.\\ Funzione Obiettivo (2.1):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	temp_X = []
-	temp_Coeffs=[]
-	for k in K:
-		for i in N:
-			for j in Lr[i]:
-				if(j,i) in A:
-					temp_Coeffs.append(C[j,i])
-					temp_X.append(f"x_{k}_{j}_{i}")
-	modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
+temp_X = []
+temp_Coeffs=[]
+for k in K:
+	for i in N:
+		for j in Lr[i]:
+			if(j,i) in A:
+				temp_Coeffs.append(C[j,i])
+				temp_X.append(f"x_{k}_{j}_{i}")
+modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
 	\end{lstlisting}}
 	\noindent Primo vincolo (2.2):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in K:
-		for t in NodiTarget[k]:
-			temp_X = []
-			temp_Coeffs=[]
-			for j in Lr[t]:
-				if(j,t) in A:
-					temp_X.append(f"x_{k}_{j}_{t}")
-					temp_Coeffs.append(1)
-			modello.linear_constraints.add
-	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[1])
+for k in K:
+	for t in NodiTarget[k]:
+		temp_X = []
+		temp_Coeffs=[]
+		for j in Lr[t]:
+			if(j,t) in A:
+				temp_X.append(f"x_{k}_{j}_{t}")
+				temp_Coeffs.append(1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[1])
 	\end{lstlisting}}
 	\noindent Secondo vincolo (2.3):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in K:
-		for i in Brokers:
-			temp_X=[]
-			temp_Coeffs=[]
-			for j in Lr[i]:
-				if(j,i) in A:
-					temp_X.append(f"x_{k}_{j}_{i}")
-					temp_Coeffs.append(1)
-			for j in Lt[i]:
-				if(i,j) in A:
-					temp_X.append(f"x_{k}_{i}_{j}")
-					temp_Coeffs.append(-1)
-			modello.linear_constraints.add
-	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[0])
+for k in K:
+	for i in Brokers:
+		temp_X=[]
+		temp_Coeffs=[]
+		for j in Lr[i]:
+			if(j,i) in A:
+				temp_X.append(f"x_{k}_{j}_{i}")
+				temp_Coeffs.append(1)
+		for j in Lt[i]:
+			if(i,j) in A:
+				temp_X.append(f"x_{k}_{i}_{j}")
+				temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[0])
 	\end{lstlisting}}
 	\noindent Terzo vincolo (2.4):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in K:
-		for (i,j) in A:
-			temp_X=[]
-			temp_Coeffs=[]
-			temp_X.append(f"e_{k}_{i}_{j}")
-			temp_Coeffs.append(bigM)
-			temp_X.append(f"x_{k}_{i}_{j}")
-			temp_Coeffs.append(-1)
-			modello.linear_constraints.add
-	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["G"],rhs=[0])
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(bigM)
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["G"],rhs=[0])
 	\end{lstlisting}}
 	\noindent Quarto vincolo (2.5):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for i in N:
-		for j in Lt[i]:
-			temp_X=[]
-			temp_Coeffs=[]
-			for k in K:
-				if(i,j) in A:
-					temp_X.append(f"e_{k}_{i}_{j}")
-					temp_Coeffs.append(a[k])
-				if(j,i) in A:
-					temp_X.append(f"e_{k}_{j}_{i}")
-					temp_Coeffs.append(a[k])
-			modello.linear_constraints.add
-	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
+for i in N:
+	for j in Lt[i]:
+		temp_X=[]
+		temp_Coeffs=[]
+		for k in K:
+			if(i,j) in A:
+				temp_X.append(f"e_{k}_{i}_{j}")
+				temp_Coeffs.append(a[k])
+			if(j,i) in A:
+				temp_X.append(f"e_{k}_{j}_{i}")
+				temp_Coeffs.append(a[k])
+		modello.linear_constraints.add
+(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
 	\end{lstlisting}}
 	\subsection{Seconda Formulazione}
 	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamendo lagrangiano, strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
 	\subsubsection{Calcolo Costi Penalizzati}
 	Il calcolo dei costi penalizzati si basa sull'equazione (2.25), la quale quantifica il guadagno associato all'attivazione di un determinato arco. Qualora tale operazione determini una riduzione del valore della funzione obiettivo, l'arco viene inserito all'interno di una lista di candidati per una futura elaborazione.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for (k,i,j) in d:
-		if(lam[(k,i)]-lam[(k,j)])<0:
-			d[(k,i,j)]=C[i,j]+((lam[(k,i)]-lam[(k,j)])*len(NodiTarget[k]))
-		else:
-			d[(k,i,j)] = C[i,j]
-		if(d[(k,i,j)]<0):
-			ePerKnapsack.append((k,i,j))
+for (k,i,j) in d:
+	if(lam[(k,i)]-lam[(k,j)])<0:
+		d[(k,i,j)]=C[i,j]+((lam[(k,i)]-lam[(k,j)])*len(NodiTarget[k]))
+	else:
+		d[(k,i,j)] = C[i,j]
+	if(d[(k,i,j)]<0):
+		ePerKnapsack.append((k,i,j))
 	\end{lstlisting}}
 	\subsubsection{KnapSack}
 	Al fine di garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem). La capacità massima dello zaino coincide con la capacità dell'arco, il peso degli oggetti da inserire all'interno dello zaino con la banda occupata dall'informazione e il profitto è rappresentato dal valore opposto del costo penalizzato, che viene reso positivo per consentirne l'utilizzo diretto. In caso di attivazione dell'arco la relativa variabile $x$ verrà aggiornata seguendo la logica espressa nel paragrafo (2.5).\\
 	In primo luogo, a ciascun arco vengono associate le informazioni che si ritengono candidate a transitarvi.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	kPerArco = {}
-	for (k,i,j) in ePerKnapsack:
-		if (i,j) not in kPerArco:
-			kPerArco[(i,j)] = []
-			kPerArco[(i,j)].append(k)
+kPerArco = {}
+for (k,i,j) in ePerKnapsack:
+	if (i,j) not in kPerArco:
+		kPerArco[(i,j)] = []
+		kPerArco[(i,j)].append(k)
 	\end{lstlisting}}
 	\noindent Successivamente si esegue l'algoritmo dello zaino per ogni arco, traducendo i parametri nelle apposite strutture dati.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for (i,j) in kPerArco.keys():
-		valoriD = []
-		peso = u[(i,j)]
-		pesi = []
-		valoriD.append(0)
-		pesi.append(0)
-		listaK = []
-		listaK.append(None)
-		for k in kPerArco[(i,j)]:
-			valoriD.append(-1*d[(k,i,j)])
-			pesi.append(a[k])
-			listaK.append(k)
+for (i,j) in kPerArco.keys():
+	valoriD = []
+	peso = u[(i,j)]
+	pesi = []
+	valoriD.append(0)
+	pesi.append(0)
+	listaK = []
+	listaK.append(None)
+	for k in kPerArco[(i,j)]:
+		valoriD.append(-1*d[(k,i,j)])
+		pesi.append(a[k])
+		listaK.append(k)
 	\end{lstlisting}}
 	\noindent Si procede quindi alla generazione della matrice di programmazione dinamica all'interno della quale vengono memorizzati i valori ottimi dei relativi sotto-problemi, divisi in base alla capacità dello zaino e agli oggetti selezionabili.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	tabella = []
-	for z in range(len(valoriD)):
-		riga= []
-		for y in range(peso+1):
-			riga.append(0)
-		tabella.append(riga)
-	for z in range(1,len(valoriD)):
-		for y in range(1,peso+1):
-			if(y>=pesi[z]):
-				tabella[z][y]=max(tabella[z-1][y],tabella[z-1][y-pesi[z]]+valoriD[z])
-			else:
-				tabella[z][y]=tabella[z-1][y]
+tabella = []
+for z in range(len(valoriD)):
+	riga= []
+	for y in range(peso+1):
+		riga.append(0)
+	tabella.append(riga)
+for z in range(1,len(valoriD)):
+	for y in range(1,peso+1):
+		if(y>=pesi[z]):
+			tabella[z][y]=max(tabella[z-1][y],tabella[z-1][y-pesi[z]]+valoriD[z])
+		else:
+			tabella[z][y]=tabella[z-1][y]
 	\end{lstlisting}}
 	\noindent Finito il riempimento della tabella, la soluzione ottima è identificata dalla cella basso a destra nella matrice. Partendo da esso si esegue un controllo a ritroso per identificare le informazioni scelte da far passare e si aggiorna la $e$ e la $x$.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	migliore = tabella[len(valoriD)-1][peso]
-	rigaDelMigliore = len(valoriD)-1
-	colonnaDelMigliore = peso
-	while(rigaDelMigliore>0):
-		if(migliore!=tabella[rigaDelMigliore-1][colonnaDelMigliore]):
-			k = listaK[rigaDelMigliore]
-			e[(k,i,j)] = 1.0
-			if(lam[k,i]-lam[k,j]>=0):
-				x[(k,i,j)]=1
-			else:
-				x[(k,i,j)]=len(NodiTarget[k])
-			colonnaDelMigliore = colonnaDelMigliore-pesi[rigaDelMigliore]
-			rigaDelMigliore = rigaDelMigliore-1
-			migliore=tabella[rigaDelMigliore][colonnaDelMigliore]
+migliore = tabella[len(valoriD)-1][peso]
+rigaDelMigliore = len(valoriD)-1
+colonnaDelMigliore = peso
+while(rigaDelMigliore>0):
+	if(migliore!=tabella[rigaDelMigliore-1][colonnaDelMigliore]):
+		k = listaK[rigaDelMigliore]
+		e[(k,i,j)] = 1.0
+		if(lam[k,i]-lam[k,j]>=0):
+			x[(k,i,j)]=1
 		else:
-			rigaDelMigliore = rigaDelMigliore-1
+			x[(k,i,j)]=len(NodiTarget[k])
+		colonnaDelMigliore = colonnaDelMigliore-pesi[rigaDelMigliore]
+		rigaDelMigliore = rigaDelMigliore-1
+		migliore=tabella[rigaDelMigliore][colonnaDelMigliore]
+	else:
+		rigaDelMigliore = rigaDelMigliore-1
 	\end{lstlisting}}
 	\subsubsection{Calcola Step}
 	Per determinare l'importanza dell'aggiornamento da applicare alle penalità lagrangiane, viene calcolato lo step del subgradiente con la formula descritta (2.28).
 	{\footnotesize \begin{lstlisting}[language=Python]
-	listaSubGradienti = []
-	for i in N:
-		listaSubGradienti.append( subGradient[(k,i)])
-		norma = np.linalg.norm(listaSubGradienti)
-		norma = norma.item()
-		if(norma!=0):
-			valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1])/(norma**2))
-		else:
-			valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1]))
+listaSubGradienti = []
+for i in N:
+	listaSubGradienti.append( subGradient[(k,i)])
+	norma = np.linalg.norm(listaSubGradienti)
+	norma = norma.item()
+	if(norma!=0):
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1])/(norma**2))
+	else:
+		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1]))
 	\end{lstlisting}}
 	\subsubsection{Calcolo del Lower Bound attuale}
 	Con l'obettivo di monitorare la convergenza dell'algoritmo e di aggiornare lo step, il valore del Lower Bound viene ricalcolato ad ogni iterazione eseguendo il calcolo della funzione obiettivo lagrangiana (2.20).
 	{\footnotesize \begin{lstlisting}[language=Python]
-	Lb=0.0
-	for (i,j) in A:
-		for k in K:
-			Lb += d[(k,i,j)]*e[(k,i,j)]
+Lb=0.0
+for (i,j) in A:
 	for k in K:
-		for i in N:
-			Lb -= lam[(k,i)]*b[k][i]
+		Lb += d[(k,i,j)]*e[(k,i,j)]
+for k in K:
+	for i in N:
+		Lb -= lam[(k,i)]*b[k][i]
 	\end{lstlisting}}
 	\subsubsection{Aggiornamento Penalità Lagrangiane}
 	Sfruttando lo step precedentemente calcolato, si procede all'aggiornamento delle penalità lagrangiane.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	subGradienti = {(k,i):0.0 for k in K for i in N}
-	for k in K:
-		for i in N:
-			Sommatoria1 = 0.0
-			Sommatoria2 = 0.0
-			for j in Lt[i]:
-				Sommatoria1 += x[(k,i,j)]
-			for j in Lr[i]:
-				Sommatoria2 += x[(k,j,i)]
-			subGradienti[(k,i)]=Sommatoria1-Sommatoria2-b[k][i]
-	for k in K:
-		valoreDiCambio = calcolaValoreDiCambio(lastLb,k,subGradienti,Ub,alpha)
-		for i in N:
-			lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
+subGradienti = {(k,i):0.0 for k in K for i in N}
+for k in K:
+	for i in N:
+		Sommatoria1 = 0.0
+		Sommatoria2 = 0.0
+		for j in Lt[i]:
+			Sommatoria1 += x[(k,i,j)]
+		for j in Lr[i]:
+			Sommatoria2 += x[(k,j,i)]
+		subGradienti[(k,i)]=Sommatoria1-Sommatoria2-b[k][i]
+for k in K:
+	valoreDiCambio = calcolaValoreDiCambio(lastLb,k,subGradienti,Ub,alpha)
+	for i in N:
+		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
 	\end{lstlisting}}
 	\subsubsection{Main Loop}
 	Infine, le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione il parametro alpha per la riduzione dello step viene dimezzato se non si incontra un miglioramento del Lower Bound per 20 cicli di fila.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	lam = {(k,i):0.0 for k in K for i in N}
-	d = {(k,i,j):0 for k in K for (i,j) in A}
+lam = {(k,i):0.0 for k in K for i in N}
+d = {(k,i,j):0 for k in K for (i,j) in A}
+e = {(k,i,j):0 for k in K for (i,j) in A}
+x = {(k,i,j):0.0 for k in K for (i,j) in A}
+ePerKnapsack = []
+ultimiLowerBounds = [0]
+Lb=0.0
+alpha = 0.1
+it_max=10000
+alphaterazioni=0
+iterazioni=0
+Ub,percorso = DijkstraEuristico()
+while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
+	iterazioni+=1
+	ePerKnapsack=[]
 	e = {(k,i,j):0 for k in K for (i,j) in A}
-	x = {(k,i,j):0.0 for k in K for (i,j) in A}
-	ePerKnapsack = []
-	ultimiLowerBounds = [0]
-	Lb=0.0
-	alpha = 0.1
-	it_max=10000
-	alphaterazioni=0
-	iterazioni=0
-	Ub,percorso = DijkstraEuristico()
-	while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
-		iterazioni+=1
-		ePerKnapsack=[]
-		e = {(k,i,j):0 for k in K for (i,j) in A}
-		x = {(k,i,j):0 for k in K for (i,j) in A}
-		CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
-		KnapSack(ePerKnapsack,d,e,x)
-		Lb = calcolaMin(lam)
-		ultimiLowerBounds.append(Lb)
-		if(ultimiLowerBounds[len(ultimiLowerBounds)-1]<=ultimiLowerBounds[len(
-		ultimiLowerBounds)-2]):
-			alphaterazioni+=1
-		if(alphaterazioni>20):
-			alphaterazioni=0
-			alpha=alpha/2
-		else:
-			alphaterazioni=0
-		aggiornaLambda(lam,ultimiLowerBounds,Ub,alpha)
+	x = {(k,i,j):0 for k in K for (i,j) in A}
+	CalcolaCostiPenalizzati(lam,d,ePerKnapsack)
+	KnapSack(ePerKnapsack,d,e,x)
+	Lb = calcolaMin(lam)
+	ultimiLowerBounds.append(Lb)
+	if(ultimiLowerBounds[len(ultimiLowerBounds)-1]<=ultimiLowerBounds[len(
+	ultimiLowerBounds)-2]):
+		alphaterazioni+=1
+	if(alphaterazioni>20):
+		alphaterazioni=0
+		alpha=alpha/2
+	else:
+		alphaterazioni=0
+	aggiornaLambda(lam,ultimiLowerBounds,Ub,alpha)
 	\end{lstlisting}}
 	\subsubsection{Cplex}
 	Similmente alla formulazione precedente, l'ambiente Cplex consente una scrittura del codice lineare. In particolare, poiché il vincolo (2.9) incorpora due vincoli distinti (2.2) e (2.3), il modello finale presenta un vincolo in meno rispetto alla prima formulazione.
 	{\footnotesize \begin{lstlisting}
-	minimize
-	sum(k in K, <i,j> in A) Costi[i][j] * e[k][i][j]; 
-	subject to {
-		forall(k in K, i in N : i != NodoOrigine[k]) 
-		sum(j in Lt[i]) x[k][i][j] - sum(j in Lr[i]) x[k][j][i] == b[k][i]; 
-		
-		forall(<i,j> in A)
-		sum(k in K) a[k] * e[k][i][j] <= Capacita[i][j];
-		
-		forall(k in K, <i,j> in A) {
-			e[k][i][j] <= x[k][i][j];
-			x[k][i][j] <= card(NodiTarget[k]) * e[k][i][j];
-		}
-	}									 
+minimize
+sum(k in K, <i,j> in A) Costi[i][j] * e[k][i][j]; 
+subject to {
+	forall(k in K, i in N : i != NodoOrigine[k]) 
+	sum(j in Lt[i]) x[k][i][j] - sum(j in Lr[i]) x[k][j][i] == b[k][i]; 
+	
+	forall(<i,j> in A)
+	sum(k in K) a[k] * e[k][i][j] <= Capacita[i][j];
+	
+	forall(k in K, <i,j> in A) {
+		e[k][i][j] <= x[k][i][j];
+		x[k][i][j] <= card(NodiTarget[k]) * e[k][i][j];
+	}
+}									 
 	\end{lstlisting}}
 	\subsubsection{Python}
 	Per quanto riguarda l'implementazione in python tramite le API di cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
 	Inizialmente, vengono inizializzate le variabili decisionali con i relativi vincoli associati (2.12) e (2.13).
 	{\footnotesize 	\begin{lstlisting}[language=Python]
-	modello = cplex.Cplex()
-	modello.objective.set_sense(modello.objective.sense.minimize)
-	x = [(k,i,j)for k in K for (i,j) in A] 
-	modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
-	lb=[0]*len(x),
-	types=["I"]*len(x))
-	e = [(k,i,j) for k in K for (i,j) in A]
-	modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
-	lb=[0]*len(e),
-	ub=[1]*len(e),
-	types=["B"]*len(e))
+modello = cplex.Cplex()
+modello.objective.set_sense(modello.objective.sense.minimize)
+x = [(k,i,j)for k in K for (i,j) in A] 
+modello.variables.add(names=[f"x_{k}_{i}_{j}"for (k,i,j) in x],
+lb=[0]*len(x),
+types=["I"]*len(x))
+e = [(k,i,j) for k in K for (i,j) in A]
+modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
+lb=[0]*len(e),
+ub=[1]*len(e),
+types=["B"]*len(e))
 	\end{lstlisting}}
 	\noindent Istanziate le variabili, si procede con la definizione della funzione obiettivo e dei vincoli della formulazione.
 	Funzione Obiettivo (2.8):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	temp_X = []
-	temp_Coeffs=[]
-	for k in K:
-		for (i,j) in A:
-			temp_Coeffs.append(C[i,j])
-			temp_X.append(f"e_{k}_{i}_{j}")
-	modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
+temp_X = []
+temp_Coeffs=[]
+for k in K:
+	for (i,j) in A:
+		temp_Coeffs.append(C[i,j])
+		temp_X.append(f"e_{k}_{i}_{j}")
+modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
 	\end{lstlisting}}
 	Primo vincolo (2.9):
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in K:
-		for i in N:
-			if i != NodoOrigine[k]:
-				temp_X = []
-				temp_Coeffs=[]
-				for j in Lt[i]:
-					if(i,j) in A:
-						temp_X.append(f"x_{k}_{i}_{j}")
-						temp_Coeffs.append(1)
-				for j in Lr[i]:
-					if(j,i) in A:
-						temp_X.append(f"x_{k}_{j}_{i}")
-						temp_Coeffs.append(-1)
-				modello.linear_constraints.add
-				(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],
-				senses=["E"],rhs=[b[k][i]])
+for k in K:
+	for i in N:
+		if i != NodoOrigine[k]:
+			temp_X = []
+			temp_Coeffs=[]
+			for j in Lt[i]:
+				if(i,j) in A:
+					temp_X.append(f"x_{k}_{i}_{j}")
+					temp_Coeffs.append(1)
+			for j in Lr[i]:
+				if(j,i) in A:
+					temp_X.append(f"x_{k}_{j}_{i}")
+					temp_Coeffs.append(-1)
+			modello.linear_constraints.add
+			(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],
+			senses=["E"],rhs=[b[k][i]])
 	\end{lstlisting}}
 	Secondo vincolo (2.10)
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for (i,j) in A:
-		temp_X = []
-		temp_Coeffs=[]
-		for k in K:
-			temp_X.append(f"e_{k}_{i}_{j}")
-			temp_Coeffs.append(a[k])
-		modello.linear_constraints.add
-		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
+for (i,j) in A:
+	temp_X = []
+	temp_Coeffs=[]
+	for k in K:
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(a[k])
+	modello.linear_constraints.add
+	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
 	\end{lstlisting}}
 	Terzo vincolo (2.11)
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in K:
-		for (i,j) in A:
-			temp_X=[]
-			temp_Coeffs=[]
-			temp_X.append(f"e_{k}_{i}_{j}")
-			temp_Coeffs.append(1)
-			temp_X.append(f"x_{k}_{i}_{j}")
-			temp_Coeffs.append(-1)
-			modello.linear_constraints.add
-			(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(1)
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
 
-	for k in K:
-		for (i,j) in A:
-			temp_X=[]
-			temp_Coeffs=[]
-			temp_X.append(f"x_{k}_{i}_{j}")
-			temp_Coeffs.append(1)
-			temp_X.append(f"e_{k}_{i}_{j}")
-			temp_Coeffs.append(-len(NodiTarget[k]))
-			modello.linear_constraints.add
-			(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])	
+for k in K:
+	for (i,j) in A:
+		temp_X=[]
+		temp_Coeffs=[]
+		temp_X.append(f"x_{k}_{i}_{j}")
+		temp_Coeffs.append(1)
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(-len(NodiTarget[k]))
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])	
 	\end{lstlisting}}
 	\section{Formulazione Con Soluzioni Parziali}
 	\subsection{Dijkstra a Scenari e Meccanismo di Discesa dell'Upper Bound}
@@ -1200,41 +1200,41 @@
 	\subsubsection{Algoritmo di Dijkstra con Controllo Capacità}
 	Questa versione dell'algoritmo è stata ottimizzata utilizzando la libreria heapq di python, la quale implementa una struttura dati con priorità per semplificare il codice.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	tabella={}
-	nodiDaVisitare=[]
-	for nodo in N:
-		if nodo == sorgente:
-			tabella[sorgente]=[0,[]]
-		else:
-			tabella[nodo]=[math.inf,[]]
-	heapq.heappush(nodiDaVisitare,(0,sorgente))
-	nodiVisitati=[]
-	while len(nodiDaVisitare)>0:
-		costo,nodo = heapq.heappop(nodiDaVisitare)
-		nodiVisitati.append(nodo)
-		archi = [(i, j) for i, j in A if i == nodo]
-		for i,j in archi:
-			if capacità[(i,j)]>=banda:
-				if tabella[j][0] > tabella[i][0]+costi[(i,j)]:
-					tabella[j][0] = tabella[i][0]+costi[(i,j)]
-					tabella[j][1]=[]
-					tabella[j][1].append(i)
-		if(j not in nodiVisitati):
-			heapq.heappush(nodiDaVisitare,(tabella[j][0],j))
-		else:
-			if tabella[j][0] == tabella[i][0]+costi[(i,j)]:
-				tabella[j][1].append(nodo)
-	if tabella[target][0]==math.inf:
-		return []
-	costo = tabella[target][0]
-	percorsi = ricostruisciPercorsi(target,sorgente,tabella,k)
-	return [(costo,percorso) for percorso in percorsi]
+tabella={}
+nodiDaVisitare=[]
+for nodo in N:
+	if nodo == sorgente:
+		tabella[sorgente]=[0,[]]
+	else:
+		tabella[nodo]=[math.inf,[]]
+heapq.heappush(nodiDaVisitare,(0,sorgente))
+nodiVisitati=[]
+while len(nodiDaVisitare)>0:
+	costo,nodo = heapq.heappop(nodiDaVisitare)
+	nodiVisitati.append(nodo)
+	archi = [(i, j) for i, j in A if i == nodo]
+	for i,j in archi:
+		if capacità[(i,j)]>=banda:
+			if tabella[j][0] > tabella[i][0]+costi[(i,j)]:
+				tabella[j][0] = tabella[i][0]+costi[(i,j)]
+				tabella[j][1]=[]
+				tabella[j][1].append(i)
+	if(j not in nodiVisitati):
+		heapq.heappush(nodiDaVisitare,(tabella[j][0],j))
+	else:
+		if tabella[j][0] == tabella[i][0]+costi[(i,j)]:
+			tabella[j][1].append(nodo)
+if tabella[target][0]==math.inf:
+	return []
+costo = tabella[target][0]
+percorsi = ricostruisciPercorsi(target,sorgente,tabella,k)
+return [(costo,percorso) for percorso in percorsi]
 	\end{lstlisting}}
 	\noindent La chiamata alla funzione di Dijkstra modificata viene gestita da un metodo centrale che richiede in ingresso una permutazione delle informazioni. Per ciascuna di esse, la funzione itera su un numero prefissato di sottoinsiemi di target da raggiungere, mescolati casualmente, gestendo in contemporanea i diversi scenari attivi. Nello specifico, all'interno del metodo è stato inserito un meccanismo di controllo per garantire il passaggio gratuito attraverso un arco se esso, per la stessa informazione, è già stato attivato nello scenario corrente.\smallskip \\
 	Per la creazione si procede alla copia della capacità originale della rete e alla definizione della struttura che conterrà i diversi scenari. \\La struttura è pensata in modo da avere per ogni soluzione: 
 	{\footnotesize \begin{lstlisting}[language=Python]
-		capacità = u.copy()
-		soluzioni = [[0,[],capacità,[],[]]]
+capacità = u.copy()
+soluzioni = [[0,[],capacità,[],[]]]
 	\end{lstlisting}}
 	La struttura è pianificata in modo da contenere per ogni scenario:
 	\begin{itemize}
@@ -1246,84 +1246,126 @@
 	\end{itemize}
 	Successivamente, l'algoritmo itera su ogni informazione $k$ e su ciascuna permutazione dei nodi target per la relativa informazione. Durante l'iterazione, il metodo considera tutti gli scenari precedentemente memorizzati e, per ogni target, cerca di espanderli. Se il cammino minimo verso il target è univoco, lo scenario corrente viene aggiornato e si prosegue altrimenti, si crea un numero di scenari pari alle alternative ottime individuate. Qualora invece il target risulti non raggiungibile, il nodo viene catalogato come inarrivabile all'interno dello scenario.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for k in permutazione:
-		soluzioniPerPermutazione = []
-		for permutazioneTarget in permutazioniTarget:
-			for soluzione in soluzioni:
-				soluzioniTemp=[]
-				soluzioniTemp.append(soluzione.copy())
-				for target in permutazioneTarget:
-					nuoviTemp=[]
-					for soluzioneTemp in soluzioniTemp:
-						valori = copy.deepcopy(soluzioneTemp)
-						costiConsiderandoArchiAttivi = copy.deepcopy(C)
-						capacitàConsiderandoArchiAttivi = copy.deepcopy(soluzioneTemp[2])
-						archiAttivi = []
-						for kArco,i,j in soluzioneTemp[1]:
-							if k==kArco:
-								costiConsiderandoArchiAttivi[(i,j)]=0
-								capacitàConsiderandoArchiAttivi[(i,j)] += a[k]
-								archiAttivi.append((i,j))
-						percorsi = Dijkstra(NodoOrigine[k],target,
-						capacitàConsiderandoArchiAttivi,a[k],k,
-						costiConsiderandoArchiAttivi)
-						if len(percorsi)==0:
-							copia = copy.deepcopy(valori)
-							copia[4].append((k,target))
-							nuoviTemp.append
-							([copia[0],copia[1],copia[2],copia[3],copia[4]])
-						else:
-							for i in range(len(percorsi)):
-								costo,archi = percorsi[i]
-								cap = nuovaCapacità(soluzioneTemp[2],archi,a[k]
-								,archiAttivi)
-								copia=copy.deepcopy(valori)
-								copia[1].extend(archi)
-								copia[3].append((k,target))
-								nuoviTemp.append([copia[0]+costo,copia[1],cap,copia[3]
-								,copia[4]])
-					soluzioniTemp=nuoviTemp
-				soluzioniPerPermutazione.extend(soluzioniTemp)
-		soluzioniPerPermutazione.sort(key=lambda s: (-len(s[3]), s[0]))
-		soluzioni=soluzioniPerPermutazione[:soluzioniDaContinuare]
-	return soluzioni
+for k in permutazione:
+	soluzioniPerPermutazione = []
+	for permutazioneTarget in permutazioniTarget:
+		for soluzione in soluzioni:
+			soluzioniTemp=[]
+			soluzioniTemp.append(soluzione.copy())
+			for target in permutazioneTarget:
+				nuoviTemp=[]
+				for soluzioneTemp in soluzioniTemp:
+					valori = copy.deepcopy(soluzioneTemp)
+					costiConsiderandoArchiAttivi = copy.deepcopy(C)
+					capacitàConsiderandoArchiAttivi = copy.deepcopy(soluzioneTemp[2])
+					archiAttivi = []
+					for kArco,i,j in soluzioneTemp[1]:
+						if k==kArco:
+							costiConsiderandoArchiAttivi[(i,j)]=0
+							capacitàConsiderandoArchiAttivi[(i,j)] += a[k]
+							archiAttivi.append((i,j))
+					percorsi = Dijkstra(NodoOrigine[k],target,
+					capacitàConsiderandoArchiAttivi,a[k],k,
+					costiConsiderandoArchiAttivi)
+					if len(percorsi)==0:
+						copia = copy.deepcopy(valori)
+						copia[4].append((k,target))
+						nuoviTemp.append
+						([copia[0],copia[1],copia[2],copia[3],copia[4]])
+					else:
+						for i in range(len(percorsi)):
+							costo,archi = percorsi[i]
+							cap = nuovaCapacità(soluzioneTemp[2],archi,a[k]
+							,archiAttivi)
+							copia=copy.deepcopy(valori)
+							copia[1].extend(archi)
+							copia[3].append((k,target))
+							nuoviTemp.append([copia[0]+costo,copia[1],cap,copia[3]
+							,copia[4]])
+				soluzioniTemp=nuoviTemp
+			soluzioniPerPermutazione.extend(soluzioniTemp)
+	soluzioniPerPermutazione.sort(key=lambda s: (-len(s[3]), s[0]))
+	soluzioni=soluzioniPerPermutazione[:soluzioniDaContinuare]
+return soluzioni
 	\end{lstlisting}}
 	\noindent Per l'aggiornamento della capacità degli archi nella rete viene sviluppano una semplice funzione di riduzione dei valori.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	cap = capacità.copy()
-	for arco in archi:
-	if arco not in archiAttivi:
-	arco = arco[1:3]
-	cap[arco] -= banda
+cap = capacità.copy()
+for arco in archi:
+if arco not in archiAttivi:
+arco = arco[1:3]
+cap[arco] -= banda
 	\end{lstlisting}}
 	\noindent Per la ricostruzione del percorso si è optato per l'utilizzo di una funzione generatrice ricorsiva. Il metodo risale la rete a ritroso restituendo mediante l'istruzione yield tutti i cammini minimi alternativi individuati.
 	{\footnotesize \begin{lstlisting}[language=Python]
-	if nodo == sorgente:
-		yield []
-		return
-	for predecessore in tabella[nodo][1]:
-		for percorso in ricostruisciPercorsi(predecessore,sorgente,tabella,k):
-			yield percorso + [(k,predecessore,nodo)]
+if nodo == sorgente:
+	yield []
+	return
+for predecessore in tabella[nodo][1]:
+	for percorso in ricostruisciPercorsi(predecessore,sorgente,tabella,k):
+		yield percorso + [(k,predecessore,nodo)]
 	\end{lstlisting}}
 	\noindent Infine, la gestione delle permutazione delle informazioni, la valutazione delle soluzioni e il corretto calcolo del costo della soluzione in caso di target non raggiunti sono coordinate una funzione che funge come punto di partenza dell'intero algoritmo:
 	{\footnotesize \begin{lstlisting}[language=Python]
-	for permutazione in permutazioniInformazioni:
-		soluzioni = MainEuristico(permutazione)
-		soluzioniTotali.extend(soluzioni)
-		if len(soluzioniTotali) > soluzioniMax:
-			break
-	if len(soluzioniTotali)==0:
-		return
-	maxRaggiunti = max(len(soluzione[3]) for soluzione in soluzioniTotali)
-	candidati = [soluzione for soluzione in soluzioniTotali if 
-	len(soluzione[3])==maxRaggiunti]
-	costoMin = min(soluzione[0] for soluzione in candidati)
-	migliori = [soluzione for soluzione in candidati if soluzione[0]==costoMin]
-	costoMinModificato = costoMin+P*len(migliori[0][4])
+for permutazione in permutazioniInformazioni:
+	soluzioni = MainEuristico(permutazione)
+	soluzioniTotali.extend(soluzioni)
+	if len(soluzioniTotali) > soluzioniMax:
+		break
+if len(soluzioniTotali)==0:
+	return
+maxRaggiunti = max(len(soluzione[3]) for soluzione in soluzioniTotali)
+candidati = [soluzione for soluzione in soluzioniTotali if 
+len(soluzione[3])==maxRaggiunti]
+costoMin = min(soluzione[0] for soluzione in candidati)
+migliori = [soluzione for soluzione in candidati if soluzione[0]==costoMin]
+costoMinModificato = costoMin+P*len(migliori[0][4])
 	\end{lstlisting}}
-	
-	\subsection{Formulazione Cplex}
-	\subsection{Lagrangiano}
+	\subsubsection{Calcolo dei Costi con Penalità Lagrangiane}
+	Per la convergenza dell'Upper Bound, il metodo centrale viene modificato per integrare nei pesi degli archi le penalità lagrangiane, calcolate dal metodo del rilassamento. È importante evidenziare che i costi utilizzati durante la fase di instradamento non sono più validi per il calcolo del costo complessivo della rete, poiché incrementati dalle $\lambda$. Risulta perciò necessario ricalcolarli per determinare il costo della soluzione.
+	{\footnotesize \begin{lstlisting}[language=Python]
+for soluzioneTemp in soluzioniTemp:
+	costiLambda = {}
+	for i,j in A:
+	costiLambda[(i,j)] = C[(i,j)]+max(0,lam[(k,target,i)]-lam[(k,target,j)])
+	for kArco, i, j in soluzioneTemp[1]:
+		if k == kArco:
+			costiLambda[(i,j)] = 0
+	percorsi = Dijkstra(NodoOrigine[k],target,capacitàConsiderandoArchiAttivi,
+	a[k],k,costiLambda)
+	if len(percorsi)==0:
+		...
+	else:
+		for i in range(len(percorsi)):
+		costo,archi = percorsi[i]
+		costo=0 
+		for kArco, nodoI, nodoJ in archi:
+			if (nodoI,nodoJ) not in archiAttivi:
+			costo += C[(nodoI,nodoJ)]
+		nuoviTemp.append([copia[0]+costo,copia[1],cap,copia[3],copia[4]])
+	\end{lstlisting}}
+	\subsection{Terza formulazione}
+	\subsubsection{Lagrangiano}
+	La terza formulazione viene implementata apportando modifiche alle funzioni utilizzate dalla seconda formulazione, in particolar modo vengono aggiunti i codici di gestione della nuova variabili decisionale $y$ secondo le modalità e condizioni proposte dalla formulazione forte definita (3.2.3).\smallskip \\
+	Il metodo di calcolo della $b$ viene definito per rispecchiare la definizione fornita dalla teoria (3.15).
+	{\footnotesize \begin{lstlisting}[language=Python]
+b = {k: {t: {i: 0 for i in N} for t in NodiTarget[k]} for k in K}
+for k in K:
+	for t in NodiTarget[k]:
+		b[k][t][NodoOrigine[k]] = y[(k, t)]
+		b[k][t][t] = -y[(k, t)]
+	\end{lstlisting}}
+	Si deve costruire una nuova funzione per il calcolo della condizione di accensione o spegnimento della $y$ per un determinato target e informazione:
+	{\footnotesize \begin{lstlisting}[language=Python]
+for k in K:
+for t in NodiTarget[k]:
+if lam[(k,t,t)]-lam[(k,t,NodoOrigine[k])]< P:
+y[(k,t)]=1
+else:
+y[(k,t)]=0
+	\end{lstlisting}}
+	\subsubsection{Cplex}
+	\subsubsection{Python}
 	\chapter{Analisi Risultati}
 	\section{Caso rotto e ricalcolo}
 	K= [0]
