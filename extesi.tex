@@ -1411,7 +1411,7 @@ subGradienti = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
 lam[(k,t,i)] = lam[(k,t,i)] + valoreDiCambio *subGradienti[(k,t,i)]
 \end{lstlisting}}
 \subsubsection{Main Loop}
-Il ciclo principale, invece, si modifica per gestire le chiamate alle varie funzioni descritte precedentemente oltre all'introduzione della nuova variabile decisionale $y$ all'interno della logica del problema.
+Il ciclo principale, invece, si modifica sia per gestire le chiamate alle varie funzioni descritte precedentemente sia per integrare la nuova variabile decisionale $y$ all'interno della logica del problema.
 {\footnotesize \begin{lstlisting}[language=Python]
 y = {(k,t):0 for k in K for t in NodiTarget[k]}
 lam = {(k,t,i):0.0 for k in K for t in NodiTarget[k] for i in N}
