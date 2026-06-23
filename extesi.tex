@@ -1551,16 +1551,17 @@ for (k, t) in KT:
 \chapter{Analisi dei Risultati}
 In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di simulazione. Le istanze di test sono costruite per simulare una rete Publish/Subscribe, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili.
 Al fine di una valutazione, la soluzione viene confrontata con l'ottimo calcolata direttamente nell'ambiente Cplex e la distanza tra le due rappresenta una metrica fondamentale e sufficiente per determinare l'ottimalità dell'algoritmo.
-La generazione degli scenari segue due modalità: una manuale per analizzare in modo mirato i casi limite e le potenziali criticità e una casuale per verificare la correttezza in contesti non preconfigurati.
+La generazione degli scenari segue due modalità: una manuale per analizzare in modo mirato i casi limite e le potenziali criticità e una casuale per verificare la correttezza in contesti non preconfigurati. \textbf{TODO}
 \section{Scenari e Test}
-\subsection{Primo caso}
+Durante l'analisi dei vari test vengono raccolte statistiche importanti al fine di valutare l'andamento e l'efficienza dell'algoritmo. Come misura principale, si adotta la distanza dall'ottimo e come indicatori secondari il tempo di esecuzione e le iterazioni. Questi due parametri non sono valutabili per tutti gli algoritmi e molti degli algoritmi soprattutto quelli Python API hanno un limite definito dalla libreria su quante variabili possono gestire quindi si andranno a perdere nelle valutazioni. Infine, in chiusura alla sezione dei test viene presentata una \textbf{TODO}
+\subsection{Primo Scenario}
 La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono effettuate in modo preciso rendendo i percorsi più brevi di soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso1}
-	\caption[Primo scenario]{Foto rete del primo scenario}
+	\caption[Primo scenario]{Foto rete del primo scenario.}
 	\label{fig:caso1}
-\end{figure}
+\end{figure} \newpage
 \subsubsection{Dati Informativi}
 La rete deve trasportare una informazione $0$ dal nodo publisher $0$ al subscriber $4$ potendo passare da 3 nodi brokers.
 I costi dei collegamenti $0->2->3->4$ sono molto ridotti.
@@ -1568,66 +1569,68 @@ I costi dei collegamenti $0->2->3->4$ sono molto ridotti.
 Inserendo il nostro scenario all'interno dei vari algoritmi si possono analizzare i risultati.
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
-	\begin{tabular}{|c|c|c|}
+	\begin{tabular}{|c|c|c|c|}
 		\hline
-		\textbf{Algoritmo} & \textbf{Soluzione} & \textbf{Tempo Impiegato (secondi)} \\ \hline
-		Prima Formulazione Cplex & 7 & / \\ \hline
-		Prima Formulazione Python API & 7 & 0.0115 \\ \hline
-		Seconda Formulazione Lagrangiana & 7 & 0.0173 \\ \hline
-		Seconda Formulazione Cplex & 7 & / \\ \hline
-		Seconda Formulazione Python API & 7 & 0.0580 \\ \hline
-		Terza Fomrulazione Lagrangiana & 7 & 0.0120 \\ \hline
-		Terza Fomrulazione Cplex & 7 & / \\ \hline
-		Terza Fomrulazione Python API & 7 & 0.0481 \\ \hline
+		\textbf{Algoritmo} & \textbf{Soluzione} & \textbf{Tempo (secondi)} & \textbf{Iterazioni} \\ \hline
+		Prima Formulazione Cplex & 7 & / & / \\ \hline
+		Prima Formulazione Python API & 7 & 0.0115 & /\\ \hline
+		Seconda Formulazione Lagrangiana & 7 & 0.0173 & 208\\ \hline
+		Seconda Formulazione Cplex & 7 & / & /\\ \hline
+		Seconda Formulazione Python API & 7 & 0.0580 & /\\ \hline
+		Terza Fomrulazione Lagrangiana & 7 & 0.0120 & 120\\ \hline
+		Terza Fomrulazione Cplex & 7 & / & /\\ \hline
+		Terza Fomrulazione Python API & 7 & 0.0481 & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica degli scenari di test analizzati.}
-	\label{tab:scenari_test}
+	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
 
-\noindent Come si vede dai risultati, nonostante tra la prima e le altre due formulazione ci sia un metodo diverso di contaggio del costo di trasporto tutte hanno dato la stessa soluzione ottima con dei tempi molto rapidi.
+\noindent Come emerge dai risultati, nonostante la prima formulazione e le successive due adottino misure differenti per il calcolo del costo del percorso ottimo, hanno tutte restituito la medesima soluzione con tempi molto ridotti. Tale soluzione, inoltre, risulta ottima per ciasciun algoritmo sviluppato, in quanto coincide con il risultato restituito dagli algoritmi Cplex. Le soluzioni tra le formulazioni coincidono in quanto avendo una sola informazione la $x$ si comporta come la $e$.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{Caso1OttimoPercorso}
-	\caption{Percorso ottimo disegnato sulla base del risultato della terza formulazione}
+	\caption{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
 	\label{fig:caso1ottimopercorso}
 \end{figure}
 
-
-K= [0]
-N= [0, 1, 2, 3, 4]
-A= [(0, 2), (0, 1), (0, 3), (2, 3), (1, 4), (2, 4), (3, 4)]
-Subscribers= [4]
-Brokers= [1, 2, 3]
-Publishers= [0]
-NodoOrigine= {0: 0}
-NodiTarget= {0: [4]}
-a= {0: 1}
-C= {(0, 2): 1, (0, 1): 35, (0, 3): 27, (2, 3): 4, (1, 4): 74, (2, 4): 77, (3, 4): 2}
-u= {(0, 2): 3, (0, 1): 5, (0, 3): 6, (2, 3): 7, (1, 4): 11, (2, 4): 3, (3, 4): 11}
-\subsection{caso 2}
+\subsection{Secondo Scenario}
 Il secondo scenario di test viene utilizzato per analizzare il comportamento dell'algoritmo in una rete densamente interconnessa. L'obbiettivo è verificare la correttezza dell'algoritmo nella scelta del percorso ottimo in un contesto con molteplici cammini alternativi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso2}
-	\caption[Secondo scenario]{Secondo scenario}
+	\caption[Secondo scenario]{Secondo scenario.}
 	\label{fig:caso2}
 \end{figure}
-
-K= [0]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-A= [(0, 6), (0, 9), (0, 5), (0, 2), (0, 8), (0, 4), (0, 7), (0, 1), (1, 4), (1, 9), (2, 3), (2, 8), (3, 1), (4, 5), (4, 2), (5, 10), (5, 2), (6, 7), (6, 3), (7, 4), (7, 8), (8, 10), (9, 5), (9, 6), (10, 4), (6, 11), (4, 11), (10, 11), (8, 11)]
-Subscribers= [11]
-Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Publishers= [0]
-NodoOrigine= {0: 0}
-NodiTarget= {0: [11]}
-a= {0: 1}
-C= {(0, 6): 37, (0, 9): 41, (0, 5): 40, (0, 2): 77, (0, 8): 8, (0, 4): 60, (0, 7): 30, (0, 1): 54, (1, 4): 39, (1, 9): 43, (2, 3): 71, (2, 8): 69, (3, 1): 99, (4, 5): 82, (4, 2): 25, (5, 10): 44, (5, 2): 30, (6, 7): 22, (6, 3): 65, (7, 4): 59, (7, 8): 97, (8, 10): 85, (9, 5): 42, (9, 6): 86, (10, 4): 89, (6, 11): 94, (4, 11): 19, (10, 11): 36, (8, 11): 77}
-u= {(0, 6): 6, (0, 9): 14, (0, 5): 14, (0, 2): 1, (0, 8): 1, (0, 4): 5, (0, 7): 14, (0, 1): 11, (1, 4): 12, (1, 9): 14, (2, 3): 10, (2, 8): 13, (3, 1): 4, (4, 5): 11, (4, 2): 6, (5, 10): 1, (5, 2): 3, (6, 7): 9, (6, 3): 1, (7, 4): 10, (7, 8): 13, (8, 10): 14, (9, 5): 1, (9, 6): 6, (10, 4): 15, (6, 11): 8, (4, 11): 9, (10, 11): 12, (8, 11): 5}
-\subsection{caso 3}
-Il terzo scenario di test introduce una situazione di congestione della rete in cui tre informazioni, di cui una con due target, competono per arrivare ai nodi Subscriber. Le capacità degli archi sono state elaborate precisamente per indurre uno scenario di saturazione che colpisca prima il percorso ottimo e poi l'unica altra via agibile.
-Gli obiettivi di questo scenario consistono nel verificare la corretta saturazione della cammino ottimo, l'efficace scelta della seconda via percorribile e la selezione ottimale di quale informazione non trasmettere.
+\subsubsection{Dati Informativi}
+La rete deve trasportare una informazione $0$ dal nodo publisher $0$ al subscriber $41$ potendo passare da 40 nodi brokers differenti utilizzando 201 possibili archi distinti.
+La peculiarità dello scenario risiede nell'elevato numero di archi all'interno del grafo, progettati per indurre una forte ridondanza e una molteplicità di cammini alternativi.
+\subsubsection{Risoluzione}
+\begin{table}[htbp]
+	\centering % Centra la tabella nella pagina
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Algoritmo} & \textbf{Soluzione} & \textbf{Tempo (secondi)} & \textbf{Iterazioni} \\ \hline
+		Prima Formulazione Cplex & 113 & / & / \\ \hline
+		Prima Formulazione Python API & 113 & 0.0568 & /\\ \hline
+		Seconda Formulazione Lagrangiana & 113 & 0.9658 & 2700\\ \hline
+		Seconda Formulazione Cplex & 113 & / & /\\ \hline
+		Seconda Formulazione Python API & 113 & 0.0500 & /\\ \hline
+		Terza Fomrulazione Lagrangiana & 113 & 0.8932 & 1640\\ \hline
+		Terza Fomrulazione Cplex & 113 & / & /\\ \hline
+		Terza Fomrulazione Python API & 113 & 0.0549 & /\\ \hline
+	\end{tabular}
+	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+\end{table}
+\noindent Come emerge dalle soluzioni, tutti gli algoritmi hanno trovato l'ottimo con tempi ridotti, tuttavia, si rileva un peggioramento dei tempi, da associare sia all'aumento dei percorsi da controllare tramite l'algoritmo di Upper Bound, sia all'aumento delle iterazioni dei cicli, i quali dipendono dal numero di archi e nodi. Analogamente a quanto osservato nel primo scenario, l'uguaglianza tra le soluzioni delle diverse formulazioni dipende dal comportamento della variabile $x$ in scenari con una sola informazione da trasmettere.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{caso2Ottimo}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\label{fig:caso2ottimo}
+\end{figure}
+\subsection{Terzo Scenario}
+Il terzo scenario di test introduce una situazione di congestione della rete in cui tre informazioni, di cui una con due target, competono per arrivare ai nodi Subscriber. Le capacità degli archi sono state elaborate precisamente per indurre uno scenario di saturazione che colpisca il percorso ottimo costringendo agli algoritmi di dover usufruire di altri cammini per la trasmissione delle informazioni.
+Gli obiettivi di questo scenario consistono nel verificare la corretta saturazione della cammino ottimo e l'efficace scelta della seconda via percorribile migliore.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso3}
@@ -1698,6 +1701,9 @@ Test con nodi con singolo target e test con nodi con più target.
 Per questo test prendo un caso semplice come il primo e continuo ad aggiungere nodi super collegati che non verranno mai scelti solo per determinare se l'algoritmo continua a produrre il risultato ottimo e di quanto peggiora il tempo per iterazione.
 \subsection{Caso 6}
 Nel sesto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di target da raggiungere per informazione.
+\section{Analisi generale con grafici istogrammi e tabella con l'ottimo per ogni algoritmo per ogni scenario}
+\section{Mostrare come cambia la convergenza al cambiare di alpha}
+\section{Mostrare come cambia più soluzioni euristiche andiamo a prendere, cambiamo i valori dell'euristico}
 \section{Soluzioni parziali}
 
 \subsection{Caso 1}
