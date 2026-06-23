@@ -960,7 +960,8 @@ for (k,i,j) in d:
 		ePerKnapsack.append((k,i,j))
 	\end{lstlisting}}
 	\subsubsection{KnapSack}
-	Al fine di garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem). La capacità massima dello zaino coincide con la capacità dell'arco, il peso degli oggetti da inserire all'interno dello zaino con la banda occupata dall'informazione e il profitto è rappresentato dal valore opposto del costo penalizzato, che viene reso positivo per consentirne l'utilizzo diretto. In caso di attivazione dell'arco la relativa variabile $x$ verrà aggiornata seguendo la logica espressa nel paragrafo (2.5).\\
+	Al fine di garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem). Il problema dello zaino è un problema molto famoso nel panorama della ricerca operativa, il cui scopo è quello di inserire la migliore combinazione di oggetti possibile all'interno di uno zaino dotato di una capacità massima. Ogni oggetto è caratterizzato da un peso e da un guadagno, di conseguenza l'obiettivo finale è la massimizzazione del profitto totale. Trattandosi di un problema complesso, i tempi di risoluzione risultano molto elevati con metodi tradizionali. Per superare questo limite si sfrutta la programmazione dinamica ovvero si suddivide in sotto-problemi e per il calcolo di ciascuno di essi si sfruttano i calcoli già effettuati in quelli precedenti al fine di ridurre i tempi di calcolo.
+	La capacità massima dello zaino coincide con la capacità dell'arco, il peso degli oggetti da inserire all'interno dello zaino con la banda occupata dall'informazione e il profitto è rappresentato dal valore opposto del costo penalizzato, che viene reso positivo per consentirne l'utilizzo diretto. In caso di attivazione dell'arco la relativa variabile $x$ verrà aggiornata seguendo la logica espressa nel paragrafo (2.5).\\
 	In primo luogo, a ciascun arco vengono associate le informazioni che si ritengono candidate a transitarvi.
 	{\footnotesize \begin{lstlisting}[language=Python]
 kPerArco = {}
@@ -1468,9 +1469,86 @@ subject to {
 }
 \end{lstlisting}}
 \subsubsection{Python API}
-L'integrazione in linguaggio python tramite l'API di Cplex ha mantenuto le idee presentate nell'ambiente Cplex, definendo inizialmente le variabili e successivamente la funzione obiettivo e i vincoli.
-
+L'integrazione in linguaggio Python tramite l'API è stata sviluppata in modo da rispecchiare le modifiche effettuate precedentemente nell'ambiente Cplex. In primo luogo si creano le variabili decisionali e di supporto, garantendo nella definizione il rispetto dei loro vincoli associati (3.26) (3.27) (3.28).
+{\footnotesize \begin{lstlisting}[language=Python]
+modello = cplex.Cplex()
+modello.objective.set_sense(modello.objective.sense.minimize)
+KT = [(k, t) for k in K for t in NodiTarget[k]]
+x = [(k,t,i,j)for (k, t) in KT for (i,j) in A] 
+modello.variables.add(names=[f"x_{k}_{t}_{i}_{j}"for (k,t,i,j) in x],
+lb=[0]*len(x),types=["I"]*len(x)) 
+e = [(k,i,j) for k in K for (i,j) in A]
+modello.variables.add(names=[f"e_{k}_{i}_{j}"for (k,i,j) in e],
+lb=[0]*len(e),ub=[1]*len(e),types=["B"]*len(e)) 
+y = [(k,t) for (k, t) in KT]
+modello.variables.add(names=[f"y_{k}_{t}" for (k,t) in y],
+lb=[0]*len(y),ub=[1]*len(y),types=["B"]*len(y))
+\end{lstlisting}}
+\noindent In secondo luogo, si definiscono la funzione obiettivo e i vincoli della formulazione, integrando la $b$ e sfruttando la struttura $KT$ appena creata. Una particolarità nell'implementazione della funzione obiettivo riguarda l'introduzione di un offset da aggiungere al calcolo, ovvero di un valore costante indipendente dalle variabili decisionali. In questo caso specifico, si tratta del valore $P$ moltiplicato per il numero di combinazioni di $KT$.\\
+Funzione Obiettivo (3.22):
+{\footnotesize \begin{lstlisting}[language=Python]
+temp_X = []
+temp_Coeffs=[]
+for k in K:
+	for (i,j) in A:
+		temp_Coeffs.append(C[i,j])
+		temp_X.append(f"e_{k}_{i}_{j}")
+for (k, t) in KT:
+	temp_Coeffs.append(-P)
+	temp_X.append(f"y_{k}_{t}")
+modello.objective.set_linear(list(zip(temp_X,temp_Coeffs)))
+offset = P * len(KT)
+modello.objective.set_offset(offset)
+\end{lstlisting}}
+\noindent Primo vincolo (3.23)
+{\footnotesize \begin{lstlisting}[language=Python]
+for (k, t) in KT:
+	for i in N:
+		temp_X = []
+		temp_Coeffs=[]
+		for j in Lt[i]:
+			if(i,j) in A:
+				temp_X.append(f"x_{k}_{t}_{i}_{j}")
+				temp_Coeffs.append(1)
+		for j in Lr[i]:
+			if(j,i) in A:
+				temp_X.append(f"x_{k}_{t}_{j}_{i}")
+				temp_Coeffs.append(-1)
+		if i==NodoOrigine[k]:
+			temp_X.append(f"y_{k}_{t}")
+			temp_Coeffs.append(-1)
+		if i == t:
+			temp_X.append(f"y_{k}_{t}")
+			temp_Coeffs.append(1)
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["E"],rhs=[0])
+\end{lstlisting}}
+\noindent Secondo vincolo (3.24):
+{\footnotesize \begin{lstlisting}[language=Python]
+for (i,j) in A:
+	temp_X = []
+	temp_Coeffs=[]
+	for k in K:
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(a[k])
+	modello.linear_constraints.add
+	(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
+\end{lstlisting}}
+\noindent Terzo vincolo (3.25):
+{\footnotesize \begin{lstlisting}[language=Python]
+for (k, t) in KT:
+	for (i,j) in A:
+		temp_X = []
+		temp_Coeffs=[]
+		temp_X.append(f"x_{k}_{t}_{i}_{j}")
+		temp_Coeffs.append(1)
+		temp_X.append(f"e_{k}_{i}_{j}")
+		temp_Coeffs.append(-1)
+		modello.linear_constraints.add
+		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
+\end{lstlisting}}
 \chapter{Analisi Risultati}
+In questo capitolo, si sono scelti delle reti di test da controllare in tutte le versioni del codice controllando e mostrando la differenza nella scelta dei vari parametri di come influenza il raggiungimento dell'ottimo.
 \section{Casi senza percorsi parziali}
 \subsection{Caso 1}
 K= [0]
