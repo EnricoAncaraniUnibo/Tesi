@@ -840,6 +840,7 @@ if(costo<costoTot):
 	\end{lstlisting}}
 	\subsection{Prima Formulazione}
 	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in python, escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
+	\subsubsection{Cplex}
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
 minimize
@@ -858,6 +859,7 @@ subject to {
 	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
 }	
 	\end{lstlisting}}
+	\subsubsection{Python API}
 	\noindent Nel codice in python la scrittura si complica e le definizioni si fanno più complesse.
 	Inizialmente vengono definite e generate le variabili decisionali con i rispettivi vincoli associati: (2.6) e (2.7).
 	{\footnotesize \begin{lstlisting}[language=Python]					 
@@ -1110,7 +1112,7 @@ subject to {
 	}
 }									 
 	\end{lstlisting}}
-	\subsubsection{Python}
+	\subsubsection{Python API}
 	Per quanto riguarda l'implementazione in python tramite le API di cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
 	Inizialmente, vengono inizializzate le variabili decisionali con i relativi vincoli associati (2.12) e (2.13).
 	{\footnotesize 	\begin{lstlisting}[language=Python]
@@ -1442,7 +1444,32 @@ while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
 	aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
 \end{lstlisting}}
 \subsubsection{Cplex}
-\subsubsection{Python}
+Nel caso della terza formulazione, all'interno dell'ambiente Cplex, si è scelto di modificare la gestione delle variabili in modo da preservare la linearità e la leggibilità del codice.
+I due cambiamenti principali riguardano l'integrazione della $b$ all'interno del vincolo, mediante l'uso di condizioni, e la creazione di una struttura $KT$ contenente le combinazioni di tutte le informazioni e i relativi target.
+{\footnotesize \begin{lstlisting}[language=Python]
+minimize
+sum(k in K, <i,j> in A) Costi[<i,j>] * e[k][<i,j>] +
+sum(k in K, t in NodiTarget[k]) P * (1 - y[k][t]);
+
+subject to {
+	
+	forall(<k, t> in KT, i in N) {
+		sum(j in Lt[i]) x[<k,t>][<i,j>] - sum(j in Lr[i]) x[<k,t>][<j,i>] == 
+		(i == NodoOrigine[k] ? y[k][t] : (i == t ? -y[k][t] : 0));
+	}
+	
+	forall(<i,j> in A)
+	sum(k in K) a[k] * e[k][<i,j>] <= Capacita[<i,j>];
+	
+	forall(<k, t> in KT, <i, j> in A) {
+		x[<k,t>][<i,j>] <= e[k][<i,j>];
+	}
+	
+}
+\end{lstlisting}}
+\subsubsection{Python API}
+L'integrazione in linguaggio python tramite l'API di Cplex ha mantenuto le idee presentate nell'ambiente Cplex, definendo inizialmente le variabili e successivamente la funzione obiettivo e i vincoli.
+
 \chapter{Analisi Risultati}
 \section{Casi senza percorsi parziali}
 \subsection{Caso 1}
