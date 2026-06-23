@@ -845,19 +845,19 @@ if(costo<costoTot):
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
 minimize
-sum(k in K, i in N, j in Lr[i]) C[j][i] * x[k][j][i]; 
+sum(k in K, i in N, j in Lr[i]) C[<j,i>] * x[k][<j,i>]; 
 subject to {
 	forall(k in K, t in NodiTarget[k]) 
-	sum(j in Lr[t]) x[k][j][t] == 1; 
+	sum(j in Lr[t]) x[k][<j,t>] == 1; 
 	
 	forall(k in K, i in Brokers)
-	sum(j in Lr[i]) x[k][j][i] == sum(j in Lt[i]) x[k][i][j];
+	sum(j in Lr[i]) x[k][<j,i>] == sum(j in Lt[i]) x[k][<i,j>];
 	
 	forall(k in K, <i,j> in A)
-	bigM*e[k][i][j] >= x[k][i][j]; 
+	bigM*e[k][<i,j>] >= x[k][<i,j>]; 
 	
 	forall(i in N, j in Lt[i])
-	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=u[i][j]; 
+	sum(k in K) a[k]*(e[k][<i,j>]+e[k][<j,i>])<=u[<i,j>]; 
 }	
 	\end{lstlisting}}
 	\subsubsection{Python API}
@@ -1100,17 +1100,17 @@ while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
 	Similmente alla formulazione precedente, l'ambiente Cplex consente una scrittura del codice lineare. In particolare, poiché il vincolo (2.9) incorpora due vincoli distinti (2.2) e (2.3), il modello finale presenta un vincolo in meno rispetto alla prima formulazione.
 	{\footnotesize \begin{lstlisting}
 minimize
-sum(k in K, <i,j> in A) C[i][j] * e[k][i][j]; 
+sum(k in K, <i,j> in A) C[<i,j>] * e[k][<i,j>]; 
 subject to {
 	forall(k in K, i in N : i != NodoOrigine[k]) 
-	sum(j in Lt[i]) x[k][i][j] - sum(j in Lr[i]) x[k][j][i] == b[k][i]; 
+	sum(j in Lt[i]) x[k][<i,j>] - sum(j in Lr[i]) x[k][<j,i>] == b[k][i]; 
 	
 	forall(<i,j> in A)
-	sum(k in K) a[k] * e[k][i][j] <= u[i][j];
+	sum(k in K) a[k] * e[k][<i,j>] <= u[<i,j>];
 	
 	forall(k in K, <i,j> in A) {
-		e[k][i][j] <= x[k][i][j];
-		x[k][i][j] <= card(NodiTarget[k]) * e[k][i][j];
+		e[k][<i,j>] <= x[k][<i,j>];
+		x[k][<i,j>] <= card(NodiTarget[k]) * e[k][<i,j>];
 	}
 }									 
 	\end{lstlisting}}
@@ -1552,15 +1552,47 @@ for (k, t) in KT:
 In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di simulazione. Le istanze di test sono costruite per simulare una rete Publish/Subscribe, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili.
 Al fine di una valutazione, la soluzione viene confrontata con l'ottimo calcolata direttamente nell'ambiente Cplex e la distanza tra le due rappresenta una metrica fondamentale e sufficiente per determinare l'ottimalità dell'algoritmo.
 La generazione degli scenari segue due modalità: una manuale per analizzare in modo mirato i casi limite e le potenziali criticità e una casuale per verificare la correttezza in contesti non preconfigurati.
-\section{Scenari}
-\subsection{Caso 1}
-La prima istanza di test è una rete molto semplice con un totale di 4 nodi. Le connessioni sono effettuate in modo preciso rendo il percorso più breve di soli due archi. Tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte dell'algoritmo di un percorso più lungo al fine di ridurre i costi complessivi.
+\section{Scenari e Test}
+\subsection{Primo caso}
+La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono effettuate in modo preciso rendendo i percorsi più brevi di soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso1}
-	\caption[Primo scenario]{Primo scenario}
+	\caption[Primo scenario]{Foto rete del primo scenario}
 	\label{fig:caso1}
 \end{figure}
+\subsubsection{Dati Informativi}
+La rete deve trasportare una informazione $0$ dal nodo publisher $0$ al subscriber $4$ potendo passare da 3 nodi brokers.
+I costi dei collegamenti $0->2->3->4$ sono molto ridotti.
+\subsubsection{Risoluzione}
+Inserendo il nostro scenario all'interno dei vari algoritmi si possono analizzare i risultati.
+\begin{table}[htbp]
+	\centering % Centra la tabella nella pagina
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Algoritmo} & \textbf{Soluzione} & \textbf{Tempo Impiegato (secondi)} \\ \hline
+		Prima Formulazione Cplex & 7 & / \\ \hline
+		Prima Formulazione Python API & 7 & 0.0115 \\ \hline
+		Seconda Formulazione Lagrangiana & 7 & 0.0173 \\ \hline
+		Seconda Formulazione Cplex & 7 & / \\ \hline
+		Seconda Formulazione Python API & 7 & 0.0580 \\ \hline
+		Terza Fomrulazione Lagrangiana & 7 & 0.0120 \\ \hline
+		Terza Fomrulazione Cplex & 7 & / \\ \hline
+		Terza Fomrulazione Python API & 7 & 0.0481 \\ \hline
+	\end{tabular}
+	\caption{Panoramica degli scenari di test analizzati.}
+	\label{tab:scenari_test}
+\end{table}
+
+\noindent Come si vede dai risultati, nonostante tra la prima e le altre due formulazione ci sia un metodo diverso di contaggio del costo di trasporto tutte hanno dato la stessa soluzione ottima con dei tempi molto rapidi.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Caso1OttimoPercorso}
+	\caption{Percorso ottimo disegnato sulla base del risultato della terza formulazione}
+	\label{fig:caso1ottimopercorso}
+\end{figure}
+
 
 K= [0]
 N= [0, 1, 2, 3, 4]
@@ -1614,10 +1646,56 @@ NodiTarget= {0: [8, 9], 1: [9], 2: [9]}
 a= {0: 3, 1: 4, 2: 9}
 C= {(0, 7): 90, (1, 3): 47, (1, 7): 91, (1, 5): 8, (1, 6): 17, (1, 4): 47, (2, 4): 48, (2, 5): 55, (2, 7): 16, (2, 6): 83, (3, 6): 53, (5, 3): 57, (6, 5): 52, (6, 8): 77, (7, 8): 17, (5, 9): 77, (7, 9): 50, (4, 9): 10}
 u= {(0, 7): 4, (1, 3): 11, (1, 7): 13, (1, 5): 15, (1, 6): 1, (1, 4): 1, (2, 4): 8, (2, 5): 15, (2, 7): 12, (2, 6): 12, (3, 6): 3, (5, 3): 3, (6, 5): 11, (6, 8): 8, (7, 8): 11, (5, 9): 9, (7, 9): 7, (4, 9): 10}
-\subsection{caso 4}
+\section{Scenari Casuali Sequenziali}
+\subsection{Caso 4}
 Nel quarto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di commodities.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{caso4}
+	\caption[Quarto scenario]{Quarto scenario}
+	\label{fig:caso4}
+\end{figure}
+K= [0, 1, 2, 3, 4, 5, 6]
+N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (10, 12), (8, 12), (7, 13)]
+Subscribers= [11, 12, 13]
+Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Publishers= [0]
+NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
+a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
+C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (10, 12): 96, (8, 12): 91, (7, 13): 28}
+u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (10, 12): 100, (8, 12): 100, (7, 13): 100}
+Dopo il quarto caso è stato modificato per impedire il raggiungimento del 12 nodo dal percorso ottimo, questo per mostrare la capacità dell'algoritmo di ricalcolare il percorso ottimo.
+K= [0, 1, 2, 3, 4, 5, 6]
+N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (8, 12), (7, 13)]
+Subscribers= [11, 12, 13]
+Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Publishers= [0]
+NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
+a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
+C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (8, 12): 91, (7, 13): 28}
+u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (8, 12): 100, (7, 13): 100}
+Dopo è stato reso impossibilitato di raggiungere il 13 nodo mostrando il risultato parziale
+K= [0, 1, 2, 3, 4, 5, 6]
+N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (8, 12)]
+Subscribers= [11, 12, 13]
+Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Publishers= [0]
+NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
+a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
+C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (8, 12): 91}
+u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (8, 12): 100}
+Si controlla sequenzalmente l'aumento del numero di informazioni e il loro impatto.
 \subsection{Caso 5}
 Nel quinto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di Broker e Archi.
+In questo caso la foto non dà un'idea chiara del grafo quindi è inutile
+Test con nodi con singolo target e test con nodi con più target.
+Per questo test prendo un caso semplice come il primo e continuo ad aggiungere nodi super collegati che non verranno mai scelti solo per determinare se l'algoritmo continua a produrre il risultato ottimo e di quanto peggiora il tempo per iterazione.
 \subsection{Caso 6}
 Nel sesto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di target da raggiungere per informazione.
 \section{Soluzioni parziali}
