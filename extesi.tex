@@ -755,6 +755,7 @@
 		\item Algoritmo Lagrangiano: Algoritmo implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
 		\item Algoritmo euristico per l'Upper Bound: Algoritmo euristico inspirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
 	\end{itemize}
+	Ogni algoritmo presentato in questo capitolo utilizza le variabili già definite nel paragrafo dei simboli globali (2.2).
 	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
 	\subsection{Upper Bound Euristico}
 	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
@@ -844,7 +845,7 @@ if(costo<costoTot):
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
 minimize
-sum(k in K, i in N, j in Lr[i]) Costi[j][i] * x[k][j][i]; 
+sum(k in K, i in N, j in Lr[i]) C[j][i] * x[k][j][i]; 
 subject to {
 	forall(k in K, t in NodiTarget[k]) 
 	sum(j in Lr[t]) x[k][j][t] == 1; 
@@ -856,7 +857,7 @@ subject to {
 	bigM*e[k][i][j] >= x[k][i][j]; 
 	
 	forall(i in N, j in Lt[i])
-	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=Capacita[i][j]; 
+	sum(k in K) a[k]*(e[k][i][j]+e[k][j][i])<=u[i][j]; 
 }	
 	\end{lstlisting}}
 	\subsubsection{Python API}
@@ -1099,13 +1100,13 @@ while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
 	Similmente alla formulazione precedente, l'ambiente Cplex consente una scrittura del codice lineare. In particolare, poiché il vincolo (2.9) incorpora due vincoli distinti (2.2) e (2.3), il modello finale presenta un vincolo in meno rispetto alla prima formulazione.
 	{\footnotesize \begin{lstlisting}
 minimize
-sum(k in K, <i,j> in A) Costi[i][j] * e[k][i][j]; 
+sum(k in K, <i,j> in A) C[i][j] * e[k][i][j]; 
 subject to {
 	forall(k in K, i in N : i != NodoOrigine[k]) 
 	sum(j in Lt[i]) x[k][i][j] - sum(j in Lr[i]) x[k][j][i] == b[k][i]; 
 	
 	forall(<i,j> in A)
-	sum(k in K) a[k] * e[k][i][j] <= Capacita[i][j];
+	sum(k in K) a[k] * e[k][i][j] <= u[i][j];
 	
 	forall(k in K, <i,j> in A) {
 		e[k][i][j] <= x[k][i][j];
@@ -1449,7 +1450,7 @@ Nel caso della terza formulazione, all'interno dell'ambiente Cplex, si è scelto 
 I due cambiamenti principali riguardano l'integrazione della $b$ all'interno del vincolo, mediante l'uso di condizioni, e la creazione di una struttura $KT$ contenente le combinazioni di tutte le informazioni e i relativi target.
 {\footnotesize \begin{lstlisting}[language=Python]
 minimize
-sum(k in K, <i,j> in A) Costi[<i,j>] * e[k][<i,j>] +
+sum(k in K, <i,j> in A) C[<i,j>] * e[k][<i,j>] +
 sum(k in K, t in NodiTarget[k]) P * (1 - y[k][t]);
 
 subject to {
@@ -1460,7 +1461,7 @@ subject to {
 	}
 	
 	forall(<i,j> in A)
-	sum(k in K) a[k] * e[k][<i,j>] <= Capacita[<i,j>];
+	sum(k in K) a[k] * e[k][<i,j>] <= u[<i,j>];
 	
 	forall(<k, t> in KT, <i, j> in A) {
 		x[<k,t>][<i,j>] <= e[k][<i,j>];
@@ -1547,10 +1548,20 @@ for (k, t) in KT:
 		modello.linear_constraints.add
 		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
 \end{lstlisting}}
-\chapter{Analisi Risultati}
-In questo capitolo, si sono scelti delle reti di test da controllare in tutte le versioni del codice controllando e mostrando la differenza nella scelta dei vari parametri di come influenza il raggiungimento dell'ottimo.
-\section{Casi senza percorsi parziali}
+\chapter{Analisi dei Risultati}
+In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di simulazione. Le istanze di test sono costruite per simulare una rete Publish/Subscribe, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili.
+Al fine di una valutazione, la soluzione viene confrontata con l'ottimo calcolata direttamente nell'ambiente Cplex e la distanza tra le due rappresenta una metrica fondamentale e sufficiente per determinare l'ottimalità dell'algoritmo.
+La generazione degli scenari segue due modalità: una manuale per analizzare in modo mirato i casi limite e le potenziali criticità e una casuale per verificare la correttezza in contesti non preconfigurati.
+\section{Scenari}
 \subsection{Caso 1}
+La prima istanza di test è una rete molto semplice con un totale di 4 nodi. Le connessioni sono effettuate in modo preciso rendo il percorso più breve di soli due archi. Tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte dell'algoritmo di un percorso più lungo al fine di ridurre i costi complessivi.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{caso1}
+	\caption[Primo scenario]{Primo scenario}
+	\label{fig:caso1}
+\end{figure}
+
 K= [0]
 N= [0, 1, 2, 3, 4]
 A= [(0, 2), (0, 1), (0, 3), (2, 3), (1, 4), (2, 4), (3, 4)]
@@ -1560,9 +1571,17 @@ Publishers= [0]
 NodoOrigine= {0: 0}
 NodiTarget= {0: [4]}
 a= {0: 1}
-C= {(0, 2): 52, (0, 1): 35, (0, 3): 27, (2, 3): 92, (1, 4): 74, (2, 4): 77, (3, 4): 67}
+C= {(0, 2): 1, (0, 1): 35, (0, 3): 27, (2, 3): 4, (1, 4): 74, (2, 4): 77, (3, 4): 2}
 u= {(0, 2): 3, (0, 1): 5, (0, 3): 6, (2, 3): 7, (1, 4): 11, (2, 4): 3, (3, 4): 11}
 \subsection{caso 2}
+Il secondo scenario di test viene utilizzato per analizzare il comportamento dell'algoritmo in una rete densamente interconnessa. L'obbiettivo è verificare la correttezza dell'algoritmo nella scelta del percorso ottimo in un contesto con molteplici cammini alternativi.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{caso2}
+	\caption[Secondo scenario]{Secondo scenario}
+	\label{fig:caso2}
+\end{figure}
+
 K= [0]
 N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 A= [(0, 6), (0, 9), (0, 5), (0, 2), (0, 8), (0, 4), (0, 7), (0, 1), (1, 4), (1, 9), (2, 3), (2, 8), (3, 1), (4, 5), (4, 2), (5, 10), (5, 2), (6, 7), (6, 3), (7, 4), (7, 8), (8, 10), (9, 5), (9, 6), (10, 4), (6, 11), (4, 11), (10, 11), (8, 11)]
@@ -1575,6 +1594,15 @@ a= {0: 1}
 C= {(0, 6): 37, (0, 9): 41, (0, 5): 40, (0, 2): 77, (0, 8): 8, (0, 4): 60, (0, 7): 30, (0, 1): 54, (1, 4): 39, (1, 9): 43, (2, 3): 71, (2, 8): 69, (3, 1): 99, (4, 5): 82, (4, 2): 25, (5, 10): 44, (5, 2): 30, (6, 7): 22, (6, 3): 65, (7, 4): 59, (7, 8): 97, (8, 10): 85, (9, 5): 42, (9, 6): 86, (10, 4): 89, (6, 11): 94, (4, 11): 19, (10, 11): 36, (8, 11): 77}
 u= {(0, 6): 6, (0, 9): 14, (0, 5): 14, (0, 2): 1, (0, 8): 1, (0, 4): 5, (0, 7): 14, (0, 1): 11, (1, 4): 12, (1, 9): 14, (2, 3): 10, (2, 8): 13, (3, 1): 4, (4, 5): 11, (4, 2): 6, (5, 10): 1, (5, 2): 3, (6, 7): 9, (6, 3): 1, (7, 4): 10, (7, 8): 13, (8, 10): 14, (9, 5): 1, (9, 6): 6, (10, 4): 15, (6, 11): 8, (4, 11): 9, (10, 11): 12, (8, 11): 5}
 \subsection{caso 3}
+Il terzo scenario di test introduce una situazione di congestione della rete in cui tre informazioni, di cui una con due target, competono per arrivare ai nodi Subscriber. Le capacità sono state elaborate precisamente per cercare uno scenario di congestione prima della strada ottima poi dell'unica altra strada fattibile.
+Gli obiettivi di questo scenario sono molteplici: La corretta saturazione della strada ottima, la corretta scelta della seconda strada fattibile e la corretta scelta di quale informazione non trasmettere.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{caso3}
+	\caption[Terzo scenario]{Terzo scenario}
+	\label{fig:caso3}
+\end{figure}
+
 K= [0, 1, 2]
 N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 A= [(0, 7), (1, 3), (1, 7), (1, 5), (1, 6), (1, 4), (2, 4), (2, 5), (2, 7), (2, 6), (3, 6), (5, 3), (6, 5), (6, 8), (7, 8), (5, 9), (7, 9), (4, 9)]
@@ -1587,31 +1615,13 @@ a= {0: 3, 1: 4, 2: 9}
 C= {(0, 7): 90, (1, 3): 47, (1, 7): 91, (1, 5): 8, (1, 6): 17, (1, 4): 47, (2, 4): 48, (2, 5): 55, (2, 7): 16, (2, 6): 83, (3, 6): 53, (5, 3): 57, (6, 5): 52, (6, 8): 77, (7, 8): 17, (5, 9): 77, (7, 9): 50, (4, 9): 10}
 u= {(0, 7): 4, (1, 3): 11, (1, 7): 13, (1, 5): 15, (1, 6): 1, (1, 4): 1, (2, 4): 8, (2, 5): 15, (2, 7): 12, (2, 6): 12, (3, 6): 3, (5, 3): 3, (6, 5): 11, (6, 8): 8, (7, 8): 11, (5, 9): 9, (7, 9): 7, (4, 9): 10}
 \subsection{caso 4}
-K= [0, 1]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-A= [(0, 6), (0, 2), (0, 7), (0, 8), (0, 10), (0, 5), (0, 3), (0, 9), (1, 10), (2, 3), (3, 10), (5, 2), (6, 8), (7, 9), (8, 5), (8, 9), (9, 5), (9, 8), (10, 1), (10, 9), (1, 11)]
-Subscribers= [11]
-Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Publishers= [0]
-NodoOrigine= {0: 0, 1: 0}
-NodiTarget= {0: [11], 1: [11]}
-a= {0: 10, 1: 6}
-C= {(0, 6): 1, (0, 2): 3, (0, 7): 43, (0, 1): 98, (0, 8): 29, (0, 10): 70, (0, 5): 46, (0, 3): 13, (0, 9): 64, (1, 10): 74, (2, 3): 83, (3, 10): 16, (5, 2): 36, (6, 8): 10, (7, 9): 46, (8, 5): 51, (8, 9): 87, (9, 5): 24, (9, 8): 11, (10, 1): 52, (10, 9): 24, (1, 11): 12}
-u= {(0, 6): 13, (0, 2): 14, (0, 7): 7, (0, 1): 4, (0, 8): 11, (0, 10): 6, (0, 5): 14, (0, 3): 8, (0, 9): 15, (1, 10): 4, (2, 3): 2, (3, 10): 12, (5, 2): 6, (6, 8): 9, (7, 9): 13, (8, 5): 4, (8, 9): 14, (9, 5): 13, (9, 8): 2, (10, 1): 15, (10, 9): 9, (1, 11): 11}
+Nel quarto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di commodities.
 \subsection{Caso 5}
-K= [0, 1, 2]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104]
-A= [(0, 92), (1, 7), (2, 65), (3, 99), (4, 100), (5, 28), (6, 87), (7, 29), (8, 63), (9, 42), (10, 50), (11, 40), (12, 82), (13, 84), (14, 62), (15, 54), (16, 6), (17, 25), (18, 89), (19, 44), (20, 36), (21, 76), (22, 88), (23, 40), (24, 54), (25, 56), (26, 34), (27, 74), (28, 45), (29, 39), (30, 56), (31, 25), (32, 67), (33, 44), (34, 42), (35, 6), (36, 53), (37, 85), (38, 41), (39, 43), (40, 73), (41, 58), (42, 32), (43, 86), (44, 93), (45, 65), (46, 23), (47, 31), (48, 51), (49, 58), (50, 40), (51, 46), (52, 39), (53, 12), (54, 47), (55, 18), (56, 87), (57, 67), (58, 39), (59, 77), (60, 43), (61, 23), (62, 65), (63, 100), (64, 48), (65, 43), (66, 93), (67, 11), (68, 79), (69, 73), (70, 101), (71, 29), (72, 84), (73, 82), (74, 24), (75, 97), (76, 11), (77, 69), (78, 77), (79, 10), (80, 13), (81, 94), (82, 48), (83, 12), (84, 40), (85, 67), (86, 29), (87, 3), (88, 70), (89, 79), (90, 24), (91, 97), (92, 71), (93, 26), (94, 92), (95, 26), (96, 79), (97, 96), (98, 41), (99, 40), (100, 71), (101, 4), (67, 102), (49, 103), (69, 104)]
-Subscribers= [102, 103, 104]
-Brokers= [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101]
-Publishers= [0, 1]
-NodoOrigine= {0: 0, 1: 0, 2: 0}
-NodiTarget= {0: [103], 1: [102], 2: [102]}
-a= {0: 10, 1: 4, 2: 6}
-C= {(0, 92): 86, (1, 7): 18, (2, 65): 95, (3, 99): 27, (4, 100): 50, (5, 28): 95, (6, 87): 23, (7, 29): 90, (8, 63): 23, (9, 42): 29, (10, 50): 72, (11, 40): 5, (12, 82): 37, (13, 84): 81, (14, 62): 67, (15, 54): 34, (16, 6): 64, (17, 25): 31, (18, 89): 32, (19, 44): 66, (20, 36): 72, (21, 76): 13, (22, 88): 92, (23, 40): 62, (24, 54): 84, (25, 56): 19, (26, 34): 97, (27, 74): 14, (28, 45): 55, (29, 39): 69, (30, 56): 8, (31, 25): 24, (32, 67): 27, (33, 44): 75, (34, 42): 24, (35, 6): 91, (36, 53): 47, (37, 85): 33, (38, 41): 54, (39, 43): 93, (40, 73): 59, (41, 58): 72, (42, 32): 96, (43, 86): 51, (44, 93): 63, (45, 65): 25, (46, 23): 8, (47, 31): 25, (48, 51): 31, (49, 58): 26, (50, 40): 8, (51, 46): 70, (52, 39): 27, (53, 12): 55, (54, 47): 66, (55, 18): 9, (56, 87): 59, (57, 67): 54, (58, 39): 31, (59, 77): 33, (60, 43): 99, (61, 23): 1, (62, 65): 43, (63, 100): 35, (64, 48): 71, (65, 43): 12, (66, 93): 55, (67, 11): 70, (68, 79): 48, (69, 73): 37, (70, 101): 66, (71, 29): 33, (72, 84): 97, (73, 82): 12, (74, 24): 35, (75, 97): 39, (76, 11): 64, (77, 69): 16, (78, 77): 10, (79, 10): 67, (80, 13): 63, (81, 94): 95, (82, 48): 40, (83, 12): 27, (84, 40): 61, (85, 67): 28, (86, 29): 50, (87, 3): 88, (88, 70): 89, (89, 79): 69, (90, 24): 48, (91, 97): 5, (92, 71): 61, (93, 26): 63, (94, 92): 61, (95, 26): 47, (96, 79): 12, (97, 96): 2, (98, 41): 32, (99, 40): 33, (100, 71): 48, (101, 4): 70, (67, 102): 53, (49, 103): 41, (69, 104): 49}
-u= {(0, 92): 14, (1, 7): 9, (2, 65): 6, (3, 99): 10, (4, 100): 12, (5, 28): 5, (6, 87): 14, (7, 29): 5, (8, 63): 12, (9, 42): 3, (10, 50): 2, (11, 40): 5, (12, 82): 12, (13, 84): 12, (14, 62): 3, (15, 54): 7, (16, 6): 8, (17, 25): 15, (18, 89): 10, (19, 44): 3, (20, 36): 2, (21, 76): 1, (22, 88): 1, (23, 40): 7, (24, 54): 12, (25, 56): 3, (26, 34): 13, (27, 74): 5, (28, 45): 12, (29, 39): 6, (30, 56): 14, (31, 25): 6, (32, 67): 2, (33, 44): 15, (34, 42): 12, (35, 6): 8, (36, 53): 5, (37, 85): 1, (38, 41): 13, (39, 43): 11, (40, 73): 1, (41, 58): 8, (42, 32): 9, (43, 86): 1, (44, 93): 13, (45, 65): 1, (46, 23): 3, (47, 31): 1, (48, 51): 12, (49, 58): 1, (50, 40): 13, (51, 46): 12, (52, 39): 9, (53, 12): 9, (54, 47): 3, (55, 18): 15, (56, 87): 9, (57, 67): 6, (58, 39): 11, (59, 77): 10, (60, 43): 14, (61, 23): 8, (62, 65): 3, (63, 100): 4, (64, 48): 2, (65, 43): 6, (66, 93): 4, (67, 11): 9, (68, 79): 14, (69, 73): 6, (70, 101): 8, (71, 29): 1, (72, 84): 2, (73, 82): 15, (74, 24): 3, (75, 97): 9, (76, 11): 15, (77, 69): 12, (78, 77): 14, (79, 10): 11, (80, 13): 11, (81, 94): 13, (82, 48): 13, (83, 12): 11, (84, 40): 3, (85, 67): 9, (86, 29): 12, (87, 3): 1, (88, 70): 1, (89, 79): 10, (90, 24): 9, (91, 97): 9, (92, 71): 7, (93, 26): 14, (94, 92): 4, (95, 26): 7, (96, 79): 12, (97, 96): 9, (98, 41): 8, (99, 40): 13, (100, 71): 13, (101, 4): 12, (67, 102): 15, (49, 103): 9, (69, 104): 10}
-5092
+Nel quinto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di Broker e Archi.
+\subsection{Caso 6}
+Nel sesto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di target da raggiungere per informazione.
 \section{Soluzioni parziali}
+
 \subsection{Caso 1}
 K= [0, 1, 2, 3, 4]
 N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]
