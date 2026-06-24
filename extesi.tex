@@ -760,7 +760,7 @@
 	\subsection{Upper Bound Euristico}
 	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
 	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
-	Ad ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e per ciascuna di esse viene eseguita una variante dell'algoritmo di Dijkstra. Questo integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target, aggiornando dinamicamente le capacità residue della rete e rimuovendo gli archi che risultano completamente saturi. L'algoritmo, infine, restituisce i percorsi che hanno il costo totale complessivo minimo.\smallskip \\
+	Ad ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e per ciascuna di esse viene eseguita una variante dell'algoritmo di Dijkstra. Questo integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target, aggiornando dinamicamente le capacità residue della rete. L'algoritmo, infine, restituisce i percorsi che hanno il costo totale complessivo minimo.\smallskip \\
 	Le variabili in input coincidono con quelle definite nel paragrafo (2.2).\\
 	Nella prima parte di codice si definiscono le strutture globali utilizzate per memorizzare il cammino ottimo e il corrispondente costo.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -775,10 +775,12 @@ CapacitàUsata = u.copy()
 informazioni = K.copy()
 random.shuffle(informazioni)
 percorsi = []
+soluzioneValida = True
 	\end{lstlisting}}
-	\noindent L'algoritmo procede iterando su ogni informazione e ad ogni iterazione salva le capacità residue oltre all'insieme di nodi da visitare filtrati per raggiungibilità.
+	\noindent L'algoritmo procede iterando su ogni informazione e ad ogni iterazione salva l'insieme di nodi da visitare filtrati per raggiungibilità.
 	{\footnotesize \begin{lstlisting}[language=Python]
-Capacità=CapacitàUsata.copy()
+if not soluzioneValida:
+	break
 unvisitedNodes = [i for i in N]
 for g,l in Lr.items():
 	if len(l)==0:
@@ -792,26 +794,25 @@ if nodoDiPartenza not in unvisitedNodes:
 while(len(unvisitedNodes)>0):
 	for (i,j) in strade:
 		if(i==nodoProtagonista and j in unvisitedNodes):
-			if(tabella[j][1]>tabella[i][1]+C[i,j]):
-				tabella[j][1]=tabella[i][1]+C[i,j]
-				tabella[j][2]=nodoProtagonista
+			if CapacitàUsata[(i, j)] - a[informazione] >= 0:
+				if(tabella[j][1]>tabella[i][1]+C[i,j]):
+					tabella[j][1]=tabella[i][1]+C[i,j]
+					tabella[j][2]=nodoProtagonista
 	unvisitedNodes.remove(nodoProtagonista)
 	indiceProssimoNodo = -1
 	for j in unvisitedNodes:
-		pretarget = tabella[j][2]
-		if (pretarget,j) in Capacità:
-			if Capacità[(pretarget,j)]-a[informazione]>=0:
-				if(tabella[j][1]<tabella[indiceProssimoNodo][1]) or 
-				indiceProssimoNodo == -1:
+		if tabella[j][1]<math.inf:
+			if indiceProssimoNodo == -1:
+				indiceProssimoNodo = j
+			else:
+				if(tabella[j][1]< tabella[indiceProssimoNodo][1]):
 					indiceProssimoNodo = j
 	if indiceProssimoNodo==-1:
 		unvisitedNodes=[]
 	else:
-		pretarget = tabella[indiceProssimoNodo][2]
-		Capacità[(pretarget,indiceProssimoNodo)]-=a[informazione]
 		nodoProtagonista = indiceProssimoNodo
 	\end{lstlisting}}
-	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target. Con l'obiettivo di velocizzare i calcoli viene effettuato un controllo e rimozione degli archi risultanti saturi.
+	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target e viene aggiornata la capacità rimanente della rete.
 	{\footnotesize \begin{lstlisting}[language=Python]
 nodiFinali = NodiTarget[informazione].copy()
 random.shuffle(nodiFinali)
@@ -820,14 +821,13 @@ for nodoFinale in nodiFinali:
 	percorso.append(nodoFinale)
 	if(tabella[nodoFinale][2]==None):
 		costo=np.inf
+		soluzioneValida = False
 		break
 	while(tabella[nodoFinale][2]!=None):
 		preFinale= tabella[nodoFinale][2]
 		percorso.append(preFinale)
 		CapacitàUsata[(preFinale,nodoFinale)]=CapacitàUsata[(preFinale
 		,nodoFinale)]-a[informazione]
-		if(CapacitàUsata[(preFinale,nodoFinale)]==0):
-			strade.remove((preFinale,nodoFinale))
 		costo += C[preFinale,nodoFinale]
 		nodoFinale = preFinale
 	percorsi.append(informazione)
@@ -835,7 +835,7 @@ for nodoFinale in nodiFinali:
 	\end{lstlisting}}
 	Al termine del ciclo di controllo su tutte le informazioni, se la soluzione è ammissibile viene confrontata con la precedente migliore e se la precedente risulta peggiore in termini di costo viene sostituita.
 	{\footnotesize 	\begin{lstlisting}[language=Python]
-if(costo<costoTot):
+if soluzioneValida and costo<costoTot:
 	costoTot=costo
 	percorsoOttimo=percorsi
 	\end{lstlisting}}
@@ -1024,14 +1024,15 @@ while(rigaDelMigliore>0):
 	Per determinare l'importanza dell'aggiornamento da applicare alle penalità lagrangiane, viene calcolato lo step del subgradiente con la formula descritta (2.28).
 	{\footnotesize \begin{lstlisting}[language=Python]
 listaSubGradienti = []
-for i in N:
-	listaSubGradienti.append( subGradient[(k,i)])
-	norma = np.linalg.norm(listaSubGradienti)
-	norma = norma.item()
-	if(norma!=0):
-		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1])/(norma**2))
-	else:
-		valoreDiCambio = alpha*((Ub-lastLb[len(lastLb)-1]))
+for k in K:
+	for i in N:
+		listaSubGradienti.append(subGradient[(k,i)])
+norma = np.linalg.norm(listaSubGradienti)
+norma = norma.item()
+if norma!=0:
+	valoreDiCambio = alpha*((Ub-lastLb[-1])/(norma**2))
+else:
+	valoreDiCambio = alpha*((Ub-lastLb[-1]))
 	\end{lstlisting}}
 	\subsubsection{Calcolo del Lower Bound attuale}
 	Con l'obettivo di monitorare la convergenza dell'algoritmo e di aggiornare lo step, il valore del Lower Bound viene ricalcolato ad ogni iterazione eseguendo il calcolo della funzione obiettivo lagrangiana (2.20).
@@ -1057,8 +1058,8 @@ for k in K:
 		for j in Lr[i]:
 			Sommatoria2 += x[(k,j,i)]
 		subGradienti[(k,i)]=Sommatoria1-Sommatoria2-b[k][i]
+valoreDiCambio = calcolaValoreDiCambio(lastLb,subGradienti,Ub,alpha)
 for k in K:
-	valoreDiCambio = calcolaValoreDiCambio(lastLb,k,subGradienti,Ub,alpha)
 	for i in N:
 		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
 	\end{lstlisting}}
@@ -1621,7 +1622,7 @@ La peculiarità dello scenario risiede nell'elevato numero di archi all'interno d
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
-\noindent Come emerge dalle soluzioni, tutti gli algoritmi hanno trovato l'ottimo con tempi ridotti, tuttavia, si rileva un peggioramento dei tempi, da associare sia all'aumento dei percorsi da controllare tramite l'algoritmo di Upper Bound, sia all'aumento delle iterazioni dei cicli, i quali dipendono dal numero di archi e nodi. Analogamente a quanto osservato nel primo scenario, l'uguaglianza tra le soluzioni delle diverse formulazioni dipende dal comportamento della variabile $x$ in scenari con una sola informazione da trasmettere.
+\noindent Come emerge dalle soluzioni, tutti gli algoritmi hanno trovato l'ottimo con tempi relativamente brevi, tuttavia, si rileva un peggioramento delle tempistiche rispetto al primo scenario, da associare sia all'aumento dei percorsi da controllare tramite l'algoritmo di Upper Bound, sia all'aumento delle iterazioni dei cicli, i quali dipendono dal numero di archi e nodi. Analogamente a quanto osservato nel primo scenario, l'uguaglianza tra le soluzioni delle diverse formulazioni dipende dal comportamento della variabile $x$ in scenari con una sola informazione da trasmettere.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso2Ottimo}
@@ -1630,70 +1631,42 @@ La peculiarità dello scenario risiede nell'elevato numero di archi all'interno d
 \end{figure}
 \subsection{Terzo Scenario}
 Il terzo scenario di test introduce una situazione di congestione della rete in cui tre informazioni, di cui una con due target, competono per arrivare ai nodi Subscriber. Le capacità degli archi sono state elaborate precisamente per indurre uno scenario di saturazione che colpisca il percorso ottimo costringendo agli algoritmi di dover usufruire di altri cammini per la trasmissione delle informazioni.
-Gli obiettivi di questo scenario consistono nel verificare la corretta saturazione della cammino ottimo e l'efficace scelta della seconda via percorribile migliore.
+Gli obiettivi di questo scenario consistono nel verificare la corretta saturazione della cammino ottimo e l'efficace scelta delle vie percorribile alternative.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso3}
 	\caption[Terzo scenario]{Terzo scenario}
 	\label{fig:caso3}
 \end{figure}
-
-K= [0, 1, 2]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-A= [(0, 7), (1, 3), (1, 7), (1, 5), (1, 6), (1, 4), (2, 4), (2, 5), (2, 7), (2, 6), (3, 6), (5, 3), (6, 5), (6, 8), (7, 8), (5, 9), (7, 9), (4, 9)]
-Subscribers= [8, 9]
-Brokers= [3, 4, 5, 6, 7]
-Publishers= [0, 1, 2]
-NodoOrigine= {0: 1, 1: 2, 2: 0}
-NodiTarget= {0: [8, 9], 1: [9], 2: [9]}
-a= {0: 3, 1: 4, 2: 9}
-C= {(0, 7): 90, (1, 3): 47, (1, 7): 91, (1, 5): 8, (1, 6): 17, (1, 4): 47, (2, 4): 48, (2, 5): 55, (2, 7): 16, (2, 6): 83, (3, 6): 53, (5, 3): 57, (6, 5): 52, (6, 8): 77, (7, 8): 17, (5, 9): 77, (7, 9): 50, (4, 9): 10}
-u= {(0, 7): 4, (1, 3): 11, (1, 7): 13, (1, 5): 15, (1, 6): 1, (1, 4): 1, (2, 4): 8, (2, 5): 15, (2, 7): 12, (2, 6): 12, (3, 6): 3, (5, 3): 3, (6, 5): 11, (6, 8): 8, (7, 8): 11, (5, 9): 9, (7, 9): 7, (4, 9): 10}
-\section{Scenari Casuali Sequenziali}
-\subsection{Caso 4}
-Nel quarto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di commodities.
+\subsubsection{Dati Informativi}
+La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal publisher $2$ e deve raggiungere il target $9$ e, infine, l'informazione $2$ parte dal publisher $0$ e deve raggiungere il target $9$. Il percorso ottimo per il raggiungimento del nodo $9$ prevede il transito attraverso il nodo $7$, tuttavia, la sua capacità è stata intenzionalmente limitata per simulare una saturazione.
+\subsubsection{Risoluzione}
+\begin{table}[htbp]
+	\centering % Centra la tabella nella pagina
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Algoritmo} & \textbf{Soluzione} & \textbf{Tempo (secondi)} & \textbf{Iterazioni} \\ \hline
+		Prima Formulazione Cplex & 229 & / & / \\ \hline
+		Prima Formulazione Python API & 229 & 0.0799 & /\\ \hline
+		Seconda Formulazione Lagrangiana & 233.73 & 2.0903 & 10000\\ \hline
+		Seconda Formulazione Cplex & 234 & / & /\\ \hline
+		Seconda Formulazione Python API & 234 & 0.0536 & /\\ \hline
+		Terza Fomrulazione Lagrangiana & 234 & 0.2831 & 942\\ \hline
+		Terza Fomrulazione Cplex & 234 & / & /\\ \hline
+		Terza Fomrulazione Python API & 234 & 0.0818 & /\\ \hline
+	\end{tabular}
+	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+\end{table} \newpage
+\noindent Dall'analisi delle soluzioni restituite dagli algoritmi emerge una mancata convergenza della seconda formulazione in modalità lagrangiana entro il limite massimo di iterazioni prefissate. Andando nel dettaglio, si nota che, mentre l'Upper Bound restituisce il risultato ottimo, il valore della soluzione lagrangiana si ferma a 233.73. Al contrario, la terza formulazione mostra un'eccellente efficienza computazionale, convergendo all'ottimo in tempi e iterazioni ridotte. Controllando la soluzione ottima, si riscontra il comportamento ricercato dallo scenario, ovvero la saturazione del cammino dal nodo $7$ a $9$, che costringe l'informazione in partenza dal nodo $2$ a passare dal nodo $4$ per raggiungere il nodo $9$, nonostante il tragitto sia più costoso.
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{caso4}
-	\caption[Quarto scenario]{Quarto scenario}
-	\label{fig:caso4}
+	\includegraphics[width=0.7\linewidth]{caso3Ottimo}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\label{fig:caso3ottimo}
 \end{figure}
-K= [0, 1, 2, 3, 4, 5, 6]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (10, 12), (8, 12), (7, 13)]
-Subscribers= [11, 12, 13]
-Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Publishers= [0]
-NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
-a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
-C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (10, 12): 96, (8, 12): 91, (7, 13): 28}
-u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (10, 12): 100, (8, 12): 100, (7, 13): 100}
-Dopo il quarto caso è stato modificato per impedire il raggiungimento del 12 nodo dal percorso ottimo, questo per mostrare la capacità dell'algoritmo di ricalcolare il percorso ottimo.
-K= [0, 1, 2, 3, 4, 5, 6]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (8, 12), (7, 13)]
-Subscribers= [11, 12, 13]
-Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Publishers= [0]
-NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
-a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
-C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (8, 12): 91, (7, 13): 28}
-u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (8, 12): 100, (7, 13): 100}
-Dopo è stato reso impossibilitato di raggiungere il 13 nodo mostrando il risultato parziale
-K= [0, 1, 2, 3, 4, 5, 6]
-N= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-A= [(0, 3), (1, 9), (3, 6), (1, 8), (3, 1), (3, 10), (4, 2), (5, 4), (5, 6), (6, 5), (6, 7), (10, 8), (3, 11), (8, 12)]
-Subscribers= [11, 12, 13]
-Brokers= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Publishers= [0]
-NodoOrigine= {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
-NodiTarget= {0: [11], 1: [12, 11], 2: [13], 3: [12], 4: [13], 5: [11], 6: [12, 13]}
-a= {0: 3, 1: 1, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3}
-C= {(0, 3): 1, (1, 9): 83, (3, 6): 20, (1, 8): 34, (3, 1): 36, (3, 10): 14, (4, 2): 12, (5, 4): 5, (5, 6): 44, (6, 5): 9, (6, 7): 6, (10, 8): 55, (3, 11): 70, (8, 12): 91}
-u= {(0, 3): 100, (1, 9): 100, (3, 6):100, (1, 8): 100, (3, 1): 100, (3, 10): 100, (4, 2): 100, (5, 4): 100, (5, 6): 100, (6, 5): 100, (6, 7): 100, (10, 8): 100, (3, 11): 100, (8, 12): 100}
-Si controlla sequenzalmente l'aumento del numero di informazioni e il loro impatto.
+\subsection{Quarto Scenario}
+Il quarto scenario di test rappresenta una rete caratterizzata dalla saturazione dei percorsi ottimi per il raggiungimento di un nodo target. L'obiettivo dello scenario è di valutare la capacità dell'algoritmo derivante dalla terza formulazione di selezionare opportunamente quali informazioni instradare fino a destinazione e quali invece escludere, verificando parallelamente l'efficacia dell'algoritmo nella scelta dei percorsi ottimi.
+
 \subsection{Caso 5}
 Nel quinto caso di test si iniziano a controllare le criticità dell'algoritmo ovvero come si comporta con un elevato numero di Broker e Archi.
 In questo caso la foto non dà un'idea chiara del grafo quindi è inutile
