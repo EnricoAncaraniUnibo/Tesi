@@ -1737,25 +1737,45 @@ L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale,
 		\hline
 		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
 		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
-		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione Lagrangiana}} &
+		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
 		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
-		1 & Target & 632 & Lower e Upper ottimi \\ \hline
-		2 & Target & 796 & Lower e Upper ottimi \\ \hline
-		3 & Target & 3596 & Lower e Upper ottimi\\ \hline
-		4 & Informazioni & 6396 & Lower ottimo, gap=36, mA=40\\ \hline
-		5 & Broker & 6396 & Lower e Upper ottimi\\ \hline
-		6 & Archi &6396 & Lower e Upper ottimi\\ \hline
-		7 & Informazioni & 9196 & Lower e Upper ottimi\\ \hline
-		8 & Broker & 9196 & Lower ottimo, gap=36, mA=40.5\\ \hline
-		9 & Archi & 9196 & Lower ottimo, gap=96, mA=41\\ \hline
+		1 & Target & 632 & Lower, Upper ottimi \\ \hline
+		2 & Target & 796 & Lower, Upper ottimi \\ \hline
+		3 & Target & 3596 & Lower, Upper ottimi\\ \hline
+		4 & Informazioni & 6396 & Lower ottimo,gap=36,mA=40\\ \hline
+		5 & Broker & 6396 & Lower, Upper ottimi\\ \hline
+		6 & Archi &6396 & Lower, Upper ottimi\\ \hline
+		7 & Informazioni & 9196 & Lower, Upper ottimi\\ \hline
+		8 & Broker & 9196 & Lower ottimo,gap=36,mA=40.5\\ \hline
+		9 & Archi & 9196 & Lower ottimo,gap=96,mA=41\\ \hline
 		10 & Broker & 9186.66 & Fallito\\ \hline
 	\end{tabular}
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
-\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili, aumentando dunque della penalità $P$ moltiplicata per il numero delle richieste non soddisfatte, il costo della rete. Un comportamento simile si nota all'aggiunta di nuove informazioni da trasmettere, questo è dovuto o ai nuovi archi attivati per soddisfare la nuova richiesta o all'impossibilità di soddisfare tale richiesta. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca mutazioni nel valore ottimo della rete, questo perché nella casualità un nodo o arco dovrebbe riuscire a creare un nuovo percorso ottimo per abbassare il costo della funzione obiettivo ma questo è altamente imporababile. Analizzando più nel dettaglio la convergenza si nota come nelle casistiche in cui l'Upper Bound non è riuscito a convergere, il Lower ha dimostrato sempre invece più convergenza e in molte casistiche la non convergenza dell'Upper era meno costosa di un errore di scelta su un arco rendendo quindi comunque ottimale lo scenario. Solo alla fine l'aggiunta di un broker ha complicato il calcolo dell'Upper Bound allontanandolo ancora di più dall'ottimo rendendo lo step per l'aggiornamento del Lower meno adatto e quindi impendendo il raggiungimento dell'ottimo.
-Effettuato sto test nasce l'idea di effettuarne altri sulla base sia dell'aumento dei target e informazioni da un lato sia dei broker e archi dall'altro per vedere dove si trova la criticità maggiore.
+\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo a tal punto da rendere meno efficace lo step per l'aggiornamento del Lower e quindi impedendogli la corretta convergenza.
+Sulla base di questo test, nasce l'idea di eseguire altre analisi in test separati, più precisamente sull'aumento di informazioni e target e sull'aumento di nodi e archi.
 \subsection{Scenario Incrementale Informazioni e Target}
-
+\begin{table}[htbp]
+	\centering % Centra la tabella nella pagina
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
+		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
+		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
+		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
+		1 & Informazioni & 1073 & Lower, Upper ottimi \\ \hline
+		2 & Informazioni & 2045 & Lower, Upper ottimi \\ \hline
+		3 & Target & 5156 & Lower, Upper ottimi\\ \hline
+		4 & Informazioni & 6167 & Lower, Upper ottimi\\ \hline
+		5 & Informazioni & 7178 & Lower, Upper ottimi\\ \hline
+		6 & Target &12257 & Lower, Upper ottimi\\ \hline
+		7 & Informazioni & 13270 & Lower, Upper ottimi\\ \hline
+		8 & Informazioni & 14283 & Lower, Upper ottimi\\ \hline
+		9 & Target & 20802 & Lower, Upper ottimi\\ \hline
+	\end{tabular}
+	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
+\end{table} \newpage
+\noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dell'algoritmo, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nella penalità da aggiungere al costo totale.
 
 \section{Analisi generale con grafici istogrammi e tabella con l'ottimo per ogni algoritmo per ogni scenario}
 \section{Mostrare come cambia la convergenza al cambiare di alpha}
