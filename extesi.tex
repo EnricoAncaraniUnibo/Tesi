@@ -1719,7 +1719,7 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
 
-\noindent Dall'analisi dei risultati risulta chiara una convergenza parziale verso la soluzione ottima, nello specifico, mentre il Lower Bound converge completamente, Upper Bound si attesta su un valore pari a 1465. Nonostante la distanza dall'ottimo, l'esito dello scenario è da considerare eccellente. La distanza dall'ottimo è di sole 7 unità, valore molto minore rispetto alla media del costo degli archi che vale 56.8, andando a dimostrare come l'impossibilità di convergere è comunque migliore rispetto all'impatto derivante dallo sbaglio di un singolo arco per l'instradamento. Il successo dello scenario inoltre si può confermare sia dalla piena convergenza del Lower Bound sia dall'analisi del percorso ottimo restituito dall'Upper Bound, in cui l'unica informazione non trasmessa è la $2$ per il target $9$.
+\noindent Dall'analisi dei risultati risulta chiara una convergenza parziale verso la soluzione ottima, nello specifico, mentre il Lower Bound converge completamente, Upper Bound si attesta su un valore pari a 1465. Nonostante la distanza dall'ottimo, l'esito dello scenario è da considerare eccellente. La distanza dall'ottimo è di sole 7 unità, valore molto minore rispetto alla mediana del costo degli archi che vale 57, andando a dimostrare come l'impossibilità di convergere è comunque migliore rispetto all'impatto derivante dallo sbaglio di un singolo arco per l'instradamento. Il successo dello scenario inoltre si può confermare sia dalla piena convergenza del Lower Bound sia dall'analisi del percorso ottimo restituito dall'Upper Bound, in cui l'unica informazione non trasmessa è la $2$ per il target $9$.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso5Ottimo}
@@ -1776,7 +1776,25 @@ Sulla base di questo test, nasce l'idea di eseguire altre analisi in test separa
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
 \noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dell'algoritmo, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nella penalità da aggiungere al costo totale.
-
+\subsection{Scenario Incrementale Broker e Archi}
+\begin{table}[htbp]
+	\centering % Centra la tabella nella pagina
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
+		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
+		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
+		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
+		1 & Archi & 110 & Lower, Upper ottimi \\ \hline
+		2 & Archi & 110 & Lower, Upper ottimi \\ \hline
+		3 & Archi & 110 & Lower, Upper ottimi\\ \hline
+		4 & Broker & 110 & Lower, Upper ottimi\\ \hline
+		5 & Archi & 110 & Lower, Upper ottimi\\ \hline
+		6 & Broker &110 & Lower, Upper ottimi\\ \hline
+	\end{tabular}
+	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
+\end{table}
+\noindent Dai risultati nella tabella risulta chiaro come la condizione analizzata precedentemente valga allo stesso modo anche per l'aumento dei nodi e degli archi. infatti, nonostante la rete diventi più complessa, l'informazione da inviare e il nodo da raggiungere rimangono fissi. Potendo al massimo individuare una soluzione migliore o uguale alla precedente, il problema risulta facilmente risolvibile.
 \section{Analisi generale con grafici istogrammi e tabella con l'ottimo per ogni algoritmo per ogni scenario}
 \section{Mostrare come cambia la convergenza al cambiare di alpha}
 \section{Mostrare come cambia più soluzioni euristiche andiamo a prendere, cambiamo i valori dell'euristico}
