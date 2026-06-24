@@ -1796,9 +1796,24 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 \end{table}
 \noindent Dai risultati nella tabella risulta chiaro come la condizione analizzata precedentemente valga allo stesso modo anche per l'aumento dei nodi e degli archi. infatti, nonostante la rete diventi più complessa, l'informazione da inviare e il nodo da raggiungere rimangono fissi. Poiché l'aggiunta di nodi o archi può solo mantenere o migliorare la soluzione esistente, il problema rimane facilmente risolvibile.
 \section{Analisi della Sensibilità dei Parametri}
-In questa sessione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica.
+In questa sessione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica. Per misurare correttamente la varianza della convergenza, è stato considerato uno scenario generato casualmente.
 \subsection{Alpha}
 Il parametro $\alpha$ controlla l'ampiezza dello step applicato per l'aggiornamento delle penalità lagrangiane secondo la formula (2.28). Un valore elevato di $\alpha$ produce aggiornamenti più ampi quindi che accelerano la convergenza nella fase iniziale, ma possono causare oscillazioni attorno all'ottimo impedendo una convergenza precisa. Al contrario, un valore ridotto garantisce una convergenza più stabile ma più lenta, richiedendo un numero maggiore di iterazioni.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\linewidth]{Alpha}
+	\caption[Convergenza del Lower Bound al variare di $\alpha$]{Convergenza del Lower Bound al variare di $\alpha$.}
+	\label{fig:alpha}
+\end{figure}
+
+\noindent Dal grafico emergono tre macro-comportamenti distinti in funzione del valore di $\alpha$ scelto:
+\begin{itemize}
+	\item Se $\alpha$ ha un valore iniziale molto ridotto, la curva prodotta risulta regolare e priva di oscillazione, ma con una velocità di convergenza molto bassa. 
+	\item Se $\alpha$ ha un valore iniziale molto elevato, la curva prodotta cresce in maniera vertiginosa, raggiungendo velocemente i valori prossimi all'ottimo ma producendo forti oscillazioni. Normalmente queste oscillazioni impedirebbero una stabilizzazione precisa del Lower Bound ma il problema viene risolto con la funzione di dimezzamento (4.1.3).
+	\item Se $\alpha$ ha un valore iniziale nella fascia intermedia, la curva prodotta risulta un buon compromesso tra le precedenti due, presentando una buona velocità di convergenza e oscillazioni contenute ma presenti.
+\end{itemize}
+\subsection{Alpha}
+
 \subsection{Conclusioni sui Test}
 \chapter{Conclusioni}
 Dijkstra si basa sull'ottimo prima per andare avanti, può essere migliorato
