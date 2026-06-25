@@ -751,16 +751,16 @@
 	Nella prima fase si calcola un Upper Bound mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità della soluzione ottenuta e la sua distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
-		\item Algoritmo Cplex: Il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
-		\item Algoritmo Lagrangiano: Algoritmo implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
-		\item Algoritmo euristico per l'Upper Bound: Algoritmo euristico ispirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
+		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
+		\item Algoritmo Lagrangiano: algoritmo implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
+		\item Algoritmo euristico per l'Upper Bound: algoritmo euristico ispirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
 	\end{itemize}
 	Ogni algoritmo presentato in questo capitolo utilizza le variabili già definite nel paragrafo dei simboli globali (2.2).
 	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
 	\subsection{Upper Bound Euristico}
 	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
 	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
-	A ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e per ciascuna di esse viene eseguita una variante dell'algoritmo di Dijkstra. Questa integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target e le capacità residue della rete vengono aggiornate. L'algoritmo, infine, restituisce i percorsi che hanno il costo complessivo minimo.\smallskip \\
+	A ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e, per ciascuna di esse, viene eseguita una variante dell'algoritmo di Dijkstra. Questa integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target, e le capacità residue della rete vengono aggiornate di conseguenza. L'algoritmo, infine, restituisce i percorsi che hanno il costo complessivo minore.\smallskip \\
 	Le variabili in ingresso coincidono con quelle definite nel paragrafo (2.2).\\
 	Nella prima parte di codice si definiscono le strutture globali utilizzate per memorizzare il cammino ottimo e il corrispondente costo.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -777,7 +777,7 @@ random.shuffle(informazioni)
 percorsi = []
 soluzioneValida = True
 	\end{lstlisting}}
-	\noindent L'algoritmo procede iterando su ogni informazione e a ogni iterazione salva l'insieme di nodi da visitare filtrati per raggiungibilità.
+	\noindent L'algoritmo procede iterando su ogni informazione e, a ogni iterazione, determina l'insieme di nodi da visitare filtrati per raggiungibilità.
 	{\footnotesize \begin{lstlisting}[language=Python]
 if not soluzioneValida:
 	break
@@ -812,7 +812,7 @@ while(len(unvisitedNodes)>0):
 	else:
 		nodoProtagonista = indiceProssimoNodo
 	\end{lstlisting}}
-	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target e viene aggiornata la capacità rimanente della rete.
+	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target, e viene aggiornata la capacità residua della rete.
 	{\footnotesize \begin{lstlisting}[language=Python]
 nodiFinali = NodiTarget[informazione].copy()
 random.shuffle(nodiFinali)
@@ -840,7 +840,7 @@ if soluzioneValida and costo<costoTot:
 	percorsoOttimo=percorsi
 	\end{lstlisting}}
 	\subsection{Prima Formulazione}
-	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in python, escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
+	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in Python, escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
 	\subsubsection{Cplex}
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
@@ -861,7 +861,7 @@ subject to {
 }	
 	\end{lstlisting}}
 	\subsubsection{Python API}
-	\noindent Nel codice in python la scrittura si complica e le definizioni si fanno più complesse.
+	\noindent Nel codice in Python la scrittura si complica e le definizioni si fanno più complesse.
 	Inizialmente vengono definite e generate le variabili decisionali con i rispettivi vincoli associati: (2.6) e (2.7).
 	{\footnotesize \begin{lstlisting}[language=Python]					 
 modello = cplex.Cplex()
@@ -948,7 +948,7 @@ for i in N:
 (lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
 	\end{lstlisting}}
 	\subsection{Seconda Formulazione}
-	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano, strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
+	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in Python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano, strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
 	\subsubsection{Calcolo Costi Penalizzati}
 	Il calcolo dei costi penalizzati si basa sull'equazione (2.25), la quale quantifica il guadagno associato all'attivazione di un determinato arco. Qualora tale operazione determini una riduzione del valore della funzione obiettivo, l'arco viene inserito all'interno di una lista di candidati per una futura elaborazione.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -1064,7 +1064,7 @@ for k in K:
 		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
 	\end{lstlisting}}
 	\subsubsection{Main Loop}
-	Infine, le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione il parametro $\alpha$ per la riduzione dello step viene dimezzato se non si incontra un miglioramento stretto del Lower Bound per 20 cicli di fila.
+	Infine, le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione il parametro $\alpha$ per la riduzione dello step viene dimezzato se non si incontra un miglioramento del Lower Bound per 20 cicli di fila, rispetto agli ultimi 20 calcolati.
 	{\footnotesize \begin{lstlisting}[language=Python]
 lam = {(k,i):0.0 for k in K for i in N}
 d = {(k,i,j):0 for k in K for (i,j) in A}
@@ -1087,8 +1087,7 @@ while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
 	KnapSack(ePerKnapsack,d,e,x)
 	Lb = calcolaMin(lam)
 	ultimiLowerBounds.append(Lb)
-	if(ultimiLowerBounds[len(ultimiLowerBounds)-1]<=ultimiLowerBounds[len(
-	ultimiLowerBounds)-2]):
+	if(ultimiLowerBounds[-1]<=max(ultimiLowerBounds[-21:-1])):
 		alphaterazioni+=1
 	if(alphaterazioni>20):
 		alphaterazioni=0
@@ -1116,7 +1115,7 @@ subject to {
 }									 
 	\end{lstlisting}}
 	\subsubsection{Python API}
-	Per quanto riguarda l'implementazione in python tramite le API di cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
+	Per quanto riguarda l'implementazione in Python tramite le API di cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
 	Inizialmente, vengono inizializzate le variabili decisionali con i relativi vincoli associati (2.12) e (2.13).
 	{\footnotesize 	\begin{lstlisting}[language=Python]
 modello = cplex.Cplex()
@@ -1203,7 +1202,7 @@ for k in K:
 	Qualora l'algoritmo incontri più strade per il raggiungimento di un nodo target di pari costo, non sceglie casualmente quale memorizzare e utilizzare ma, al contrario, crea uno scenario distinto per ogni strada ottima individuata. Con questa modalità, la ricerca del percorso ottimo per le informazioni e target successivi non risente di una decisione casuale, ma viene testata in parallelo insieme agli altri scenari possibili. Al termine del processo vengono estrapolati gli scenari migliori individuati e i relativi costi associati. Per rimanere in linea con l'ideologia di un algoritmo rapido ed euristico viene imposto un limite massimo sia alle soluzioni finali sia agli scenari da mantenere attivi durante l'esecuzione.\smallskip \\
 	La seconda novità risiede nella convergenza dell'Upper Bound verso la soluzione ottima. Poiché la determinazione dell'Upper Bound migliore risulta particolarmente dispendiosa nella prima iterazione sebbene si utilizzi una procedura euristica, si adotta una strategia di aggiornamento ripetuto. A intervalli prefissati di iterazioni, l'Upper Bound viene ricalcolato con il medesimo codice, incorporando nei costi degli archi le penalità lagrangiane.
 	\subsubsection{Algoritmo di Dijkstra con Controllo Capacità}
-	Questa versione dell'algoritmo è stata ottimizzata utilizzando la libreria heapq di python, la quale implementa una struttura dati con priorità per semplificare il codice.
+	Questa versione dell'algoritmo è stata ottimizzata utilizzando la libreria heapq di Python, la quale implementa una struttura dati con priorità per semplificare il codice.
 	{\footnotesize \begin{lstlisting}[language=Python]
 tabella={}
 nodiDaVisitare=[]
@@ -1752,7 +1751,7 @@ L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale,
 	\end{tabular}
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
-\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo. Questa distanza ha ridotto l'efficacia dello step di l'aggiornamento del Lower Bound, impedendone la corretta convergenza.
+\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo. Questa distanza ha ridotto l'efficacia dello step di l'aggiornamento del Lower Bound, impedendone la corretta convergenza all'interno del numero di iterazioni prefissate.
 Da questa analisi emerge la necessità di approfondire separatamente due aspetti: l'aumento di informazioni e di target e l'aumento di nodi e di archi.
 \subsection{Scenario Incrementale Informazioni e Target}
 \begin{table}[htbp]
@@ -1775,7 +1774,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 	\end{tabular}
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
-\noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dell'algoritmo, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nella penalità da aggiungere al costo totale.
+\noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dell'algoritmo, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nelle penalità da aggiungere al costo totale.
 \subsection{Scenario Incrementale Broker e Archi}
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1796,7 +1795,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 \end{table}
 \noindent Dai risultati nella tabella risulta chiaro come la condizione analizzata precedentemente valga allo stesso modo anche per l'aumento dei nodi e degli archi. infatti, nonostante la rete diventi più complessa, l'informazione da inviare e il nodo da raggiungere rimangono fissi. Poiché l'aggiunta di nodi o archi può solo mantenere o migliorare la soluzione esistente, il problema rimane facilmente risolvibile.
 \section{Analisi della Sensibilità dei Parametri}
-In questa sessione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica. Per misurare correttamente la varianza della convergenza, è stato considerato uno scenario generato casualmente e è stato utilizzato l'algoritmo lagrangiano della terza formulazione.
+In questa sessione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica. Per misurare correttamente l'andamento della convergenza, è stata presa in esame una rete generata casualmente, risolta utilizzando l'algoritmo lagrangiano basato sulla terza formulazione.
 \subsection{Alpha}
 Il parametro $\alpha$ controlla l'ampiezza dello step applicato per l'aggiornamento delle penalità lagrangiane secondo la formula (2.28). Un valore elevato di $\alpha$ produce aggiornamenti più ampi quindi che accelerano la convergenza nella fase iniziale, ma possono causare oscillazioni attorno all'ottimo impedendo una convergenza precisa. Al contrario, un valore ridotto garantisce una convergenza più stabile ma più lenta, richiedendo un numero maggiore di iterazioni.
 \begin{figure}[h]
@@ -1821,8 +1820,31 @@ La qualità dell'Upper Bound fornito all'algoritmo lagrangiano influenza direttam
 	\label{fig:deviazione-upperbound}
 \end{figure}
 
-\noindent Dal grafico emerge come, in tutte le casistiche, anche quella più estrema con un errore del $100\%$, la sbagliata individuazione dell'Upper Bound non comprometta la convergenza del Lower Bound verso l'ottimo. L'effetto prodotto è simile a quello di un aumento del parametro $\alpha$. Più l'Upper Bound risulta distante dall'ottimo, più la curva di convergenza sarà vertiginosa e avrà oscillazioni più estreme, mentre con l'Upper Bound ottimale avremmo una curva di convergenza più tranquilla e con oscillazioni più contenute. Questo test dimostra anche come, nonostante l'errore sul calcolo dell'Upper Bound, l'algoritmo sia in grado di trovare il Lower Bound ottimale.
+\noindent Dal grafico emerge come l'effetto prodotto da una sovrastima dell'Upper Bound sia analogo a quello di un aumento del parametro $\alpha$. Più l'Upper Bound risulta distante dall'ottimo, più la curva di convergenza sarà vertiginosa e avrà oscillazioni più estreme. Al contrario, con un Upper Bound ottimale si ha una curva di convergenza più tranquilla e con oscillazioni più contenute. Questo test conferma inoltre come, nonostante un calcolo impreciso dell'Upper Bound, l'algoritmo sia comunque in grado di trovare il Lower Bound ottimale, almeno su reti di semplice complessità.
+\subsection{Profondità della Ricerca Euristica}
+L'algoritmo euristico per il calcolo dell'Upper Bound è gestito da due parametri principali che ne controllano la profondità di ricerca:
+\begin{itemize}
+	\item Massime Permutazioni: Il numero massimo di permutazioni dei target considerate per ciascuna informazione.
+	\item Massime Soluzioni: Il numero massimo di scenari alternativi mantenuti attivi durante l'esecuzione dell'algoritmo.
+\end{itemize}
+In linea teorica, aumentare questi parametri migliora la qualità dell'Upper Bound trovato, a costo di un incremento del tempo di ricerca.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\linewidth]{Tempi}
+	\caption[Grafico mostrante i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.]{Grafico mostrante i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.}
+	\label{fig:tempi}
+\end{figure}
+
+\noindent Dal grafico emerge come i tempi di esecuzione crescano all'aumentare dei parametri, ma con un comportamento asimmetrico tra i due. Incrementare esclusivamente le massime permutazioni produce tempi leggermente superiori rispetto all'incremento esclusivo delle massime soluzioni. Tuttavia, l'aumento singolo di ciascuna delle due variabili, non produce un incremento significativo se confrontato con quello derivante dall'aumento contemporaneo di entrambe. Dal grafico questo fenomeno risulta evidente: configurazioni con un solo parametro elevato, anche di molto, producono tempi comunque inferiori rispetto a configurazioni in cui entrambi i parametri assumono valori anche ridotti. Questo conferma una crescita strettamente dipendente dal prodotto dei due parametri, infatti, per ogni permutazione considerata vengono esplorati tutti gli scenari attivi.
 \subsection{Conclusioni sui Test}
+I risultati ottenuti nei diversi scenari testati consentono di trarre delle considerazioni conclusive sull'efficacia e sui limiti degli algoritmi sviluppati.
+Negli scenari arbitrari, la terza formulazione si è dimostrata la migliore, non solo avendo la possibilità di gestire più tipologie di scenari rispetto alle altre due, ma convergendo anche in tempi minori garantendo comunque il corretto instradamento delle informazioni.
+Negli scenari casuali incrementali emerge un risultato interessante e coerente con la teoria, l'aumento singolo di informazioni e target o di nodi e archi non induce una complessità sufficiente a mettere in difficoltà l'algoritmo. La criticità emerge quando più variabili vengono aumentate in contemporanea, richiedendo sia la soddisfazione di più richieste sia una elaborazione delle stesse in una rete più articolata.
+L'analisi dei parametri, invece, ha fornito indicazioni pratiche utili per la calibrazione dello step e dell'algoritmo euristico. Il parametro $\alpha$ incide significativamente sulla velocità e sulla stabilità della convergenza, così come la distanza dell'Upper Bound dall'ottimo. 
+Scegliere un $\alpha$ troppo elevato rischia di rallentare la convergenza o impedirla completamente. Al contrario, una scelta più ridotta di $\alpha$ porta a una convergenza più stabile ma lenta.
+Un effetto parzialmente analogo si osserva con la distanza dell'Upper Bound dall'ottimo, cioè una sovrastima del valore produce oscillazioni più estreme e una convergenza più rapida.
+Per quanto riguarda la profondità della ricerca euristica, i test confermano che il costo computazionale è gestito da due parametri fondamentali: il numero di permutazioni da controllare per informazione e il numero di scenari attivi da mantenere. Incrementare un solo parametro alla volta non produce un aumento significativo dei tempi di calcolo, mentre, al contrario, l'aumento di entrambi genera una crescita dei tempi molto più marcata.
+In conclusione, i test evidenziano come la terza formulazione e l'algoritmo lagrangiano sviluppati siano efficaci in numerosi scenari e riescano a ottenere i risultati attesi. Negli scenari in cui l'Upper Bound non converge all'ottimo, il Lower Bound riesce quasi sempre, dimostrando come la criticità principale risieda nel calcolo di un Upper Bound euristico di alta qualità. Poiché l'Upper Bound viene ricalcolato periodicamente sfruttando le penalità lagrangiane, si tende a ottenere la migliore soluzione individuabile da un approccio basato sui cammini minimi, che non sempre corrisponde all'ottimo. Nonostante questa limitazione, l'algoritmo rimane utilizzabile in modo efficiente in contesti realistici, producendo soluzioni di buona qualità in tempi contenuti.
 \chapter{Conclusioni}
 Dijkstra si basa sull'ottimo prima per andare avanti, può essere migliorato
 	%Ora vediamo un elenco numerato:         %crea un elenco numerato
