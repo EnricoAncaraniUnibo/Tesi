@@ -393,18 +393,18 @@
 		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie favorendo l'ottenimento di valori interi per le variabili e di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
 	\end{itemize}
 	\section{Ambiente di Sviluppo}
-	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono CPLEX Optimization Studio e Google Colab.\smallskip \\
-	CPLEX Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
+	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono Cplex Optimization Studio e Google Colab.\smallskip \\
+	Cplex Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
 	Per garantire semplicità è richiesta solamente la struttura del problema, i dati e la configurazione di avvio.
 	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano al suo interno è complesso. \smallskip \\
 	Google Colab invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
-	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo CPLEX con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
+	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
 	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx e Matplotlib.pyplot.
 	\begin{figure}[h]
 		\centering
 		\begin{minipage}{0.75\textwidth}
 			\includegraphics[width=1\linewidth]{Cplex}
-			\caption[Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio]{Immagine dell'ambiente di sviluppo di CPLEX Optimization Studio\\}
+			\caption[Immagine dell'ambiente di sviluppo di Cplex Optimization Studio]{Immagine dell'ambiente di sviluppo di Cplex Optimization Studio\\}
 			\label{fig:cplex}
 		\end{minipage}
 		\hfill
@@ -745,8 +745,8 @@
 	\end{align}
 	
 	\chapter{Implementazione Algoritmica}
-	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi.
-	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
+	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi. \smallskip \\
+	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema anche peggiore di quella ottimale, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. \smallskip \\ Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). \smallskip \\ Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
 		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
@@ -755,18 +755,18 @@
 	\end{itemize}
 	Ogni algoritmo presentato in questo capitolo utilizza le variabili già definite nel paragrafo dei simboli globali (2.2).
 	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
-	In questa sessione si analizzano le due formulazioni che non prevedono la possibilità di generare soluzioni parziali insieme al loro algoritmo per la ricerca di un Upper Bound ammissibile.
+	In questa sezione si analizzano le due formulazioni che non prevedono la possibilità di generare soluzioni parziali insieme al loro algoritmo per la ricerca di un Upper Bound ammissibile.
 	\subsection{Upper Bound Euristico}
-	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi.
+	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi. \smallskip \\
 	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
-	A ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e, per ciascuna di esse, viene eseguita una variante dell'algoritmo di Dijkstra. Questa integra un controllo preventivo sulle capacità residue degli archi: un nodo adiacente viene preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target e le capacità residue della rete vengono aggiornate di conseguenza. L'algoritmo, infine, restituisce i percorsi che hanno il costo complessivo minore.\smallskip \\
-	Le variabili in ingresso coincidono con quelle definite nel paragrafo (2.2).\\
+	A ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e, per ciascuna di esse, viene eseguita una variante dell'algoritmo di Dijkstra che integra un controllo preventivo sulle capacità residue degli archi. Tale vincolo impone che un nodo adiacente venga preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target e le capacità residue della rete vengono aggiornate di conseguenza. L'algoritmo, infine, restituisce i percorsi che hanno il costo complessivo minore.\smallskip \\
+	Le variabili in ingresso coincidono con quelle definite nel paragrafo (2.2). \smallskip \\
 	Nella prima parte di codice si definiscono le strutture globali utilizzate per memorizzare il cammino ottimo e il corrispondente costo.
 	{\footnotesize \begin{lstlisting}[language=Python]
 percorsoOttimo=[]
 costoTot = np.inf
 	\end{lstlisting}}
-	\noindent All'inizio di ogni iterazione dell'algoritmo viene creata una copia delle strutture necessarie per i calcoli, inoltre viene mescolato l'ordine di elaborazione delle informazioni.
+	\noindent All'inizio di ogni iterazione dell'algoritmo viene creata una copia delle strutture necessarie per i calcoli e viene mescolato l'ordine di elaborazione delle informazioni.
 	{\footnotesize \begin{lstlisting}[language=Python]
 costo = 0.0
 strade = A.copy()
@@ -776,7 +776,7 @@ random.shuffle(informazioni)
 percorsi = []
 soluzioneValida = True
 	\end{lstlisting}}
-	\noindent L'algoritmo procede iterando su ogni informazione e, a ogni iterazione, determina l'insieme di nodi da visitare filtrati per raggiungibilità.
+	\noindent L'algoritmo procede iterando su ogni informazione e, a ogni iterazione, determina l'insieme di nodi da visitare filtrati per raggiungibilità. Nello specifico, qualora per un dato nodo g l'insieme dei predecessori risulti vuoto, esso viene rimosso.
 	{\footnotesize \begin{lstlisting}[language=Python]
 if not soluzioneValida:
 	break
@@ -788,7 +788,7 @@ nodoDiPartenza = NodoOrigine[informazione]
 if nodoDiPartenza not in unvisitedNodes:
 	unvisitedNodes.append(nodoDiPartenza)
 	\end{lstlisting}}
-	\noindent Successivamente viene applicata una variante dell'algoritmo di Dijkstra con controllo sulle capacità per determinare l'albero dei cammini minimi. Per l'elaborazione viene utilizzata una tabella in grado di memorizzare il costo del cammino minimo temporaneo e il relativo nodo predecessore. In caso di nodi non raggiungibili l'algoritmo viene fermato forzatamente.
+	\noindent Successivamente viene applicata una variante dell'algoritmo di Dijkstra con controllo sulle capacità per determinare l'albero dei cammini minimi. Per l'elaborazione viene utilizzata una tabella in grado di memorizzare il costo del cammino minimo temporaneo e il relativo nodo predecessore. 
 	{\footnotesize \begin{lstlisting}[language=Python]
 while(len(unvisitedNodes)>0):
 	for (i,j) in strade:
@@ -806,12 +806,15 @@ while(len(unvisitedNodes)>0):
 			else:
 				if(tabella[j][1]< tabella[indiceProssimoNodo][1]):
 					indiceProssimoNodo = j
-	if indiceProssimoNodo==-1:
-		unvisitedNodes=[]
-	else:
-		nodoProtagonista = indiceProssimoNodo
 	\end{lstlisting}}
-	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target e viene aggiornata la capacità residua della rete.
+\noindent In caso di nodi non raggiungibili l'algoritmo viene fermato forzatamente altrimenti si prosegue con la sua esecuzione.
+	{\footnotesize \begin{lstlisting}[language=Python]
+if indiceProssimoNodo==-1:
+	unvisitedNodes=[]
+else:
+	nodoProtagonista = indiceProssimoNodo
+\end{lstlisting}}
+	\noindent Completata l'esplorazione della rete, i percorsi ottimi vengono ricostruiti a ritroso a partire dai rispettivi nodi target e viene aggiornata la capacità residua della rete. In caso di target non raggiunti l'iterazione dell'algoritmo viene considerata fallita.
 	{\footnotesize \begin{lstlisting}[language=Python]
 nodiFinali = NodiTarget[informazione].copy()
 random.shuffle(nodiFinali)
@@ -832,7 +835,7 @@ for nodoFinale in nodiFinali:
 	percorsi.append(informazione)
 	percorsi.append(percorso)
 	\end{lstlisting}}
-	\noindent Al termine del ciclo di controllo su tutte le informazioni, se la soluzione è ammissibile viene confrontata con la precedente migliore e, se quest'ultima risulta peggiore in termini di costo, viene sostituita.
+	\noindent Al termine del ciclo di controllo su tutte le informazioni, se la soluzione è ammissibile, viene confrontata con la precedente migliore e, qualora quest'ultima risulti peggiore in termini di costo, viene sostituita.
 	{\footnotesize 	\begin{lstlisting}[language=Python]
 if soluzioneValida and costo<costoTot:
 	costoTot=costo
@@ -1045,7 +1048,7 @@ for k in K:
 		Lb -= lam[(k,i)]*b[k][i]
 	\end{lstlisting}}
 	\subsubsection{Aggiornamento Penalità Lagrangiane}
-	Sfruttando lo step precedentemente calcolato, si procede all'aggiornamento delle penalità lagrangiane.
+	Sfruttando lo step precedentemente calcolato, si procede all'aggiornamento delle penalità lagrangiane secondo la formula $\lambda^k_i=\lambda^k_i+ \theta s^k_i$.
 	{\footnotesize \begin{lstlisting}[language=Python]
 subGradienti = {(k,i):0.0 for k in K for i in N}
 for k in K:
@@ -1063,7 +1066,7 @@ for k in K:
 		lam[(k,i)] = lam[(k,i)] + valoreDiCambio *subGradienti[(k,i)]
 	\end{lstlisting}}
 	\subsubsection{Main Loop}
-	Le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione, il parametro $\alpha$ per la riduzione dello step viene dimezzato se non si incontra un miglioramento del Lower Bound per 20 cicli di fila, rispetto agli ultimi 20 calcolati.
+	Le funzioni appena elencate vengono gestite all'interno di un ciclo principale, il quale itera i metodi fino al raggiungimento del Lower Bound ottimo o all'esecuzione di un numero arbitrario di cicli. In questa implementazione, il parametro $\alpha$ per la riduzione dello step viene dimezzato se non si incontra un miglioramento del Lower Bound per 20 cicli di fila, rispetto agli ultimi 20 calcolati. La scelta di tali parametri mira a trovare un equilibrio tra una frequenza di dimezzamento di $\alpha$ troppo elevata e una eccessivamente rara.
 	{\footnotesize \begin{lstlisting}[language=Python]
 lam = {(k,i):0.0 for k in K for i in N}
 d = {(k,i,j):0 for k in K for (i,j) in A}
@@ -1195,7 +1198,7 @@ for k in K:
 		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])	
 	\end{lstlisting}}
 	\section{Formulazione Con Soluzioni Parziali}
-	In questa sessione si analizza la formulazione che prevede la possibilità di generare soluzioni parziali insieme al suo algoritmo per la ricerca di un Upper Bound ammissibile.
+	In questa sezione si analizza la formulazione che prevede la possibilità di generare soluzioni parziali insieme al suo algoritmo per la ricerca di un Upper Bound ammissibile.
 	\subsection{Dijkstra a Scenari e Meccanismo di Discesa dell'Upper Bound}
 	Per quanto riguarda la nuova formulazione, l'approccio alla ricerca di un Upper Bound ammissibile è stato radicalmente cambiato per superare i limiti della precedente versione. Nel modello antecedente l'algoritmo, l'impossibilità di raggiungere anche un solo nodo target da parte della rispettiva informazione decretava il fallimento dell'intera esecuzione. Nella nuova versione, divisa in funzioni, il calcolo di un Upper Bound euristico è composto da una base logica che segue  la procedura di Dijkstra per i cammini minimi unita con una logica di generazione di scenari alternativi. L'approccio è euristico in quanto l'algoritmo valuta solo un sottoinsieme di permutazioni, scelte casualmente, sia delle informazioni, sia dei target da raggiungere. \smallskip \\
 	Le due principali innovazioni introdotte in questa versione consistono nella gestione di scenari multipli di esplorazione delle soluzioni e del meccanismo di stringimento dell'Upper Bound. \smallskip \\
@@ -1298,9 +1301,9 @@ return soluzioni
 	{\footnotesize \begin{lstlisting}[language=Python]
 cap = capacità.copy()
 for arco in archi:
-if arco not in archiAttivi:
-arco = arco[1:3]
-cap[arco] -= banda
+	if arco not in archiAttivi:
+		arco = arco[1:3]
+		cap[arco] -= banda
 	\end{lstlisting}}
 	\noindent Per la ricostruzione del percorso si è optato per l'utilizzo di una funzione generatrice ricorsiva. Il metodo ripercorre la rete a ritroso restituendo, mediante l'istruzione yield, tutti i cammini minimi alternativi individuati.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -1803,7 +1806,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 \end{table}
 \noindent Dai risultati nella tabella risulta chiaro come la condizione analizzata precedentemente valga allo stesso modo anche per l'aumento dei nodi e degli archi. Infatti, nonostante la rete diventi più complessa, l'informazione da inviare e il nodo da raggiungere rimangono fissi. Poiché l'aggiunta di nodi o archi può solo mantenere o migliorare la soluzione esistente, il problema rimane facilmente risolvibile.
 \section{Analisi della Sensibilità dei Parametri}
-In questa sessione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica. Per misurare correttamente l'andamento della convergenza, è stata presa in esame una rete generata casualmente, risolta utilizzando l'algoritmo lagrangiano basato sulla terza formulazione.
+In questa sezione si analizza l'impatto dei principali parametri configurabili sulle prestazioni degli algoritmi lagrangiani sviluppati. In particolare, i parametri presi in esami sono $\alpha$ per l'aggiornamento delle penalità lagrangiane, la qualità dell'Upper Bound fornito alla formula per il calcolo dello step e le metriche per definire la profondità della ricerca euristica. Per misurare correttamente l'andamento della convergenza, è stata presa in esame una rete generata casualmente, risolta utilizzando l'algoritmo lagrangiano basato sulla terza formulazione.
 \subsection{Alpha}
 Il parametro $\alpha$ controlla l'ampiezza dello step applicato per l'aggiornamento delle penalità lagrangiane secondo la formula (2.28). Un valore elevato di $\alpha$ produce aggiornamenti più ampi quindi che accelerano la convergenza nella fase iniziale, ma possono causare oscillazioni attorno all'ottimo impedendo una convergenza precisa. Al contrario, un valore ridotto garantisce una convergenza più stabile ma più lenta, richiedendo un numero maggiore di iterazioni.
 \begin{figure}[h]
