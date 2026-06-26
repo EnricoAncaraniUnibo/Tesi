@@ -156,7 +156,7 @@
 	Nel nuovo modello viene, inoltre, proposto un meccanismo di penalizzazione che guida l'ottimizzazione verso soluzioni che minimizzano il numero di consegne non effettuate.
 	Per supportare la corretta convergenza del risultato è stato rivisitato l'algoritmo del collega per il calcolo dell'Upper Bound, creandone una nuova versione basata sulla logica di Dijkstra per il calcolo dei cammini minimi unito con un approccio a scenari multipli alternativi, capace di restituire soluzioni parziali e, periodicamente, abbassare l'Upper Bound. \smallskip \\
 	La tesi è suddivisa in sei capitoli. Il primo capitolo introduce il campo dell'IoT e il modello Publish/Subscribe insieme agli ambienti di sviluppo e alla teoria matematica di riferimento. Il secondo capitolo descrive le formulazioni estrapolate dalla tesi del collega, con particolare attenzione all'applicazione del rilassamento lagrangiano e ai passaggi logici effettuati. Il terzo capitolo tratta lo sviluppo della nuova formulazione estesa, in grado di gestire multicasting e soluzioni parziali. Il quarto capitolo presenta gli algoritmi sviluppati e la logica di funzionamento alla loro base. Il quinto capitolo si pone l'obiettivo di testare gli algoritmi su numerosi casi di test, al fine di comprendere il loro corretto funzionamento e le criticità, con particolare riguardo per la terza formulazione in quanto le altre due già dimostrate funzionanti dalla tesi del collega. Il sesto capitolo riassume il lavoro svolto e presenta possibili sviluppi futuri. \smallskip \\
-	In conclusione, il lavoro presentato in questa tesi fornisce un algoritmo per l'ottimizzazione dell'instradamento di informazioni all'interno di reti IoT, superando i limiti della seconda formulazione del collega e consentendo una gestione flessibile delle informazioni anche in scenari dove un instradamento completo non è sempre possibile.	
+	In conclusione, il lavoro presentato in questa tesi fornisce due algoritmi per l'ottimizzazione dell'instradamento di informazioni all'interno di reti IoT, superando i limiti della seconda formulazione del collega e consentendo una gestione flessibile delle informazioni anche in scenari dove un instradamento completo non è sempre possibile.	
 	\chapter{Introduzione}     
 	\vspace{-0.5cm}        
 	\section{Iot (Internet of Things)}    
@@ -624,36 +624,36 @@
 	Si riprende dunque il lagrangiano ottenuto al punto 2.5 (equazione (2.21)) e vi si aggiunge il nuovo termine della funzione obiettivo in quanto non altera i calcoli già effettuati:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+			L(\lambda)=\min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 		\end{split}
 	\end{equation}
 	Si isola dunque la seconda parte dell'equazione, contenente la nuova variabile, per ottenere la condizione di attivazione di $y$:
 	\begin{equation}
-		\min P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		L(\lambda)=\min P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 	\end{equation}
 	Si separano i nodi nelle diverse tipologie e si sviluppano i prodotti con le corrispondenti $\lambda$:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{o \in NodoOrigine_k}\lambda^k_ {o} b^k_{o}+\sum_{t \in NodiTarget_k}\lambda^k_{t} b^k_{t})
+			L(\lambda)=\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{br \in Brokers} \lambda^k_ {br} b^k_{br} & \\+\sum_{o \in NodoOrigine_k}\lambda^k_ {o} b^k_{o}+\sum_{t \in NodiTarget_k}\lambda^k_{t} b^k_{t})
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
+			L(\lambda)=\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}(\sum_{o \in NodoOrigine_k}& \\\sum_{t \in NodiTarget_k}\lambda^k_ {o} y^k_{t}+\sum_{t \in NodiTarget_k}-\lambda^k_{t}y^k_{t})
 		\end{split}
 	\end{equation}
 	(3.6)$\rightarrow$(3.7): Nel passaggio tra le due equazioni, si sostituiscono le variabili $b$ con i valori stabiliti dalla definizione.
 	\begin{equation}
-		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
+		L(\lambda)=\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{k \in K}\sum_{t \in NodiTarget_k}(y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}))
 	\end{equation}
 	(3.8): La sommatoria sui nodi di origine viene rimossa perché, per ogni $k$, esiste un unico nodo che genera l'informazione.
 	\begin{equation}
-		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}) 
+		L(\lambda)=\min \sum_{k \in K}\sum_{t \in NodiTarget_k}(P-Py^k_t)-y^k_{t}(\lambda^k_ {o} -\lambda^k_{t}) 
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
-		\min \sum_{k \in K}\sum_{t \in NodiTarget_k}P-y^k_t(\lambda^k_ {o} -\lambda^k_{t}+P)
+		L(\lambda)=\min \sum_{k \in K}\sum_{t \in NodiTarget_k}P-y^k_t(\lambda^k_ {o} -\lambda^k_{t}+P)
 	\end{equation}
 	La condizione di attivazione di $y^k_t$ si ottiene confrontando il costo nel caso in cui il nodo target $t$ sia servito ($y^k_t=1$) rispetto al caso in cui non lo sia ($y^k_t=0$).
 	Nel momento in cui il costo associato col caso servito risulta minore si ha un guadagno e quindi si attiva $y^k_t$:
@@ -695,19 +695,19 @@
 	Tali condizioni vengono ricalcolate seguendo il medesimo procedimento di rilassamento lagrangiano descritto in precedenza (2.5 e 3.1):
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+			L(\lambda)=\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
+			L(\lambda)=\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
 		\end{split}
 	\end{equation}
 	Essendo unici il nodo di origine $o$ e il nodo target $ta$, per ogni informazione $k$ e target $t$, le rispettive sommatorie presentano un unico termine, e possono quindi essere rimosse. Inoltre, poiché $ta$ e $t$ indicano lo stesso nodo, è possibile sostituire $ta$ con $t$: 
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+			L(\lambda)=\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
 	La funzione obiettivo può essere suddivisa in due sotto-problemi indipendenti, ciascuno utilizzato per ricavare le condizioni di attivazione delle relative variabili decisionali al loro interno.\\
@@ -746,7 +746,7 @@
 	
 	\chapter{Implementazione Algoritmica}
 	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi.
-	Nella prima fase si calcola un Upper Bound mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità della soluzione ottenuta e la sua distanza dall'ottimo.\smallskip \\
+	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
 		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
@@ -1552,16 +1552,16 @@ for (k, t) in KT:
 \end{lstlisting}}
 \chapter{Analisi dei Risultati}
 In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di test. Le istanze di test sono costruite per simulare una rete Publish/Subscribe, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili.
-Per valutarne la qualità, la soluzione viene confrontata con l'ottimo calcolato direttamente nell'ambiente Cplex e la distanza tra le due rappresenta una metrica fondamentale e sufficiente per determinare l'ottimalità dell'algoritmo.
+Per valutarne la qualità, le soluzioni ottenute tramite il Lower Bound e l'Upper Bound vengono confrontate con l'ottimo calcolato direttamente nell'ambiente Cplex e la distanza da esso rappresenta una metrica fondamentale e sufficiente per determinare l'ottimalità degli algoritmi.
 La generazione degli scenari segue due modalità: un'arbitraria per analizzare il corretto funzionamento all'interno dei casi limite e una casuale per verificare la correttezza in contesti non preconfigurati. In particolare gli scenari casuali vengono generati con un incremento iterativo delle possibili variabili: informazioni, nodi, archi e numero target per individuare quale parametro porta criticità agli algoritmi.
 \section{Scenari e Test Arbitrari}
-Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza dell'algoritmo. Le implementazioni in Python non lagrangiane presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo sotto un prefissato numero di variabili.
+Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo sotto un prefissato numero di variabili.
 \subsection{Primo Scenario}
 La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono disposte in modo che i percorsi più brevi siano composti da soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso1}
-	\caption[Primo scenario]{Foto rete del primo scenario.}
+	\caption[Primo scenario]{Primo scenario.}
 	\label{fig:caso1}
 \end{figure} \newpage
 \subsubsection{Dati Informativi}
@@ -1581,6 +1581,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 		Terza Formulazione Lagrangiana & 7 & 0.0120 & 120\\ \hline
 		Terza Formulazione Cplex & 7 & / & /\\ \hline
 		Terza Formulazione Python API & 7 & 0.0481 & /\\ \hline
+		Upper Bound & 7 & / & /\\ \hline
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
@@ -1595,7 +1596,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 \end{figure}
 
 \subsection{Secondo Scenario}
-Il secondo scenario di test viene utilizzato per analizzare il comportamento dell'algoritmo in una rete densamente interconnessa. L'obiettivo è verificare la correttezza dell'algoritmo nella scelta del percorso ottimo in un contesto con molteplici cammini alternativi.
+Il secondo scenario di test viene utilizzato per analizzare il comportamento degli algoritmi in una rete densamente interconnessa. L'obiettivo è verificare la correttezza degli algoritmi nella scelta del percorso ottimo in un contesto con molteplici cammini alternativi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso2}
@@ -1619,6 +1620,7 @@ La peculiarità dello scenario risiede nell'elevato numero di archi all'interno d
 		Terza Formulazione Lagrangiana & 113 & 0.8932 & 1640\\ \hline
 		Terza Formulazione Cplex & 113 & / & /\\ \hline
 		Terza Formulazione Python API & 113 & 0.0549 & /\\ \hline
+		Upper Bound & 113 & / & /\\ \hline
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
@@ -1654,6 +1656,7 @@ La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi targe
 		Terza Formulazione Lagrangiana & 234 & 0.2831 & 942\\ \hline
 		Terza Formulazione Cplex & 234 & / & /\\ \hline
 		Terza Formulazione Python API & 234 & 0.0818 & /\\ \hline
+		Upper Bound & 234 & / & /\\ \hline
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table} \newpage
@@ -1663,7 +1666,7 @@ La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi targe
 	\includegraphics[width=0.7\linewidth]{caso3Ottimo}
 	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
 	\label{fig:caso3ottimo}
-\end{figure}
+\end{figure}\newpage
 \subsection{Quarto Scenario}
 Il quarto scenario di test rappresenta una rete caratterizzata dalla saturazione dei percorsi ottimi per il raggiungimento di un nodo target. L'obiettivo dello scenario è di valutare la capacità dell'algoritmo derivante dalla terza formulazione di selezionare opportunamente quali informazioni instradare fino a destinazione e quali invece escludere, verificando parallelamente l'efficacia dell'algoritmo nella scelta dei percorsi ottimi.
 \begin{figure}[h]
@@ -1671,11 +1674,11 @@ Il quarto scenario di test rappresenta una rete caratterizzata dalla saturazione
 	\includegraphics[width=0.7\linewidth]{caso4}
 	\caption[Quarto scenario]{Quarto scenario}
 	\label{fig:caso4}
-\end{figure}
+\end{figure}\newpage
 \subsubsection{Dati Informativi}
 La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal Publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal Publisher $0$ e deve raggiungere il target $8$, e l'informazione $2$ parte dal Publisher $2$ e deve raggiungere i target $8$ e $9$. I percorsi ottimi per il raggiungimento dei nodi $9$ e $8$ hanno la capacità intenzionalmente limitata per impedire il corretto arrivo di tutte le informazioni ai relativi target. La scelta che si vuole indurre è il corretto reinstradamento delle informazioni destinate al target $8$ e il mancato invio di una informazione per il raggiungimento del target $9$.
 \subsubsection{Risoluzione}
-In quanto lo scenario si basa sulla mancata ricezione da parte di una informazione l'unico algoritmo che fornisce soluzione è quello basato sulla terza formulazione.
+In quanto lo scenario si basa sulla mancata ricezione da parte di una informazione l'unico algoritmo che fornisce soluzione per il Lower Bound è quello basato sulla terza formulazione.
 È importante sottolineare che, anche qualora non fosse stata necessaria una soluzione parziale, la seconda formulazione si sarebbe dimostrata comunque inadeguata per via della richiesta da parte dell'informazione dell'instradamento verso molteplici target.
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1685,19 +1688,21 @@ In quanto lo scenario si basa sulla mancata ricezione da parte di una informazio
 		Terza Formulazione Lagrangiana & 1026 & 0.4830 & 1331\\ \hline
 		Terza Formulazione Cplex & 1026 & / & /\\ \hline
 		Terza Formulazione Python API & 1026 & 0.0732 & /\\ \hline
+		Upper Bound & 1026 & / & /\\ \hline
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
-\end{table}\newpage
-\noindent Come evince dai risultati, l'algoritmo ha individuato la soluzione ottima in tempi ridotti. Nello scenario corrente, la scelta ottima ricade nel non consegnare l'informazione $2$ al target $9$. La decisione presa è dettata dalla topologia della rete, la quale richiederebbe all'informazione $2$ di attraversare un tragitto più lungo e costoso rispetto all'informazione $0$. Inoltre i costi risultano molto elevati perché sono sommati alla penalità associata col mancato trasferimento di una informazione che nel quarto scenario vale 553.
+\end{table}
+
+\noindent Come evince dai risultati, l'algoritmo lagrangiano ha individuato la soluzione ottima in tempi ridotti. Nello scenario corrente, la scelta ottima ricade nel non consegnare l'informazione $2$ al target $9$. La decisione presa è dettata dalla topologia della rete, la quale richiederebbe all'informazione $2$ di attraversare un tragitto più lungo e costoso rispetto all'informazione $0$. Inoltre i costi risultano molto elevati perché sono sommati alla penalità associata col mancato trasferimento di una informazione che nel quarto scenario vale 553.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso4ottimo}
 	\caption[Percorso ottimo disegnato sulla base della soluzione fornita dalla terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
 	\label{fig:caso4ottimo}
-\end{figure}
+\end{figure}\newpage
 
 \subsection{Quinto Scenario}
-Il quinto scenario rappresenta una rete caratterizzata da un solo arco collegato con un target richiesto da tutte le informazioni transitanti. L'obiettivo dello scenario è quello di mostrare una preferenza da parte dell'algoritmo nell'invio di un numero maggiore di informazioni, con occupazione di banda minore rispetto alla trasmissione di una singolare che saturerebbe l'arco.
+Il quinto scenario rappresenta una rete caratterizzata da un solo arco collegato con un target richiesto da tutte le informazioni transitanti. L'obiettivo dello scenario è quello di mostrare una preferenza da parte dell'algoritmo lagrangiano nell'invio di un numero maggiore di informazioni, con occupazione di banda minore rispetto alla trasmissione di una singolare che saturerebbe l'arco.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{Caso5}
@@ -1705,9 +1710,9 @@ Il quinto scenario rappresenta una rete caratterizzata da un solo arco collegato
 	\label{fig:caso5}
 \end{figure}
 \subsubsection{Dati Informativi}
-La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi target. Nello specifico, tutte e tre vengono richieste dal nodo target $9$, il quale è collegato con il resto della rete da un singolo arco di capacità intenzionalmente limitata. Il collegamento può sostenere una banda massima pari a $4$ e le informazioni occupano rispettivamente $2$, $2$ e $4$. Quello che si vuole mostrare è che l'algoritmo preferisce instradare le due informazioni con minore occupazione rispetto all'invio della singola che saturerebbe l'arco, favorendo la soddisfazione di più richieste.
+La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi target. Nello specifico, tutte e tre vengono richieste dal nodo target $9$, il quale è collegato con il resto della rete da un singolo arco di capacità intenzionalmente limitata. Il collegamento può sostenere una banda massima pari a $4$ e le informazioni occupano rispettivamente $2$, $2$ e $4$. Quello che si vuole mostrare è che gli algoritmi preferiscono instradare le due informazioni con minore occupazione rispetto all'invio della singola che saturerebbe l'arco, favorendo la soddisfazione di più richieste.
 \subsubsection{Risoluzione}
-In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che restituisce un risultato è quello derivante dalla terza formulazione. 
+In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che restituisce un risultato per il Lower Bound è quello derivante dalla terza formulazione. 
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
 	\begin{tabular}{|c|c|c|c|}
@@ -1716,6 +1721,7 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 		Terza Formulazione Lagrangiana & 1458 & 4.6466 & 10000\\ \hline
 		Terza Formulazione Cplex & 1458 & / & /\\ \hline
 		Terza Formulazione Python API & 1458 & 0.0582 & /\\ \hline
+		Upper Bound & 1465 & / & /\\ \hline
 	\end{tabular}
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
@@ -1726,7 +1732,7 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 	\includegraphics[width=0.7\linewidth]{caso5Ottimo}
 	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
 	\label{fig:caso5ottimo}
-\end{figure}
+\end{figure}\newpage
 \section{Scenari e Test Casuali}
 Come descritto in precedenza, questa sezione è dedicata allo sviluppo di scenari casuali con la peculiarità di un incremento progressivo, a ogni iterazione, di una specifica variabile della rete. A causa dell'elevata probabilità di nodi irraggiungibili e target multipli in quanto casuali, si è optato per applicare il test solo sulla terza formulazione ovvero quella centrale di questa tesi, oltre che quella che ha dato i migliori risultati negli scenari arbitrari. Questo approccio permette di testare gli algoritmi in simulazioni sempre più complesse, portando alla luce eventuali limiti o difficoltà.
 \subsection{Scenario Incrementale Casuale}
@@ -1738,7 +1744,7 @@ L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale,
 		\hline
 		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
 		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
-		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
+		\shortstack[c]{\textbf{Risultato Lower} \\ \textbf{Bound}} &
 		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
 		1 & Target & 632 & Lower, Upper ottimi \\ \hline
 		2 & Target & 796 & Lower, Upper ottimi \\ \hline
@@ -1762,7 +1768,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 		\hline
 		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
 		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
-		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
+		\shortstack[c]{\textbf{Risultato Lower} \\ \textbf{Bound}} &
 		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
 		1 & Informazioni & 1073 & Lower, Upper ottimi \\ \hline
 		2 & Informazioni & 2045 & Lower, Upper ottimi \\ \hline
@@ -1776,7 +1782,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 	\end{tabular}
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
-\noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dell'algoritmo, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nelle penalità da aggiungere al costo totale.
+\noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dei nostri algoritmi, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nelle penalità da aggiungere al costo totale.
 \subsection{Scenario Incrementale Broker e Archi}
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1784,7 +1790,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 		\hline
 		\shortstack[c]{\textbf{Numero} \\ \textbf{Iterazione}} & 
 		\shortstack[c]{\textbf{Incremento} \\ \textbf{Effettuato}} & 
-		\shortstack[c]{\textbf{Risultato Terza} \\ \textbf{Formulazione}} &
+		\shortstack[c]{\textbf{Risultato Lower} \\ \textbf{Bound}} &
 		\shortstack[c]{\textbf{Breve} \\ \textbf{Descrizione}} \\ \hline
 		1 & Archi & 110 & Lower, Upper ottimi \\ \hline
 		2 & Archi & 110 & Lower, Upper ottimi \\ \hline
@@ -1841,15 +1847,23 @@ In linea teorica, aumentare questi parametri migliora la qualità dell'Upper Boun
 \subsection{Conclusioni sui Test}
 I risultati ottenuti nei diversi scenari testati consentono di trarre delle considerazioni conclusive sull'efficacia e sui limiti degli algoritmi sviluppati.
 Negli scenari arbitrari, la terza formulazione si è dimostrata la migliore, non solo avendo la possibilità di gestire più tipologie di scenari rispetto alle altre due, ma convergendo anche in tempi minori garantendo comunque il corretto instradamento delle informazioni.
-Negli scenari casuali incrementali emerge un risultato interessante e coerente con la teoria, l'aumento singolo di informazioni e target o di nodi e archi non induce una complessità sufficiente a mettere in difficoltà l'algoritmo. La criticità emerge quando più variabili vengono aumentate in contemporanea, richiedendo sia la soddisfazione di più richieste sia una elaborazione delle stesse in una rete più articolata.
+Negli scenari casuali incrementali emerge un risultato interessante e coerente con la teoria, l'aumento singolo di informazioni e target o di nodi e archi non induce una complessità sufficiente a mettere in difficoltà gli algoritmi. La criticità emerge quando più variabili vengono aumentate in contemporanea, richiedendo sia la soddisfazione di più richieste sia una elaborazione delle stesse in una rete più articolata.
 L'analisi dei parametri, invece, ha fornito indicazioni pratiche utili per la calibrazione dello step e dell'algoritmo euristico. Il parametro $\alpha$ incide significativamente sulla velocità e sulla stabilità della convergenza, così come la distanza dell'Upper Bound dall'ottimo. 
 Scegliere un $\alpha$ troppo elevato rischia di impedire la convergenza. Al contrario, una scelta più ridotta di $\alpha$ porta a una convergenza più stabile ma lenta.
 Un effetto parzialmente analogo si osserva con la distanza dell'Upper Bound dall'ottimo, cioè una sovrastima del valore produce oscillazioni più estreme e una convergenza più rapida.
 Per quanto riguarda la profondità della ricerca euristica, i test confermano che il costo computazionale è gestito da due parametri fondamentali: il numero di permutazioni da controllare per informazione e il numero di scenari attivi da mantenere. Incrementare un solo parametro alla volta non produce un aumento significativo dei tempi di calcolo, mentre, al contrario, l'aumento di entrambi genera una crescita dei tempi molto più marcata.
-In conclusione, i test evidenziano come la terza formulazione e l'algoritmo lagrangiano sviluppati siano efficaci in numerosi scenari e riescano a ottenere i risultati attesi. Negli scenari in cui l'Upper Bound non converge all'ottimo, il Lower Bound riesce quasi sempre, dimostrando come la criticità principale risieda nel calcolo di un Upper Bound euristico di alta qualità. Poiché l'Upper Bound viene ricalcolato periodicamente sfruttando le penalità lagrangiane, si tende a ottenere la migliore soluzione individuabile da un approccio basato sui cammini minimi, che non sempre corrisponde all'ottimo. Nonostante questa limitazione, l'algoritmo rimane utilizzabile in modo efficiente in contesti realistici, producendo soluzioni di buona qualità in tempi contenuti.
+In conclusione, i test evidenziano come la terza formulazione e l'algoritmo lagrangiano sviluppati siano efficaci in numerosi scenari e riescano a ottenere i risultati attesi. Negli scenari in cui l'Upper Bound non converge all'ottimo, il Lower Bound riesce quasi sempre, dimostrando come la criticità principale risieda nel calcolo di un Upper Bound euristico di alta qualità. Poiché l'Upper Bound viene ricalcolato periodicamente sfruttando le penalità lagrangiane, si tende a ottenere la migliore soluzione individuabile da un approccio basato sui cammini minimi, che non sempre corrisponde all'ottimo. Nonostante questa limitazione, gli algoritmi rimangono utilizzabili in modo efficiente in contesti realistici, producendo soluzioni di buona qualità in tempi contenuti.
 \chapter{Conclusioni e Sviluppi Futuri}
-Il problema affrontato in questa tesi riguarda la necessità di estendere il modello e gli algoritmi sviluppati dal mio collega nella sua tesi, in particolare si cerca un'implementazione della logica per la corretta gestione dei casi di multicasting di informazioni e di soluzioni parziali in caso di nodi non raggiungibili.
-Il problema viene risolto prendendo come riferimento la seconda formulazione sviluppata dal collega insieme al suo algoritmo per il calcolo dell'Upper BOund. Questi vengono estesi e modificati in modo da poter gestire le casistiche problematiche appena descritte e per poter restituire soluzioni parziali. In particolar modo la formulazione viene aggiunta di una variabile decisionale, una formulazione forte dei vincoli e un meccanismo di penalizzazione che guida la ricerca verso la consegna di più informazioni possibili. L'algoritmo euristco invece rivede una sua ridefinizione con l'aggiunta di un meccanismo 
+Questa tesi evidenzia come la trasmissione di informazioni all'interno di una rete, in particolar modo negli ambienti IoT, caratterizzati da un'elevata vulnerabilità a guasti o richieste multiple, possa trovarsi davanti a scenari critici.
+In tali contesti, nasce l'esigenza di definire un approccio ottimizzato in grado di determinare i percorsi corretti di instradamento delle informazioni, gestendo la possibilità di richieste irrisolvibili attraverso la generazione di soluzioni parziali. \smallskip \\
+La tesi propone un approccio basato sulla convergenza di un Lower Bound e un Upper Bound per individuare la soluzione ottima. 
+Il Lower Bound viene calcolato mediante un algoritmo sviluppato a partire del rilassamento lagrangiano della formulazione matematica del problema (3.2.4). L'Upper Bound, invece, deriva da un algoritmo euristico basato sulla logica di Dijkstra per l'individuazione dei cammini minimi, esteso alla gestione di scenari alternativi. \smallskip \\
+I test effettuati hanno dimostrato una convergenza ottima e robusta della metodologia proposta, grazie soprattutto all'efficacia dell'algoritmo lagrangiano. Al contrario, l'aumento della complessità della rete tende a penalizzare la fase di calcolo dell'Upper Bound, confermandolo come l'anello debole nella ricerca della soluzione ottima. Nonostante ciò, l'approccio si rileva efficiente, garantendo soluzioni ottime o di buona qualità in tempi computazionalmente ridotti, anche su reti di media e alta complessità.\smallskip \\
+Possibili sviluppi futuri di questo lavoro includono una rielaborazione della logica alla base dell'algoritmo di Upper Bound, al fine di garantire una sua corretta convergenza anche in casi di elevata complessità. Parallelamente, si potrebbe procedere allo sviluppo distribuito dell'algoritmo lagrangiano, spostando il calcolo da un server centralizzato ai singoli nodi della rete.\smallskip \\
+In conclusione, la soluzione presentata in questa tesi si dimostra un approccio robusto ed efficiente per l'instradamento in reti Publish/Subscribe, ponendo basi solide per un suo futuro impiego in contesti reali.
+
+
+
 	%Ora vediamo un elenco numerato:         %crea un elenco numerato
 	%\begin{enumerate}
 	%\item primo oggetto
