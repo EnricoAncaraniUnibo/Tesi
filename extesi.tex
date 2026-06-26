@@ -80,7 +80,7 @@
 			%   o ambito disciplinare da cui nasce la tesi (es. "Machine Learning", "Calcolo Numerico").
 			% - Oppure, se non richiesto dal tuo Corso di Laurea, puoi COMMENTARE
 			%   l'intera riga anteponendo un % all'inizio.
-			{\large{\bf TODO}}
+			{\large{\bf Ricerca Operativa: Metodi di Ottimizzazione per le Reti}}
 		\end{center}
 		
 		\vspace{30mm}
@@ -97,7 +97,7 @@
 			%   a seconda di quanto concordato con il/la relatore/relatrice.
 			% - "NOME RELATORE" con Nome e Cognome del relatore.
 			{\large{\bf Relatore:\\
-					Chiar.ma Prof.\\
+					Chiar.mo Prof.\\
 					Marco Antonio Boschetti}} \\[5mm]
 			
 			% ------------------------------------------------------------------
@@ -149,7 +149,14 @@
 	\chapter*{Sommario}
 %	\setcounter{page}{5}
 	\thispagestyle{plain}
-	TODO
+	IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica moderna che ha alla base l'utilizzo di dispositivi intelligenti per lo scambio di informazioni. All'interno di questa sfera, uno dei metodi di comunicazione più diffusi è quello basato sul modello Publish/Subscribe che consente lo scambio di dati tra dispositivi della rete senza la necessità di conoscenza diretta tra loro. Il modello utilizza tre tipologie di dispositivi: Publisher, Broker e Subscriber. I Publisher, una volta ottenuti dei dati tramite sensori di vario genere, li pubblicano rendendoli disponibili nella rete. I dati si spostano attraverso i Broker, nodi intermedi che gestiscono la connessione, per poi giungere ai Subscriber che li leggono e elaborano. Il protocollo standard per l'implementazione del modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili. \smallskip \\
+	Questa tesi riprende il lavoro effettuato da un collega nell'anno accademico 2021-2022, il quale aveva sviluppato un algoritmo distribuito basato sulle proprietà matematiche del rilassamento lagrangiano dove ogni nodo conosce solamente se stesso e i propri vicini per il calcolo del percorso ottimo. 
+	Il presente lavoro reimplementa le formulazioni del collega al fine di analizzare il pensiero logico e i passaggi matematici che hanno portato alla loro costruzione, per poi concentrarsi sull'estensione della seconda formulazione rendendola capace di gestire scenari di multicasting e di situazioni in cui la consegna completa a tutti i nodi Subscriber non è garantita, casi che risultavano difficili o impossibili da risolvere dal modello originale. 
+	Il nuovo modello esteso si fonda su una formulazione forte dei vincoli e introduce una nuova variabile decisionale che consente di rappresentare e gestire la mancata consegna, permettendo di ottenere soluzioni parziali valide anche in presenza di reti con capacità stringenti o nodi irraggiungibili.
+	Nel nuovo modello viene, inoltre, proposto un meccanismo di penalizzazione che guida l'ottimizzazione verso soluzioni che minimizzano il numero di consegne non effettuate.
+	Per supportare la corretta convergenza del risultato è stato rivisitato l'algoritmo del collega per il calcolo dell'Upper Bound, creandone una nuova versione basata sulla logica di Dijkstra per il calcolo dei cammini minimi unito con un approccio a scenari multipli alternativi, capace di restituire soluzioni parziali e, periodicamente, abbassare l'Upper Bound. \smallskip \\
+	La tesi è suddivisa in sei capitoli. Il primo capitolo introduce il campo dell'IoT e il modello Publish/Subscribe insieme agli ambienti di sviluppo e alla teoria matematica di riferimento. Il secondo capitolo descrive le formulazioni estrapolate dalla tesi del collega, con particolare attenzione all'applicazione del rilassamento lagrangiano e ai passaggi logici effettuati. Il terzo capitolo tratta lo sviluppo della nuova formulazione estesa, in grado di gestire multicasting e soluzioni parziali. Il quarto capitolo presenta gli algoritmi sviluppati e la logica di funzionamento alla loro base. Il quinto capitolo si pone l'obiettivo di testare gli algoritmi su numerosi casi di test, al fine di comprendere il loro corretto funzionamento e le criticità, con particolare riguardo per la terza formulazione in quanto le altre due già dimostrate funzionanti dalla tesi del collega. Il sesto capitolo riassume il lavoro svolto e presenta possibili sviluppi futuri. \smallskip \\
+	In conclusione, il lavoro presentato in questa tesi fornisce un algoritmo per l'ottimizzazione dell'instradamento di informazioni all'interno di reti IoT, superando i limiti della seconda formulazione del collega e consentendo una gestione flessibile delle informazioni anche in scenari dove un instradamento completo non è sempre possibile.	
 	\chapter{Introduzione}     
 	\vspace{-0.5cm}        
 	\section{Iot (Internet of Things)}    
@@ -1558,7 +1565,7 @@ La prima istanza di test è una rete semplice con un totale di 4 nodi. Le conness
 	\label{fig:caso1}
 \end{figure} \newpage
 \subsubsection{Dati Informativi}
-La rete deve trasportare una informazione $0$ dal nodo publisher $0$ al subscriber $4$ potendo passare da 3 nodi brokers.
+La rete deve trasportare una informazione $0$ dal nodo Publisher $0$ al Subscriber $4$ potendo passare da 3 nodi Brokers.
 I costi del percorso $0-2-3-4$ sono molto ridotti.
 \subsubsection{Risoluzione}
 \begin{table}[htbp]
@@ -1596,7 +1603,7 @@ Il secondo scenario di test viene utilizzato per analizzare il comportamento del
 	\label{fig:caso2}
 \end{figure}
 \subsubsection{Dati Informativi}
-La rete deve trasportare una informazione $0$ dal nodo publisher $0$ al subscriber $41$ potendo passare da 40 nodi brokers differenti utilizzando 201 possibili archi distinti.
+La rete deve trasportare una informazione $0$ dal nodo Publisher $0$ al Subscriber $41$ potendo passare da 40 nodi Brokers differenti utilizzando 201 possibili archi distinti.
 La peculiarità dello scenario risiede nell'elevato numero di archi all'interno del grafo, progettati per indurre una forte ridondanza e una molteplicità di cammini alternativi.
 \subsubsection{Risoluzione}
 \begin{table}[htbp]
@@ -1632,7 +1639,7 @@ Gli obiettivi di questo scenario consistono nel verificare la corretta saturazio
 	\label{fig:caso3}
 \end{figure}
 \subsubsection{Dati Informativi}
-La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal publisher $2$ e deve raggiungere il target $9$ e, infine, l'informazione $2$ parte dal publisher $0$ e deve raggiungere il target $9$. Il percorso ottimo per il raggiungimento del nodo $9$ prevede il transito attraverso il nodo $7$, tuttavia, la sua capacità è stata intenzionalmente limitata per simulare una saturazione.
+La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal Publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal Publisher $2$ e deve raggiungere il target $9$ e, infine, l'informazione $2$ parte dal Publisher $0$ e deve raggiungere il target $9$. Il percorso ottimo per il raggiungimento del nodo $9$ prevede il transito attraverso il nodo $7$, tuttavia, la sua capacità è stata intenzionalmente limitata per simulare una saturazione.
 \subsubsection{Risoluzione}
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1666,7 +1673,7 @@ Il quarto scenario di test rappresenta una rete caratterizzata dalla saturazione
 	\label{fig:caso4}
 \end{figure}
 \subsubsection{Dati Informativi}
-La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal publisher $0$ e deve raggiungere il target $8$, e l'informazione $2$ parte dal publisher $2$ e deve raggiungere i target $8$ e $9$. I percorsi ottimi per il raggiungimento dei nodi $9$ e $8$ hanno la capacità intenzionalmente limitata per impedire il corretto arrivo di tutte le informazioni ai relativi target. La scelta che si vuole indurre è il corretto reinstradamento delle informazioni destinate al target $8$ e il mancato invio di una informazione per il raggiungimento del target $9$.
+La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal Publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal Publisher $0$ e deve raggiungere il target $8$, e l'informazione $2$ parte dal Publisher $2$ e deve raggiungere i target $8$ e $9$. I percorsi ottimi per il raggiungimento dei nodi $9$ e $8$ hanno la capacità intenzionalmente limitata per impedire il corretto arrivo di tutte le informazioni ai relativi target. La scelta che si vuole indurre è il corretto reinstradamento delle informazioni destinate al target $8$ e il mancato invio di una informazione per il raggiungimento del target $9$.
 \subsubsection{Risoluzione}
 In quanto lo scenario si basa sulla mancata ricezione da parte di una informazione l'unico algoritmo che fornisce soluzione è quello basato sulla terza formulazione.
 È importante sottolineare che, anche qualora non fosse stata necessaria una soluzione parziale, la seconda formulazione si sarebbe dimostrata comunque inadeguata per via della richiesta da parte dell'informazione dell'instradamento verso molteplici target.
@@ -1746,7 +1753,7 @@ L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale,
 	\end{tabular}
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
-\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo. Questa distanza ha ridotto l'efficacia dello step di aggiornamento del Lower Bound, impedendone la corretta convergenza all'interno del numero di iterazioni prefissate.
+\noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un Broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo. Questa distanza ha ridotto l'efficacia dello step di aggiornamento del Lower Bound, impedendone la corretta convergenza all'interno del numero di iterazioni prefissate.
 Da questa analisi emerge la necessità di approfondire separatamente due aspetti: l'aumento di informazioni e di target e l'aumento di nodi e di archi.
 \subsection{Scenario Incrementale Informazioni e Target}
 \begin{table}[htbp]
@@ -1840,7 +1847,9 @@ Scegliere un $\alpha$ troppo elevato rischia di impedire la convergenza. Al cont
 Un effetto parzialmente analogo si osserva con la distanza dell'Upper Bound dall'ottimo, cioè una sovrastima del valore produce oscillazioni più estreme e una convergenza più rapida.
 Per quanto riguarda la profondità della ricerca euristica, i test confermano che il costo computazionale è gestito da due parametri fondamentali: il numero di permutazioni da controllare per informazione e il numero di scenari attivi da mantenere. Incrementare un solo parametro alla volta non produce un aumento significativo dei tempi di calcolo, mentre, al contrario, l'aumento di entrambi genera una crescita dei tempi molto più marcata.
 In conclusione, i test evidenziano come la terza formulazione e l'algoritmo lagrangiano sviluppati siano efficaci in numerosi scenari e riescano a ottenere i risultati attesi. Negli scenari in cui l'Upper Bound non converge all'ottimo, il Lower Bound riesce quasi sempre, dimostrando come la criticità principale risieda nel calcolo di un Upper Bound euristico di alta qualità. Poiché l'Upper Bound viene ricalcolato periodicamente sfruttando le penalità lagrangiane, si tende a ottenere la migliore soluzione individuabile da un approccio basato sui cammini minimi, che non sempre corrisponde all'ottimo. Nonostante questa limitazione, l'algoritmo rimane utilizzabile in modo efficiente in contesti realistici, producendo soluzioni di buona qualità in tempi contenuti.
-\chapter{Conclusioni}
+\chapter{Conclusioni e Sviluppi Futuri}
+Il problema affrontato in questa tesi riguarda la necessità di estendere il modello e gli algoritmi sviluppati dal mio collega nella sua tesi, in particolare si cerca un'implementazione della logica per la corretta gestione dei casi di multicasting di informazioni e di soluzioni parziali in caso di nodi non raggiungibili.
+Il problema viene risolto prendendo come riferimento la seconda formulazione sviluppata dal collega insieme al suo algoritmo per il calcolo dell'Upper BOund. Questi vengono estesi e modificati in modo da poter gestire le casistiche problematiche appena descritte e per poter restituire soluzioni parziali. In particolar modo la formulazione viene aggiunta di una variabile decisionale, una formulazione forte dei vincoli e un meccanismo di penalizzazione che guida la ricerca verso la consegna di più informazioni possibili. L'algoritmo euristco invece rivede una sua ridefinizione con l'aggiunta di un meccanismo 
 	%Ora vediamo un elenco numerato:         %crea un elenco numerato
 	%\begin{enumerate}
 	%\item primo oggetto
