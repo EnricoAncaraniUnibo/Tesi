@@ -603,7 +603,7 @@
 	Le formulazioni descritte in precedenza presentano un limite nel fondamento logico: i vincoli (2.2) e (2.9) impongono che ogni Subscriber riceva l'informazione richiesta. Di conseguenza, se anche un solo destinatario non è raggiungibile, tali vincoli risultano violati, il problema non ammette soluzioni e non è possibile perciò calcolare una soluzione parziale, ovvero una in cui solo un sottoinsieme di riceventi viene soddisfatto.
 	Per superare questa limitazione si introduce una nuova variabile decisionale binaria $y^k_i \in \{0,1\}$ che indica se un determinato nodo $i$ va servito con l'informazione $k$.
 	Questa variabile ricopre un ruolo chiave in due aspetti del problema: la funzione obiettivo del problema e la definizione di $b^k_i$.\smallskip \\
-	Per la sua integrazione si aggiorna la seconda formulazione:
+	Per la sua integrazione si aggiorna la seconda formulazione e la definizione di $b^k_i$:
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 	\end{equation}
@@ -669,7 +669,7 @@
 	\subsection{Analisi del Problema nel Dettaglio}
 	Il vincolo lega la variabile $x^k_{ij}$ alla variabile binaria di attivazione $e^k_{ij}$. Seguendo la logica del vincolo ci si aspetterebbe che se non transita alcuna informazione ($x=0$) allora il vincolo imponga $e=0$, mentre nel caso contrario costringa $e=1$. 
 	Nella realtà la presenza del fattore $\sum_{t \in NodiTarget_k}y^k_t$ altera questa dinamica. Prendendo come esempio una rete con un'informazione $k$ che deve raggiungere due target distinti $t_1 \text{ e } t_2$, negli archi in cui la variabile $x$ assume valore singolo ($x^k_{ij}=1$), il vincolo esprime $1\leq 2e$, ovvero $e\geq \frac{1}{2}$. Nel rilassamento continuo alla variabile $e$ sarà assegnato il valore minore possibile per minimizzare la funzione obiettivo e quindi assumerà valore $0.5$. Nonostante il risolutore costringa la variabile ad assumere valore intero, e quindi $1$, il valore frazionario rimarrà impresso nelle $\lambda$ che guidano l'algoritmo durante le iterazioni successive.
-	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco attivo e a favorire quello disattivo, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia, poiché blocca il raggiungimento di una soluzione intera ammissibile.
+	L'effetto pratico che si osserva è il seguente: l'algoritmo tende a penalizzare l'arco attivo e a favorire quello disattivo, per poi invertire, mantenendo così una media di attivazione pari a $0.5$. Questa oscillazione impedisce al Lower Bound di crescere oltre una certa soglia.
 	\subsection{Scrittura in Formulazione Forte}
 	Per eliminare la debolezza del vincolo, si ridefiniscono le variabili $x$, $b$ e $\lambda$ in modo da distinguere il nodo target che l'informazione deve raggiungere.
 	Nascono così le variabili $x^{kt}_{ij}$, $b^{kt}_i$ e $\lambda^{kt}_i$.\\
@@ -685,11 +685,11 @@
 		b^{kt}_i =
 		\begin{cases}
 			y^k_i & \text{se } i \text{ Publisher dell'informazione } k \text{ diretta al target } t\\
-			-y^k_i & \text{se } i \text{ Subscriber}\\
+			-y^k_i & \text{se } i \text{ Subscriber dell'informazione }k \text{ e }i=t \\
 			0 & \text{se } i \text{ Broker} 
 		\end{cases}
 	\end{equation}
-	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitato a uno. Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
+	Con questa formulazione, l'arco viene attivato non appena dell'informazione lo attraversa, per qualsiasi target, ma il legame rimane diretto. In questo modo, se l'arco è disattivato l'informazione passante è nulla e, viceversa, se attivo è limitata a uno per target (3.13). Ciò toglie la possibilità di soluzioni frazionarie e rimuove le oscillazioni descritte in precedenza.
 	\subsection{Nuove Condizioni di Attivazione}
 	A seguito della ridefinizione delle variabili decisionali, occorre riformulare le condizioni di scelta per l'attivazione degli archi, l'instradamento delle informazioni e la selezione dei nodi da servire.\\
 	Tali condizioni vengono ricalcolate seguendo il medesimo procedimento di rilassamento lagrangiano descritto in precedenza (2.5 e 3.1):
@@ -728,7 +728,7 @@
 			\min \sum_{k \in K}(\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
-	Lo sviluppo dell'equazione porta alla condizione descritta in precedenza (3.11), rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$. \newpage
+	Lo sviluppo dell'equazione porta alla condizione descritta in precedenza (3.11), rimasta invariata: $\lambda^{kt}_t-\lambda^{kt}_o<P$.
 	\subsection{Terza Formulazione Completa}
 	Funzione Obiettivo:\\
 	\begin{equation}
