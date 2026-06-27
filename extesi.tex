@@ -11,6 +11,7 @@
 \usepackage{tgtermes}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{url}
 \pgfplotsset{compat=1.18}
 \usepackage{listings}
 \lstset{frame=tb,
@@ -149,13 +150,13 @@
 	\chapter*{Sommario}
 %	\setcounter{page}{5}
 	\thispagestyle{plain}
-	IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica moderna che ha alla base l'utilizzo di dispositivi intelligenti per lo scambio di informazioni. All'interno di questa sfera, uno dei metodi di comunicazione più diffusi è quello basato sul modello Publish/Subscribe che consente lo scambio di dati tra dispositivi della rete senza la necessità di conoscenza diretta tra loro. Il modello utilizza tre tipologie di dispositivi: Publisher, Broker e Subscriber. I Publisher, una volta ottenuti dei dati tramite sensori di vario genere, li pubblicano rendendoli disponibili nella rete. I dati si spostano attraverso i Broker, nodi intermedi che gestiscono la connessione, per poi giungere ai Subscriber che li leggono e elaborano. Il protocollo standard per l'implementazione del modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili. \smallskip \\
+	IoT (Internet of Things) è l'acronimo utilizzato per indicare la sfera tecnologica moderna che ha alla base l'utilizzo di dispositivi intelligenti per lo scambio di informazioni. All'interno di questa sfera, uno dei metodi di comunicazione più diffusi è quello basato sul modello Publish/Subscribe \cite{Pub/Sub} che consente lo scambio di dati tra dispositivi della rete senza la necessità di conoscenza diretta tra loro. Il modello utilizza tre tipologie di dispositivi: Publisher, Broker e Subscriber. I Publisher, una volta ottenuti dei dati tramite sensori di vario genere, li pubblicano rendendoli disponibili nella rete. I dati si spostano attraverso i Broker, nodi intermedi che gestiscono la connessione, per poi giungere ai Subscriber che li leggono e elaborano. Il protocollo standard per l'implementazione del modello è l'MQTT \cite{MQTT}, progettato per essere leggero e robusto anche su reti instabili. \smallskip \\
 	Questa tesi riprende il lavoro effettuato dal collega Urbinati nell'anno accademico 2021-2022  \cite{amslaurea28118}, il quale aveva sviluppato un algoritmo distribuito basato sulle proprietà matematiche del rilassamento lagrangiano dove ogni nodo conosce solamente se stesso e i propri vicini per il calcolo del percorso ottimo. 
 	Il presente lavoro reimplementa le formulazioni del collega \cite{amslaurea28118} al fine di analizzare il pensiero logico e i passaggi matematici che hanno portato alla loro costruzione, per poi concentrarsi sull'estensione della seconda formulazione rendendola capace di gestire scenari di multicasting e di situazioni in cui la consegna completa a tutti i nodi Subscriber non è garantita, casi che risultavano difficili o impossibili da risolvere dal modello originale. 
 	Il nuovo modello esteso si fonda su una formulazione forte dei vincoli e introduce una nuova variabile decisionale che consente di rappresentare e gestire la mancata consegna, permettendo di ottenere soluzioni parziali valide anche in presenza di reti con capacità stringenti o nodi irraggiungibili.
 	Nel nuovo modello viene, inoltre, proposto un meccanismo di penalizzazione che guida l'ottimizzazione verso soluzioni che minimizzano il numero di consegne non effettuate.
 	Per supportare la corretta convergenza del risultato è stato rivisitato l'algoritmo del collega \cite{amslaurea28118} per il calcolo dell'Upper Bound, creandone una nuova versione basata sulla logica di Dijkstra per il calcolo dei cammini minimi unito con un approccio a scenari multipli alternativi, capace di restituire soluzioni parziali e, periodicamente, abbassare l'Upper Bound. \smallskip \\
-	La tesi è suddivisa in sei capitoli. Il primo capitolo introduce il campo dell'IoT e il modello Publish/Subscribe insieme agli ambienti di sviluppo e alla teoria matematica di riferimento. Il secondo capitolo descrive le formulazioni estrapolate dalla tesi del collega \cite{amslaurea28118}, con particolare attenzione all'applicazione del rilassamento lagrangiano e ai passaggi logici effettuati. Il terzo capitolo tratta lo sviluppo della nuova formulazione estesa, in grado di gestire multicasting e soluzioni parziali. Il quarto capitolo presenta gli algoritmi sviluppati e la logica di funzionamento alla loro base. Il quinto capitolo si pone l'obiettivo di testare gli algoritmi su numerosi casi di test, al fine di comprendere il loro corretto funzionamento e le criticità, con particolare riguardo per la terza formulazione in quanto le altre due già dimostrate funzionanti dalla tesi del collega \cite{amslaurea28118}. Il sesto capitolo riassume il lavoro svolto e presenta possibili sviluppi futuri. \smallskip \\
+	La tesi è suddivisa in sei capitoli. Il primo capitolo introduce il campo dell'IoT e il modello Publish/Subscribe \cite{Pub/Sub} insieme agli ambienti di sviluppo e alla teoria matematica di riferimento. Il secondo capitolo descrive le formulazioni estrapolate dalla tesi del collega \cite{amslaurea28118}, con particolare attenzione all'applicazione del rilassamento lagrangiano e ai passaggi logici effettuati. Il terzo capitolo tratta lo sviluppo della nuova formulazione estesa, in grado di gestire multicasting e soluzioni parziali. Il quarto capitolo presenta gli algoritmi sviluppati e la logica di funzionamento alla loro base. Il quinto capitolo si pone l'obiettivo di testare gli algoritmi su numerosi casi di test, al fine di comprendere il loro corretto funzionamento e le criticità, con particolare riguardo per la terza formulazione in quanto le altre due già dimostrate funzionanti dalla tesi del collega \cite{amslaurea28118}. Il sesto capitolo riassume il lavoro svolto e presenta possibili sviluppi futuri. \smallskip \\
 	In conclusione, il lavoro presentato in questa tesi fornisce due algoritmi per l'ottimizzazione dell'instradamento di informazioni all'interno di reti IoT, superando i limiti della seconda formulazione del collega Urbinati \cite{amslaurea28118} e consentendo una gestione flessibile delle informazioni anche in scenari dove un instradamento completo non è sempre possibile.	
 	\chapter{Introduzione}     
 	\vspace{-0.5cm}        
@@ -169,7 +170,7 @@
 	\vspace{-0.5cm}
 	\section{Publish/Subscribe}
 	\vspace{-0.3cm}   
-	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
+	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe \cite{Pub/Sub}, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
 	In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
 	Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
 	Il protocollo standard per l'implementazione di questo modello è l'MQTT, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
@@ -393,12 +394,12 @@
 		\item Formulazione forte: I vincoli sono scritti in modo tale da limitare pesantemente le scelte frazionarie favorendo l'ottenimento di valori interi per le variabili e di conseguenza, un valore ottimo molto vicino all'ottimo intero se non coincidente.
 	\end{itemize}
 	\section{Ambiente di Sviluppo}
-	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono Cplex Optimization Studio e Google Colab.\smallskip \\
-	Cplex Optimization Studio è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
+	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono Cplex Optimization Studio \cite{Cplex} e Google Colab.\smallskip \\
+	Cplex Optimization Studio \cite{Cplex} è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
 	Per garantire semplicità è richiesta solamente la struttura del problema, i dati e la configurazione di avvio.
 	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano al suo interno è complesso. \smallskip \\
 	Google Colab invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
-	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
+	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex \cite{Cplex} con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
 	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx e Matplotlib.pyplot.
 	\begin{figure}[h]
 		\centering
@@ -417,7 +418,7 @@
 	\chapter{Descrizione del Problema e delle Formulazioni}
 	\section{Scenario del Problema}
 	Il problema che si vuole approfondire nello specifico è quello di una rete IoT in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
-	La rete è caratterizzata da una struttura Publish/Subscribe che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
+	La rete è caratterizzata da una struttura Publish/Subscribe \cite{Pub/Sub} che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
 	L'obiettivo della tesi è sviluppare, a partire dal lavoro del collega Urbinati \cite{amslaurea28118}, un algoritmo efficiente per il calcolo del costo del percorso ottimale. L'algoritmo dovrà essere in grado di gestire sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti. \smallskip \\
 	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
 	\begin{itemize}
@@ -438,9 +439,9 @@
 	\begin{itemize}
 		\item $K$, è l'insieme contenente le informazioni da inviare o ricevere.
 		\item $N$, è l'insieme contenente tutti i nodi della rete.
-		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe fanno parte dei generatori delle informazioni.
+		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe \cite{Pub/Sub} fanno parte dei generatori delle informazioni.
 		\item $Broker$, è l'insieme contenente i nodi di mezzo che non devono nè generare nè consumare le informazioni ma solo ritrasmettere.
-		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe devono ricevere le informazioni.
+		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe \cite{Pub/Sub} devono ricevere le informazioni.
 		\item $A$, è l'insieme contenente gli archi della rete quindi i canali di comunicazione.
 		\item $NodoOrigine_k$, è l'insieme contenente per ogni informazione $k$ il suo nodo di origine.
 		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
@@ -749,7 +750,7 @@
 	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema anche peggiore di quella ottimale, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. \smallskip \\ Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). \smallskip \\ Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
-		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
+		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex \cite{Cplex} o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
 		\item Algoritmo Lagrangiano: implementato in Python, applica la logica teorica del rilassamento lagrangiano e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
 		\item Algoritmo euristico per l'Upper Bound: ispirato alla logica di Dijkstra, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
 	\end{itemize}
@@ -842,9 +843,9 @@ if soluzioneValida and costo<costoTot:
 	percorsoOttimo=percorsi
 	\end{lstlisting}}
 	\subsection{Prima Formulazione}
-	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in Python escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
+	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex \cite{Cplex} e in Python escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
 	\subsubsection{Cplex}
-	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
+	Nell'ambiente Cplex \cite{Cplex} il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
 minimize
 sum(k in K, i in N, j in Lr[i]) C[<j,i>] * x[k][<j,i>]; 
@@ -950,7 +951,7 @@ for i in N:
 (lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
 	\end{lstlisting}}
 	\subsection{Seconda Formulazione}
-	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in Python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
+	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex \cite{Cplex} e in Python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
 	\subsubsection{Calcolo Costi Penalizzati}
 	Il calcolo dei costi penalizzati si basa sull'equazione (2.25), la quale quantifica il guadagno associato all'attivazione di un determinato arco. Qualora tale operazione determini una riduzione del valore della funzione obiettivo, l'arco viene inserito all'interno di una lista di candidati per una futura elaborazione.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -1099,7 +1100,7 @@ while abs(Ub-Lb)>1e-4 and iterazioni<it_max:
 	aggiornaLambda(lam,ultimiLowerBounds,Ub,alpha)
 	\end{lstlisting}}
 	\subsubsection{Cplex}
-	Similmente alla formulazione precedente, l'ambiente Cplex consente una scrittura del codice più lineare e leggibile. In particolare, poiché il vincolo (2.9) ne incorpora due distinti (2.2) e (2.3), il modello finale risulta più compatto rispetto alla prima formulazione.
+	Similmente alla formulazione precedente, l'ambiente Cplex \cite{Cplex} consente una scrittura del codice più lineare e leggibile. In particolare, poiché il vincolo (2.9) ne incorpora due distinti (2.2) e (2.3), il modello finale risulta più compatto rispetto alla prima formulazione.
 	{\footnotesize \begin{lstlisting}
 minimize
 sum(k in K, <i,j> in A) C[<i,j>] * e[k][<i,j>]; 
@@ -1117,7 +1118,7 @@ subject to {
 }									 
 	\end{lstlisting}}
 	\subsubsection{Python API}
-	Per quanto riguarda l'implementazione in Python tramite le API di Cplex, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
+	Per quanto riguarda l'implementazione in Python tramite le API di Cplex \cite{Cplex}, il terzo vincolo deve essere suddiviso in due sotto-vincoli per garantire il rispetto di entrambe le condizioni.\\
 	Inizialmente, vengono generate le variabili decisionali con i relativi vincoli associati (2.12) e (2.13).
 	{\footnotesize 	\begin{lstlisting}[language=Python]
 modello = cplex.Cplex()
@@ -1451,7 +1452,7 @@ while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
 	aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
 \end{lstlisting}}
 \subsubsection{Cplex}
-Nel caso della terza formulazione, all'interno dell'ambiente Cplex, si è scelto di modificare la gestione delle variabili in modo da preservare la linearità e la leggibilità del codice.
+Nel caso della terza formulazione, all'interno dell'ambiente Cplex \cite{Cplex}, si è scelto di modificare la gestione delle variabili in modo da preservare la linearità e la leggibilità del codice.
 I due cambiamenti principali riguardano l'integrazione della variabile $b$ all'interno del vincolo, mediante l'uso di condizioni, e la creazione di una struttura $KT$ contenente le combinazioni di tutte le informazioni e i relativi target.
 {\footnotesize \begin{lstlisting}[language=Python]
 minimize
@@ -1475,7 +1476,7 @@ subject to {
 }
 \end{lstlisting}}
 \subsubsection{Python API}
-L'integrazione in linguaggio Python tramite l'API è stata sviluppata in modo da rispecchiare le modifiche effettuate precedentemente nell'ambiente Cplex. In primo luogo si creano le variabili decisionali e di supporto, garantendo nella definizione il rispetto dei loro vincoli associati (3.26) (3.27) (3.28).
+L'integrazione in linguaggio Python tramite l'API è stata sviluppata in modo da rispecchiare le modifiche effettuate precedentemente nell'ambiente Cplex \cite{Cplex}. In primo luogo si creano le variabili decisionali e di supporto, garantendo nella definizione il rispetto dei loro vincoli associati (3.26) (3.27) (3.28).
 {\footnotesize \begin{lstlisting}[language=Python]
 modello = cplex.Cplex()
 modello.objective.set_sense(modello.objective.sense.minimize)
@@ -1554,11 +1555,11 @@ for (k, t) in KT:
 		(lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[0])
 \end{lstlisting}}
 \chapter{Analisi dei Risultati}
-In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di test. Le istanze di test sono costruite per simulare una rete Publish/Subscribe, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili. \smallskip \\
-Le soluzioni ottenute tramite gli algoritmi sviluppati vengono confrontate con il valore ottimo calcolato direttamente nell'ambiente Cplex e la distanza da esso rappresenta una metrica fondamentale e sufficiente per valutarne la qualità. \smallskip \\
+In questo capitolo si approfondisce l'applicazione pratica degli algoritmi sviluppati, con l'obiettivo primario di valutarne l'efficacia e la correttezza all'interno di diversi scenari di test. Le istanze di test sono costruite per simulare una rete Publish/Subscribe \cite{Pub/Sub}, nella quale bisogna inviare simultaneamente più informazioni con la possibilità di target multipli e di nodi irraggiungibili. \smallskip \\
+Le soluzioni ottenute tramite gli algoritmi sviluppati vengono confrontate con il valore ottimo calcolato direttamente nell'ambiente Cplex \cite{Cplex} e la distanza da esso rappresenta una metrica fondamentale e sufficiente per valutarne la qualità. \smallskip \\
 La generazione degli scenari segue due modalità: un'arbitraria per analizzare il corretto funzionamento all'interno dei casi limite e una casuale per verificare la correttezza in contesti non preconfigurati. In particolare gli scenari casuali vengono generati con un incremento iterativo delle possibili variabili: informazioni, nodi, archi e numero target per individuare quale parametro porta criticità agli algoritmi.
 \section{Scenari e Test Arbitrari}
-Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo sotto un prefissato numero di variabili.
+Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex \cite{Cplex} presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo sotto un prefissato numero di variabili.
 \subsection{Primo Scenario}
 La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono disposte in modo che i percorsi più brevi siano composti da soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
@@ -1589,7 +1590,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
 \end{table}
 
-\noindent Come emerge dai risultati, nonostante la prima formulazione e le successive due adottino criteri diversi per il calcolo del costo del percorso ottimo, hanno tutte restituito la medesima soluzione con tempi molto ridotti. Tale soluzione, inoltre, risulta ottima per ciascun algoritmo sviluppato, in quanto coincide con il risultato restituito dagli algoritmi sviluppati su Cplex. Le soluzioni tra le formulazioni coincidono in quanto, avendo una sola informazione e un solo target, la $x$ si comporta similmente alla $e$ e quindi le funzioni obiettivo coincidono.
+\noindent Come emerge dai risultati, nonostante la prima formulazione e le successive due adottino criteri diversi per il calcolo del costo del percorso ottimo, hanno tutte restituito la medesima soluzione con tempi molto ridotti. Tale soluzione, inoltre, risulta ottima per ciascun algoritmo sviluppato, in quanto coincide con il risultato restituito dagli algoritmi sviluppati su Cplex \cite{Cplex}. Le soluzioni tra le formulazioni coincidono in quanto, avendo una sola informazione e un solo target, la $x$ si comporta similmente alla $e$ e quindi le funzioni obiettivo coincidono.
 
 \begin{figure}[h]
 	\centering
@@ -1863,7 +1864,7 @@ La tesi propone un approccio basato sulla convergenza di un Lower Bound e un Upp
 Il Lower Bound viene calcolato mediante un algoritmo sviluppato a partire del rilassamento lagrangiano della formulazione matematica del problema (3.2.4). L'Upper Bound, invece, deriva da un algoritmo euristico basato sulla logica di Dijkstra per l'individuazione dei cammini minimi, esteso alla gestione di scenari alternativi. \smallskip \\
 I test effettuati hanno dimostrato una convergenza ottima e robusta della metodologia proposta, grazie soprattutto all'efficacia dell'algoritmo lagrangiano. Al contrario, l'aumento della complessità della rete tende a penalizzare la fase di calcolo dell'Upper Bound, confermandolo come l'anello debole nella ricerca della soluzione ottima. Nonostante ciò, l'approccio si rileva efficiente, garantendo soluzioni ottime o di buona qualità in tempi computazionalmente ridotti, anche su reti di media e alta complessità.\smallskip \\
 Possibili sviluppi futuri di questo lavoro includono una rielaborazione della logica alla base dell'algoritmo di Upper Bound, al fine di garantire una sua corretta convergenza anche in casi di elevata complessità. Parallelamente, si potrebbe procedere allo sviluppo distribuito dell'algoritmo lagrangiano, spostando il calcolo da un server centralizzato ai singoli nodi della rete.\smallskip \\
-In conclusione, la soluzione presentata in questa tesi si dimostra un approccio robusto ed efficiente per l'instradamento in reti Publish/Subscribe ponendo basi solide per un suo futuro impiego in contesti reali.
+In conclusione, la soluzione presentata in questa tesi si dimostra un approccio robusto ed efficiente per l'instradamento in reti Publish/Subscribe \cite{Pub/Sub} ponendo basi solide per un suo futuro impiego in contesti reali.
 \bibliographystyle{unsrt}
 \bibliography{bibliografia}
 
