@@ -153,14 +153,14 @@
 	IoT (Internet of Things) \cite{Atzori2010} è l'acronimo utilizzato per indicare la sfera tecnologica moderna che ha alla base l'utilizzo di dispositivi intelligenti per lo scambio di informazioni. All'interno di questa sfera, uno dei metodi di comunicazione più diffusi è quello basato sul modello Publish/Subscribe \cite{PubSub} che consente lo scambio di dati tra dispositivi della rete senza la necessità di conoscenza diretta tra loro. Il modello utilizza tre tipologie di dispositivi: Publisher, Broker e Subscriber. I Publisher, una volta ottenuti dei dati tramite sensori di vario genere, li pubblicano rendendoli disponibili nella rete. I dati si spostano attraverso i Broker, nodi intermedi che gestiscono la connessione, per poi giungere ai Subscriber che li leggono e elaborano. Il protocollo standard per l'implementazione del modello è l'MQTT \cite{MQTT}, progettato per essere leggero e robusto anche su reti instabili. \smallskip \\
 	Questa tesi riprende il lavoro effettuato dal collega Urbinati nell'anno accademico 2021-2022  \cite{amslaurea28118}, il quale aveva sviluppato un algoritmo distribuito basato sulle proprietà matematiche del rilassamento lagrangiano \cite{Fisher1981} dove ogni nodo conosce solamente se stesso e i propri vicini per il calcolo del percorso ottimo. 
 	Il presente lavoro reimplementa le formulazioni del collega al fine di analizzare il pensiero logico e i passaggi matematici che hanno portato alla loro costruzione, per poi concentrarsi sull'estensione della seconda formulazione rendendola capace di gestire scenari di multicasting e di situazioni in cui la consegna completa a tutti i nodi Subscriber non è garantita, casi che risultavano difficili o impossibili da risolvere dal modello originale. 
-	Il nuovo modello esteso si fonda su una formulazione forte dei vincoli e introduce una nuova variabile decisionale che consente di rappresentare e gestire la mancata consegna, permettendo di ottenere soluzioni parziali valide anche in presenza di reti con capacità stringenti o nodi irraggiungibili.
+	Il nuovo modello esteso si fonda su una formulazione forte dei vincoli \cite{Wolsey1998} e introduce una nuova variabile decisionale che consente di rappresentare e gestire la mancata consegna, permettendo di ottenere soluzioni parziali valide anche in presenza di reti con capacità stringenti o nodi irraggiungibili.
 	Nel nuovo modello viene, inoltre, proposto un meccanismo di penalizzazione che guida l'ottimizzazione verso soluzioni che minimizzano il numero di consegne non effettuate.
 	Per supportare la corretta convergenza del risultato è stato rivisitato l'algoritmo del collega per il calcolo dell'Upper Bound, creandone una nuova versione basata sulla logica di Dijkstra \cite{Dijkstra1959} per il calcolo dei cammini minimi unito con un approccio a scenari multipli alternativi, capace di restituire soluzioni parziali e, periodicamente, abbassare l'Upper Bound. \smallskip \\
 	La tesi è suddivisa in sei capitoli. Il primo capitolo introduce il campo dell'IoT e il modello Publish/Subscribe insieme agli ambienti di sviluppo e alla teoria matematica di riferimento. Il secondo capitolo descrive le formulazioni estrapolate dalla tesi del collega, con particolare attenzione all'applicazione del rilassamento lagrangiano e ai passaggi logici effettuati. Il terzo capitolo tratta lo sviluppo della nuova formulazione estesa, in grado di gestire multicasting e soluzioni parziali. Il quarto capitolo presenta gli algoritmi sviluppati e la logica di funzionamento alla loro base. Il quinto capitolo si pone l'obiettivo di testare gli algoritmi su numerosi casi di test, al fine di comprendere il loro corretto funzionamento e le criticità, con particolare riguardo per la terza formulazione in quanto le altre due già dimostrate funzionanti dalla tesi del collega. Il sesto capitolo riassume il lavoro svolto e presenta possibili sviluppi futuri. \smallskip \\
 	In conclusione, il lavoro presentato in questa tesi fornisce due algoritmi per l'ottimizzazione dell'instradamento di informazioni all'interno di reti IoT, superando i limiti della seconda formulazione del collega Urbinati e consentendo una gestione flessibile delle informazioni anche in scenari dove un instradamento completo non è sempre possibile.	
 	\chapter{Introduzione}     
 	\vspace{-0.5cm}        
-	\section{Iot (Internet of Things)}    
+	\section{IoT (Internet of Things)}    
 	\vspace{-0.3cm}          
 	Il termine Iot \cite{Atzori2010} nasce come acronimo per indicare quella sfera tecnologica moderna che si basa sull'utilizzo di dispositivi "intelligenti". Quest'ultima ha avuto particolare rilevanza nell'ultimo periodo storico, andando a rivoluzionare il modo in cui si raccolgono e si processano le informazioni sia in ambito domestico sia industriale. \smallskip \\
 	Un dispositivo definito intelligente o più comunemente chiamato "smart" è un dispositivo in grado di connettersi alla rete per poter svolgere diverse funzioni in cui tra le più importanti è presente lo scambio di informazioni. \smallskip \\
@@ -173,7 +173,7 @@
 	Tra le metodologie più famose di trasmissione di messaggi, quella che si intende approfondire è il Publish/Subscribe \cite{PubSub}, un paradigma particolarmente adatto all'IoT, nato come sostituzione del classico Client-Server. In questo schema i dispositivi si dividono in Publisher e Subscriber collegati tra loro tramite dei nodi/server di trasmissione definiti Broker. \smallskip \\
 	In questo modello ognuno ha il suo ruolo: i Publisher devono diffondere nella rete le informazioni in loro possesso, i Broker devono ritrasmettere queste informazioni senza permettere danneggiamenti o perdita delle stesse e i Subscriber sono i ricevitori o i richiedenti.
 	Per quanto riguarda il meccanismo alla base è molto semplice: il Publisher invia messaggi etichettati con un topic, il Broker li riceve e li inoltra solamente ai Subscriber iscritti a quel topic. \smallskip \\ Questo approccio permette un disaccoppiamento tra nodo di partenza e di arrivo, in quanto le due parti non si conoscono direttamente e non devono per forza essere attive contemporaneamente per garantire il successo della comunicazione. \smallskip \\
-	Il protocollo standard per l'implementazione di questo modello è l'MQTT \cite{MQTT}, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
+	Il protocollo standard per l'implementazione di questo modello è l'MQTT \cite{MQTT}, progettato per essere leggero e robusto anche su reti instabili ma che presenta alla base una criticità importante: essendo il Broker il nodo centrale di comunicazione, la sua irraggiungibilità diventa rischio di interruzione per l'intera rete \cite{electronics11091498}. Per ovviare al problema, si è optato per la creazione di infrastrutture con più Broker configurati per lavorare e apparire come uno solo, in modo che nel caso di fallimento di un server, i rimanenti possano continuare il lavoro.\smallskip \\ Facendo riferimento al paragrafo precedente si può associare il ruolo di Publisher ai sensori e il ruolo di Subscriber a tutti quei dispositivi che necessitano del valore rilevato.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=1\linewidth]{publish-subscribe}
@@ -195,10 +195,10 @@
 	In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
 	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
 	\subsubsection{Peer-To-Peer}
-	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
+	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi.
 	
 	\section{Problema di Ottimizzazione}
-	Il problema descritto è così definito come un problema di ottimizzazione \cite{Wolsey1998}, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
+	Il problema della ricerca del percorso ottimo è così definito come un problema di ottimizzazione \cite{Wolsey1998}, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
 	Questo tipo di problema è descrivibile utilizzando un modello matematico:
 	\begin{equation}
 		min/max\ \sum_i c_ix_i
@@ -281,7 +281,7 @@
 	\end{equation}
 	Una delle tecniche che può essere usata per la ricerca della soluzione del duale lagrangiano è il metodo del subgradiente.
 	\subsubsection{Metodo del Subgradiente}
-	Il metodo del subgradiente \cite{HeldWolfeCrowder1974} è un metodo iterativo usato per massimizzare una funzione concava, come quella lagrangiana, con lo scopo di ottenere il migliore limite inferiore per il problema originale. Nello specifico, si può utilizzare per calcolare i moltiplicatori di Lagrange associati ai vincoli rilassati che forniscono il risultato $L(\lambda)$ più alto. \smallskip \\
+	Il metodo del subgradiente \cite{Fisher1981} è un metodo iterativo usato per massimizzare una funzione concava, come quella lagrangiana, con lo scopo di ottenere il migliore limite inferiore per il problema originale. Nello specifico, si può utilizzare per calcolare i moltiplicatori di Lagrange associati ai vincoli rilassati che forniscono il risultato $L(\lambda)$ più alto. \smallskip \\
 	La funzione lagrangiana non è perfettamente una curva liscia ma è composta di segmenti, ciascuno corrispondente a una soluzione ottima $\bar{x}$ per il $\lambda$ specificato.
 	\begin{figure}[h]
 		\centering
@@ -400,7 +400,7 @@
 	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano \cite{Fisher1981} al suo interno è complesso. \smallskip \\
 	Google Colab \cite{GoogleColab} invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
 	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
-	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano \cite{Fisher1981}, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx \cite{NetworkX} e Matplotlib.pyplot.
+	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx \cite{NetworkX} e Matplotlib.pyplot \cite{MatPlotLibPyPlot}.
 	\begin{figure}[h]
 		\centering
 		\begin{minipage}{0.75\textwidth}
@@ -432,7 +432,7 @@
 		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
 		\label{fig:rete}
 	\end{figure}
-	I seguenti simboli globali e le successive due formulazioni sono ripresi dalla tesi del collega \cite{amslaurea28118}, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
+	I seguenti simboli globali e le successive due formulazioni sono ripresi dalla tesi del collega, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
 	\section{Simboli Globali} 
 	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
 	è necessario mappare le variabili reali in un contesto informatico/matematico:
@@ -486,7 +486,7 @@
 	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
 	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
 	\section{Seconda Formulazione}
-	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano \cite{Fisher1981}, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
+	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
 	Funzione Obiettivo:\\
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
@@ -576,9 +576,9 @@
 	$x^k_{ij}$ dipende da $(\lambda^k_i-\lambda^k_j)$. Poiché l'obiettivo è minimizzare, se il termine $(\lambda^k_i-\lambda^k_j)$ fosse positivo allontanerebbe dalla soluzione ottima e quindi $x^k_{ij}$ assume il valore minimo consentito dal vincolo (2.11). Se invece fosse negativo contribuirebbe alla minimizzazione e quindi $x^k_{ij}$ assume il valore massimo consentito che è pari a $NodiTarget_k$. \smallskip \\
 	Determinati quali archi attivare e per quali informazioni, si incontra un ulteriore problema legato alla capacità degli archi: non tutte le informazioni selezionate potrebbero essere trasmesse simultaneamente all'interno dell'arco senza superare la sua capacità massima.
 	Questo problema è riconducibile al classico problema del Knapsack \cite{MartelloToth1990} in cui l'arco rappresenta lo zaino con capacità $u_{ij}$ e le informazioni $k$ sono gli oggetti con peso $a_k$ e valore $-d^k_{ij}$ che si vuole inserire all'interno.
-	Poiché il Knapsack massimizza il valore degli oggetti inseriti e il mio guadagno è rappresentato in negativo da $d^k_{ij}$, invertendone il segno rendo compatibili i due problemi.
+	Poiché il Knapsack massimizza il valore degli oggetti inseriti e il guadagno è rappresentato in negativo da $d^k_{ij}$, invertendone il segno si rendono compatibili i due problemi.
 	\subsection{Aggiornamento delle Penalità Lagrangiane}
-	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente \cite{HeldWolfeCrowder1974} come descritto nella sezione (1.4.2). \smallskip \\
+	Per l'aggiornamento delle penalità si utilizza il metodo del subgradiente \cite{Fisher1981} come descritto nella sezione (1.4.2). \smallskip \\
 	Si prende il vincolo rilassato e da esso si definisce il subgradiente:
 	\begin{equation}
 		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
@@ -747,7 +747,7 @@
 	
 	\chapter{Implementazione Algoritmica}
 	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi. \smallskip \\
-	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema anche peggiore di quella ottimale, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero proibitivi. \smallskip \\ Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). \smallskip \\ Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
+	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema non necessariamente ottimale, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero molto elevati. \smallskip \\ Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). \smallskip \\ Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
 		\item Algoritmo Cplex: il modello matematico viene direttamente implementato nell'ambiente di sviluppo di Cplex \cite{Cplex} o in Python. La soluzione ottima restituita costituisce il riferimento per il confronto con i risultati degli altri algoritmi.
@@ -758,7 +758,7 @@
 	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
 	In questa sezione si analizzano le due formulazioni che non prevedono la possibilità di generare soluzioni parziali insieme al loro algoritmo per la ricerca di un Upper Bound ammissibile.
 	\subsection{Upper Bound Euristico}
-	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra \cite{Dijkstra1959} per i cammini minimi. \smallskip \\
+	Per il calcolo dell'Upper Bound relativo alla prima e alla seconda formulazione, si è optato per lo sviluppo di un algoritmo euristico basato sulla logica di Dijkstra per i cammini minimi. \smallskip \\
 	Poiché l'ordine di instradamento delle informazioni influenza significativamente l'allocazione delle capacità sugli archi e la qualità della soluzione finale, l'algoritmo adotta un approccio Multi-Start ripetuto per un numero arbitrario di iterazioni. 
 	A ogni iterazione, l'insieme delle informazioni viene mescolato casualmente e, per ciascuna di esse, viene eseguita una variante dell'algoritmo di Dijkstra che integra un controllo preventivo sulle capacità residue degli archi. Tale vincolo impone che un nodo adiacente venga preso in considerazione solo se l'arco che lo raggiunge è in grado di sostenere il peso dell'informazione corrente. Al termine di ogni iterazione, i cammini ottimi vengono ricostruiti a ritroso a partire dai nodi target e le capacità residue della rete vengono aggiornate di conseguenza. L'algoritmo, infine, restituisce i percorsi che hanno il costo complessivo minore.\smallskip \\
 	Le variabili in ingresso coincidono con quelle definite nel paragrafo (2.2). \smallskip \\
@@ -843,7 +843,7 @@ if soluzioneValida and costo<costoTot:
 	percorsoOttimo=percorsi
 	\end{lstlisting}}
 	\subsection{Prima Formulazione}
-	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex \cite{Cplex} e in Python escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano \cite{Fisher1981}.\smallskip \\
+	Per quanto riguarda la prima formulazione, lo sviluppo si è concentrato sulla creazione del modello in ambiente di sviluppo Cplex e in Python escludendo l'implementazione della metodologia basata sul rilassamento lagrangiano.\smallskip \\
 	\subsubsection{Cplex}
 	Nell'ambiente Cplex il codice risulta molto lineare, con una distinzione chiara tra la funzione obiettivo e i vincoli.
 	{\footnotesize \begin{lstlisting}
@@ -951,7 +951,7 @@ for i in N:
 (lin_expr=[cplex.SparsePair(temp_X,temp_Coeffs)],senses=["L"],rhs=[u[i,j]])
 	\end{lstlisting}}
 	\subsection{Seconda Formulazione}
-	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex \cite{Cplex} e in Python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano \cite{Fisher1981} strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
+	La seconda formulazione, oltre all'implementazione nell'ambiente Cplex e in Python tramite API, prevede lo sviluppo di un algoritmo basato sulla teoria del rilassamento lagrangiano strutturato in diverse funzioni, ognuna con il proprio specifico ruolo.
 	\subsubsection{Calcolo Costi Penalizzati}
 	Il calcolo dei costi penalizzati si basa sull'equazione (2.25), la quale quantifica il guadagno associato all'attivazione di un determinato arco. Qualora tale operazione determini una riduzione del valore della funzione obiettivo, l'arco viene inserito all'interno di una lista di candidati per una futura elaborazione.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -964,7 +964,7 @@ for (k,i,j) in d:
 		ePerKnapsack.append((k,i,j))
 	\end{lstlisting}}
 	\subsubsection{KnapSack}
-	Per garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem). Il problema dello zaino è molto famoso nel panorama della ricerca operativa e il suo scopo è quello di inserire la migliore combinazione di oggetti possibile all'interno di uno zaino dotato di una capacità massima limitata. Ogni oggetto è caratterizzato da un peso e da un guadagno, di conseguenza, l'obiettivo finale è la massimizzazione del profitto totale. Trattandosi di un problema complesso, i tempi di risoluzione risultano molto elevati con metodi tradizionali. Per superare questo limite, si sfrutta la programmazione dinamica, ovvero si suddivide in sotto-problemi e, per il calcolo di ciascuno di essi, si sfruttano le operazioni già effettuate in quelli precedenti al fine di ridurre i tempi.
+	Per garantire il rispetto del vincolo sulla capacità degli archi, si è optato per lo sviluppo di un algoritmo basato sulla programmazione dinamica applicata al problema dello zaino (KnapSack problem) \cite{MartelloToth1990}. Il problema dello zaino è molto famoso nel panorama della ricerca operativa e il suo scopo è quello di inserire la migliore combinazione di oggetti possibile all'interno di uno zaino dotato di una capacità massima limitata. Ogni oggetto è caratterizzato da un peso e da un guadagno, di conseguenza, l'obiettivo finale è la massimizzazione del profitto totale. Trattandosi di un problema complesso, i tempi di risoluzione risultano molto elevati con metodi tradizionali. Per superare questo limite, si sfrutta la programmazione dinamica, ovvero si suddivide in sotto-problemi e, per il calcolo di ciascuno di essi, si sfruttano le operazioni già effettuate in quelli precedenti al fine di ridurre i tempi.
 	La capacità massima dello zaino coincide con la capacità dell'arco, il peso degli oggetti da inserire è rappresentato dalla banda occupata dall'informazione e il profitto è dato dal valore opposto del costo penalizzato, che viene reso positivo per consentirne l'utilizzo diretto. In caso di attivazione dell'arco la relativa variabile $x$ verrà aggiornata seguendo la logica espressa nel paragrafo (2.5).\\
 	In primo luogo, a ciascun arco vengono associate le informazioni che si ritengono candidate a transitarvi.
 	{\footnotesize \begin{lstlisting}[language=Python]
@@ -1201,7 +1201,7 @@ for k in K:
 	\section{Formulazione Con Soluzioni Parziali}
 	In questa sezione si analizza la formulazione che prevede la possibilità di generare soluzioni parziali insieme al suo algoritmo per la ricerca di un Upper Bound ammissibile.
 	\subsection{Dijkstra a Scenari e Meccanismo di Discesa dell'Upper Bound}
-	Per quanto riguarda la nuova formulazione, l'approccio alla ricerca di un Upper Bound ammissibile è stato radicalmente cambiato per superare i limiti della precedente versione. Nel modello antecedente l'algoritmo, l'impossibilità di raggiungere anche un solo nodo target da parte della rispettiva informazione decretava il fallimento dell'intera esecuzione. Nella nuova versione, divisa in funzioni, il calcolo di un Upper Bound euristico è composto da una base logica che segue  la procedura di Dijkstra \cite{Dijkstra1959} per i cammini minimi unita con una logica di generazione di scenari alternativi. L'approccio è euristico in quanto l'algoritmo valuta solo un sottoinsieme di permutazioni, scelte casualmente, sia delle informazioni, sia dei target da raggiungere. \smallskip \\
+	Per quanto riguarda la nuova formulazione, l'approccio alla ricerca di un Upper Bound ammissibile è stato radicalmente cambiato per superare i limiti della precedente versione. Nel modello antecedente l'algoritmo, l'impossibilità di raggiungere anche un solo nodo target da parte della rispettiva informazione decretava il fallimento dell'intera esecuzione. Nella nuova versione, divisa in funzioni, il calcolo di un Upper Bound euristico è composto da una base logica che segue  la procedura di Dijkstra per i cammini minimi unita con una logica di generazione di scenari alternativi. L'approccio è euristico in quanto l'algoritmo valuta solo un sottoinsieme di permutazioni, scelte casualmente, sia delle informazioni, sia dei target da raggiungere. \smallskip \\
 	Le due principali innovazioni introdotte in questa versione consistono nella gestione di scenari multipli di esplorazione delle soluzioni e del meccanismo di stringimento dell'Upper Bound. \smallskip \\
 	La prima novità riguarda la strutturazione di soluzioni seguendo scenari alternativi per la scelta del percorso.
 	Qualora l'algoritmo incontri più strade per il raggiungimento di un nodo target di pari costo, non sceglie casualmente quale memorizzare e utilizzare ma, al contrario, crea uno scenario distinto per ogni strada ottima individuata. Con questa modalità, la ricerca del percorso ottimo per le informazioni e target successivi non risente di una decisione casuale, ma viene testata in parallelo insieme agli altri scenari possibili. Al termine del processo vengono estrapolati gli scenari migliori individuati e i relativi costi associati. Per rimanere in linea con l'ideologia di un algoritmo rapido ed euristico viene imposto un limite massimo sia alle soluzioni finali sia agli scenari da mantenere attivi durante l'esecuzione.\smallskip \\
@@ -1452,7 +1452,7 @@ while abs(UbEuristicoFormattato-Lb)>1e-4 and iterazioni<it_max:
 	aggiornaLambda(lam,ultimiLowerBounds,UbEuristicoFormattato,alpha,x,b)
 \end{lstlisting}}
 \subsubsection{Cplex}
-Nel caso della terza formulazione, all'interno dell'ambiente Cplex \cite{Cplex}, si è scelto di modificare la gestione delle variabili in modo da preservare la linearità e la leggibilità del codice.
+Nel caso della terza formulazione, all'interno dell'ambiente Cplex, si è scelto di modificare la gestione delle variabili in modo da preservare la linearità e la leggibilità del codice.
 I due cambiamenti principali riguardano l'integrazione della variabile $b$ all'interno del vincolo, mediante l'uso di condizioni, e la creazione di una struttura $KT$ contenente le combinazioni di tutte le informazioni e i relativi target.
 {\footnotesize \begin{lstlisting}[language=Python]
 minimize
@@ -1559,7 +1559,7 @@ In questo capitolo si approfondisce l'applicazione pratica degli algoritmi svilu
 Le soluzioni ottenute tramite gli algoritmi sviluppati vengono confrontate con il valore ottimo calcolato direttamente nell'ambiente Cplex \cite{Cplex} e la distanza da esso rappresenta una metrica fondamentale e sufficiente per valutarne la qualità. \smallskip \\
 La generazione degli scenari segue due modalità: un'arbitraria per analizzare il corretto funzionamento all'interno dei casi limite e una casuale per verificare la correttezza in contesti non preconfigurati. In particolare gli scenari casuali vengono generati con un incremento iterativo delle possibili variabili: informazioni, nodi, archi e numero target per individuare quale parametro porta criticità agli algoritmi.
 \section{Scenari e Test Arbitrari}
-Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo sotto un prefissato numero di variabili.
+Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo entro un prefissato numero di variabili.
 \subsection{Primo Scenario}
 La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono disposte in modo che i percorsi più brevi siano composti da soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
@@ -1682,7 +1682,7 @@ Il quarto scenario di test rappresenta una rete caratterizzata dalla saturazione
 \subsubsection{Dati Informativi}
 La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi target. Nello specifico l'informazione $0$ parte dal Publisher $1$ e deve raggiungere i target $8$ e $9$, l'informazione $1$ parte dal Publisher $0$ e deve raggiungere il target $8$, e l'informazione $2$ parte dal Publisher $2$ e deve raggiungere i target $8$ e $9$. I percorsi ottimi per il raggiungimento dei nodi $9$ e $8$ hanno la capacità intenzionalmente limitata per impedire il corretto arrivo di tutte le informazioni ai relativi target. La scelta che si vuole indurre è il corretto reinstradamento delle informazioni destinate al target $8$ e il mancato invio di una informazione per il raggiungimento del target $9$.
 \subsubsection{Risoluzione}
-In quanto lo scenario si basa sulla mancata ricezione da parte di una informazione l'unico algoritmo che fornisce soluzione per il Lower Bound è quello basato sulla terza formulazione.
+In quanto lo scenario si basa sulla mancata ricezione da parte di un'informazione l'unico algoritmo che fornisce soluzione per il Lower Bound è quello basato sulla terza formulazione.
 È importante sottolineare che, anche qualora non fosse stata necessaria una soluzione parziale, la seconda formulazione si sarebbe dimostrata comunque inadeguata per via della richiesta da parte di molteplici target della medesima informazione.
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1738,7 +1738,7 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 	\label{fig:caso5ottimo}
 \end{figure}\newpage
 \section{Scenari e Test Casuali}
-Come descritto in precedenza, questa sezione è dedicata allo sviluppo di scenari casuali con la peculiarità di un incremento progressivo, a ogni iterazione, di una specifica variabile della rete. A causa dell'elevata probabilità di nodi irraggiungibili e target multipli in quanto casuali, si è optato per applicare il test solo sulla terza formulazione ovvero quella centrale di questa tesi, oltre che quella che ha dato i migliori risultati negli scenari arbitrari. Questo approccio permette di testare gli algoritmi in simulazioni sempre più complesse, portando alla luce eventuali limiti o difficoltà.
+Come descritto in precedenza, questa sezione è dedicata allo sviluppo di scenari casuali con la peculiarità di un incremento progressivo, a ogni iterazione, di una specifica variabile della rete. A causa dell'elevata probabilità di nodi irraggiungibili e target multipli in quanto generati casualmente, si è optato per applicare il test solo sulla terza formulazione ovvero quella centrale di questa tesi, oltre che quella che ha dato i migliori risultati negli scenari arbitrari. Questo approccio permette di testare gli algoritmi in simulazioni sempre più complesse, portando alla luce eventuali limiti o difficoltà.
 \subsection{Scenario Incrementale Casuale}
 Per valutare l'ottimalità delle soluzioni anche nei casi di mancata convergenza, all'interno della tabella è stato introdotto il parametro mA che rappresenta il costo mediano degli archi in quella precisa istanza.
 L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale, se la distanza tra Lower e Upper risulta inferiore al costo mediano degli archi, allora si può considerare trascurabile in quanto vale meno di un errore sulla scelta di un singolo arco.
