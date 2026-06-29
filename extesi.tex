@@ -224,7 +224,7 @@
 		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
 	\end{equation}
 	\subsection{Rilassamento Lagrangiano}
-	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, peggiore sarà il valore della funzione obiettivo, allontanandosi dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
+	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, maggiore sarà la distanza del valore della funzione obiettivo dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
 	\subsubsection{Spiegazione Matematica}
 	Si considera un problema di minimizzazione P:
 	\begin{equation}
@@ -420,7 +420,7 @@
 	\section{Scenario del Problema}
 	Il problema che si vuole approfondire nello specifico è quello di una rete IoT \cite{Atzori2010} in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
 	La rete è caratterizzata da una struttura Publish/Subscribe \cite{PubSub} che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
-	L'obiettivo della tesi è sviluppare, a partire dal lavoro del collega Urbinati \cite{amslaurea28118} svolto nell'anno accademico 2021-2022, un algoritmo efficiente per il calcolo del costo del percorso ottimo. La tesi del collega prevedeva di creare due formulazioni del medesimo problema, sviluppando in particolar modo la seconda in maniera distribuita sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}. L'idea è di riprendere le formulazioni create, analizzarne i passaggi logici e matematici che hanno portato alla loro costruzione e poi di estendere la seconda per poter gestire sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti, sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, casistiche che la formulazione originale non supporta. \smallskip \\
+	L'obiettivo della tesi è sviluppare, a partire dal lavoro del collega Urbinati \cite{amslaurea28118} svolto nell'anno accademico 2021-2022, un algoritmo centralizzato efficiente per il calcolo del costo del percorso ottimo. La tesi del collega prevedeva di creare due formulazioni del medesimo problema, sviluppando in particolar modo la seconda in maniera distribuita sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}. L'idea è di riprendere le formulazioni create, analizzarne i passaggi logici e matematici che hanno portato alla loro costruzione e poi di estendere la seconda per poter gestire sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti, sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, casistiche che il modello originale non supportava. \smallskip \\ 
 	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
 	\begin{itemize}
 		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
@@ -433,7 +433,7 @@
 		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
 		\label{fig:rete}
 	\end{figure} \newpage
-	I seguenti simboli globali e le successive due formulazioni sono ripresi dalla tesi del collega, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
+	\noindent I seguenti simboli globali e le successive due formulazioni sono ripresi dalla tesi del collega, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
 	\section{Simboli Globali} 
 	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
 	è necessario mappare le variabili reali in un contesto informatico/matematico:
@@ -747,7 +747,7 @@
 	\end{align}
 	
 	\chapter{Implementazione Algoritmica}
-	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati, illustrandone la logica di funzionamento strutturata su due fasi. \smallskip \\
+	In questo capitolo vengono presentati e descritti gli algoritmi sviluppati sulla base logica delle formulazioni analizzate nel capitolo precedente, illustrandone il funzionamento strutturato su due fasi. \smallskip \\
 	Nella prima fase si calcola un Upper Bound, ovvero una soluzione ammissibile del problema non necessariamente ottimale, mediante metodi euristici, con l'obiettivo di contenere i tempi di calcolo che, altrimenti, risulterebbero molto elevati. \smallskip \\ Nella seconda fase, tale valore viene utilizzato come riferimento per guidare la ricerca del miglior Lower Bound, sfruttando l'aggiornamento delle penalità lagrangiane descritto in precedenza (2.5.1). \smallskip \\ Il processo, infine, si conclude con un confronto volto a valutare la qualità delle soluzioni  ottenute e la loro distanza dall'ottimo.\smallskip \\
 	Le principali classi di algoritmi implementate sono:
 	\begin{itemize}
