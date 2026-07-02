@@ -215,7 +215,7 @@
 		x \in \{0, 1\}
 	\end{equation}
 	Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ e $B$ le matrici dei coefficienti del problema, $b$ e $d$ i vettori delle costanti per i vincoli.\smallskip \\
-	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo, per la soluzione del problema originale, un limite superiore nel caso di massimizzazione della funzione obiettivo, o un limite inferiore nel caso di minimizzazione.
+	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo, per la soluzione del problema originale, un limite superiore nel caso di massimizzazione della funzione obiettivo o un limite inferiore nel caso di minimizzazione.
 	\subsection{Rilassamento Continuo}
 	Il rilassamento più intuitivo è quello continuo \cite{Wolsey1998}, dove se il problema presenta delle variabili decisionali intere, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza delle variabili e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
 	Questo approccio trasforma il problema intero in un problema di programmazione lineare continua, per il quale esistono algoritmi efficienti. Lo spazio delle soluzioni ammissibili, tuttavia, è più ampio e il valore ottimo del problema rilassato potrebbe non essere sempre applicabile al problema originale.
@@ -223,7 +223,7 @@
 		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
 	\end{equation}
 	\subsection{Rilassamento Lagrangiano}
-	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, maggiore sarà la distanza del valore della funzione obiettivo dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà un limite inferiore per la soluzione del problema di minimizzazione originale, senza tuttavia garantire il raggiungimento dell'ottimo.
+	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, maggiore sarà la distanza del valore della funzione obiettivo dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà un limite inferiore per la soluzione del problema di minimizzazione originale senza tuttavia garantire il raggiungimento della soluzione ottima.
 	\subsubsection{Spiegazione Matematica}
 	Si considera un problema di minimizzazione P:
 	\begin{equation}
@@ -236,7 +236,7 @@
 	\begin{equation}
 		x \in \{0, 1\}
 	\end{equation}
-	Con $c$ il vettore dei costi, x la variabile decisionale, A la matrice dei coefficienti del problema, b il vettore delle costanti per il vincolo. \smallskip \\
+	Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ la matrice dei coefficienti del problema, $b$ il vettore delle costanti per il vincolo. \smallskip \\
 	Con il rilassamento lagrangiano si rilassa il vincolo $Ax \geq b$ aggiungendo una penalità $\lambda$ non negativa e inserendolo all'interno della funzione obiettivo.
 	\begin{equation}
 		z(P)=min\ cx,\ Ax-b \geq 0
@@ -249,7 +249,7 @@
 	\begin{equation}
 		x \in \{0, 1\}
 	\end{equation}
-	Il motivo del segno $-$ è dovuto al fatto che il vincolo è soddisfatto quando assume un valore maggiore o uguale a 0, quindi dato che $\lambda$ è definita non negativa, se il vincolo non viene soddisfatto come nel caso in cui sia negativo, sottrarlo dalla funzione obiettivo ne aumenta il valore, allontanandolo dal minimo ricercato.\vspace{0.15cm}  \\  Il valore ottimale del problema originale $z(P)$ sarà maggiore o al massimo uguale al valore ottimale del problema rilassato $L(\lambda)$. 
+	Il motivo del segno $-$ è dovuto al fatto che il vincolo $Ax-b$ è soddisfatto quando assume un valore maggiore o uguale a 0: ($Ax-b\geq0$), quindi dato che $\lambda$ è definita non negativa, se il vincolo non viene soddisfatto e risulta quindi negativo sottrarlo dalla funzione obiettivo ne aumenta il valore, allontanandolo dal minimo ricercato.\vspace{0.15cm}  \\  Il valore ottimale del problema originale $z(P)$ sarà maggiore o al massimo uguale al valore ottimale del problema rilassato $L(\lambda)$. 
 	\begin{align}
 		z(P)\geq L(\lambda),\ \ \ \ \forall \lambda \geq 0
 	\end{align}
