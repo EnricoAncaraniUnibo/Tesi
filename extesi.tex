@@ -151,7 +151,7 @@
 %	\setcounter{page}{5}
 	\thispagestyle{plain}
 	IoT (Internet of Things) \cite{Atzori2010} è l'acronimo utilizzato per indicare la sfera tecnologica moderna che ha alla base l'utilizzo di dispositivi intelligenti per lo scambio di informazioni. All'interno di questa sfera, uno dei metodi di comunicazione più diffusi è quello basato sul modello Publish/Subscribe \cite{PubSub} che consente lo scambio di dati tra dispositivi della rete senza la necessità di conoscenza diretta tra loro. Il modello utilizza tre tipologie di dispositivi: Publisher, Broker e Subscriber. I Publisher, una volta ottenuti dei dati tramite sensori di vario genere, li pubblicano rendendoli disponibili nella rete. I dati si spostano attraverso i Broker, nodi intermedi che gestiscono la connessione, per poi giungere ai Subscriber che li leggono ed elaborano. Il protocollo standard per l'implementazione del modello è l'MQTT \cite{MQTT}, progettato per essere leggero e robusto anche su reti instabili. \smallskip \\
-	Questa tesi riprende il lavoro effettuato dal collega Urbinati nell'anno accademico 2021-2022  \cite{amslaurea28118}, il quale aveva sviluppato un algoritmo distribuito basato sulle proprietà matematiche del rilassamento lagrangiano \cite{Fisher1981} dove ogni nodo conosce solamente se stesso e i propri vicini per il calcolo del percorso ottimo. 
+	Questa tesi riprende il lavoro effettuato dal collega Urbinati nell'anno accademico 2021-2022  \cite{amslaurea28118}, il quale aveva sviluppato un algoritmo distribuito basato sulle proprietà matematiche del rilassamento lagrangiano \cite{Fisher1981} dove ogni nodo conosce solamente se stesso e i propri vicini per il calcolo dei percorsi ottimi. 
 	Il presente lavoro reimplementa le formulazioni del collega al fine di analizzare il pensiero logico e i passaggi matematici che hanno portato alla loro costruzione, per poi concentrarsi sull'estensione della seconda formulazione proposta in \cite{amslaurea28118} rendendola capace di gestire scenari di multicasting e di situazioni in cui la consegna completa a tutti i nodi Subscriber non è garantita, casi che risultavano difficili o impossibili da risolvere dal modello originale. 
 	Il nuovo modello esteso si fonda su una formulazione forte dei vincoli \cite{Wolsey1998} e introduce una nuova variabile decisionale che consente di rappresentare e gestire la mancata consegna delle informazioni, permettendo di ottenere soluzioni parziali valide anche in presenza di reti con capacità insufficienti o nodi irraggiungibili.
 	Nel nuovo modello viene, inoltre, proposto un meccanismo di penalizzazione che guida l'ottimizzazione verso soluzioni che minimizzano il numero di consegne non effettuate.
@@ -396,8 +396,8 @@
 	\section{Ambiente di Sviluppo}
 	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono Cplex Optimization Studio e Google Colab.\smallskip \\
 	Cplex Optimization Studio \cite{Cplex} è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
-	Per garantire semplicità è richiesta solamente la struttura del problema, i dati e la configurazione di avvio.
-	È un software potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano \cite{Fisher1981} al suo interno è complesso. \smallskip \\
+	Per garantire questa semplicità, all'utente è richiesto solamente di definire la struttura del problema, ovvero le variabili decisionali, i vincoli e la funzione obiettivo, di fornire i dati necessari a istanziare il modello e di specificare le configurazioni di avvio, cioè i parametri che regolano l'esecuzione del risolutore. Sarà il software poi a occuparsi della scelta e dell'utilizzo del metodo risolutivo più adatto.
+	È un ambiente di sviluppo potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano \cite{Fisher1981} al suo interno è complesso. \smallskip \\
 	Google Colab \cite{GoogleColab} invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
 	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
 	È grazie a questa flessibilità che l'ambiente di Google Colab permette di modellare anche problemi di ottimizzazione complessi, come il rilassamento lagrangiano, e permette la visualizzazione delle casistiche tramite librerie grafiche come Networkx \cite{NetworkX} e Matplotlib.pyplot \cite{MatPlotLibPyPlot}.
@@ -419,7 +419,7 @@
 	\section{Scenario del Problema}
 	Il problema che si vuole approfondire nello specifico è quello di una rete IoT \cite{Atzori2010} in cui si vogliono scambiare informazioni tra generatori di dati e ricevitori.
 	La rete è caratterizzata da una struttura Publish/Subscribe \cite{PubSub} che, come definita in precedenza, presenta al suo interno dei nodi di comunicazione definiti Broker, sensori che svolgono il ruolo di generatori dei dati (Publisher) e utenti finali che svolgono il ruolo di ricevitori (Subscriber). \smallskip \\
-	L'obiettivo della tesi è sviluppare, a partire dal lavoro del collega Urbinati \cite{amslaurea28118} svolto nell'anno accademico 2021-2022, un algoritmo centralizzato efficiente per il calcolo del costo del percorso ottimo. La tesi del collega prevedeva di creare due formulazioni del medesimo problema, sviluppando in particolar modo la seconda in maniera distribuita sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}. L'idea è di riprendere le formulazioni create, analizzarne i passaggi logici e matematici che hanno portato alla loro costruzione e poi di estendere la seconda per poter gestire sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti, sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, casistiche che il modello originale non supportava. \smallskip \\ 
+	L'obiettivo della tesi è sviluppare, a partire dal lavoro del collega Urbinati \cite{amslaurea28118} svolto nell'anno accademico 2021-2022, un algoritmo centralizzato efficiente per il calcolo del costo dei percorsi ottimi. La tesi del collega prevedeva di creare due formulazioni del medesimo problema, sviluppando in particolar modo la seconda in maniera distribuita sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}. L'idea è di riprendere le formulazioni create, analizzarne i passaggi logici e matematici che hanno portato alla loro costruzione e poi di estendere la seconda per poter gestire sia scenari di multicasting, ovvero situazioni in cui la stessa informazione è richiesta contemporaneamente da più utenti, sia il calcolo di percorsi parziali in presenza di destinatari non raggiungibili, casistiche che il modello originale non supportava. \smallskip \\ 
 	Per modellare correttamente il problema è necessario considerare un caso reale, quindi con diversi fattori in gioco:
 	\begin{itemize}
 		\item Capacità del canale (quante informazioni possono passare insieme nello stesso collegamento nello stesso momento).
@@ -429,34 +429,34 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{Rete}
-		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
+		\caption[Immagine di una rete con dei Publisher (sensori), dei Broker e dei Subscriber]{Una rete con dei Publisher (sensori), dei Broker e dei Subscriber (utenti finali)}
 		\label{fig:rete}
 	\end{figure} \newpage
-	\noindent I seguenti simboli globali e le successive due formulazioni sono ripresi dalla tesi del collega, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
-	\section{Simboli Globali} 
+	\noindent La seguente notazione e le successive due formulazioni sono ripresi dalla tesi di Urbinati, con una particolare attenzione nella spiegazione di tutti i passaggi, anche quelli da lui omessi.
+	\section{Notazione} 
 	Per poter iniziare una transizione del problema dal mondo reale a una formulazione matematica 
 	è necessario mappare le variabili reali in un contesto informatico/matematico:
 	\begin{itemize}
 		\item $K$, è l'insieme contenente le informazioni da inviare o ricevere.
 		\item $N$, è l'insieme contenente tutti i nodi della rete.
 		\item $Publisher$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe  fanno parte dei generatori delle informazioni.
-		\item $Broker$, è l'insieme contenente i nodi di mezzo che non devono nè generare nè consumare le informazioni ma solo ritrasmettere.
+		\item $Broker$, è l'insieme contenente i nodi intermedi che non devono nè generare nè consumare le informazioni ma solo ritrasmettere.
 		\item $Subscriber$, è l'insieme contenente i nodi che secondo il modello Publish/Subscribe  devono ricevere le informazioni.
 		\item $A$, è l'insieme contenente gli archi della rete quindi i canali di comunicazione.
 		\item $NodoOrigine_k$, è l'insieme contenente per ogni informazione $k$ il suo nodo di origine.
 		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
 		\item $b^k_i$, è una variabile che, a seconda del nodo $i$ e della informazione $k$, indica il ruolo di $i$ rispetto a $k$: se è maggiore di $0$ allora $i$ è un generatore e produce $b^k_i$ informazioni $k$, se è uguale a $0$ allora $i$ è un nodo di trasmissione e invece se è uguale a $-1$ allora $i$ è un nodo richiedente di $k$.
 		\item $a_k$, è una variabile che indica per ogni informazione $k$ quanta banda occupa all'interno di un canale.
-		\item $c_{ij}$, è l'insieme contenente per ogni arco $i,j$ il suo costo.
-		\item $u_{ij}$, è l'insieme contenente per ogni arco $i,j$ la sua capacità.
-		\item $Lt_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi raggiungibili da $i$.
-		\item $Lr_i$, è l'insieme contenente per ogni nodo $i$ tutti i nodi da cui si può raggiungere $i$.
+		\item $c_{ij}$, è il costo associato all'arco $i,j$.
+		\item $u_{ij}$, è la capacità associata all'arco $i,j$.
+		\item $Lt_i$, è l'insieme contenente, per ogni nodo $i$, tutti i nodi raggiungibili da $i$.
+		\item $Lr_i$, è l'insieme contenente, per ogni nodo $i$, tutti i nodi da cui si può raggiungere $i$.
 		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
 		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
-		\item $M$, è una variabile di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
+		\item $M$, è un parametro di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
 	\end{itemize}
 	\section{Prima Formulazione}
-	Una prima formulazione può essere descritta con uno schema minimum-cost maximum-flow \cite{AhujaMagnantiOrlin1993}, un problema comunemente noto nell'ambito dell'ottimizzazione dove viene richiesto di soddisfare il maggior numero di richieste possibili minimizzando i costi nel farlo. \\
+	Una prima formulazione può essere descritta con uno schema minimum-cost flow \cite{AhujaMagnantiOrlin1993}, un problema comunemente noto nell'ambito dell'ottimizzazione in cui l'obiettivo è soddisfare tutte le richieste minimizzando i costi nel farlo. \\
 	Funzione Obiettivo:\\
 	\begin{equation}
 		\text{minimizza} \sum_{k \in K}\sum_{i \in N}\sum_{j \in Lr_i} c_{ji}x^k_{ji}
@@ -471,7 +471,7 @@
 		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale, ma poiché la copia del messaggio viene generata solo dopo il suo transito, la capacità prende in considerazione solo se l'arco è attivo o meno. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale. La funzione obiettivo tiene conto dell'instradamento effettivo su ciascun arco, ovvero della quantità di copie della medesima informazione $k$ che vi transita, mentre il vincolo di capacità non considera questa quantità ma si limita a verificare se l'arco risulta attivo in uno dei due versi o in entrambi per il transito dell'informazione $k$. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
 	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
 	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
 	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
@@ -479,17 +479,17 @@
 	Questo deve valere per ogni Subscriber e per ogni informazione richiesta.\smallskip \\
 	(2.3): Sommando il numero di Subscriber serviti tramite gli archi entranti nel Broker $i$, il risultato deve essere uguale al numero di Subscriber serviti tramite gli archi uscenti dal medesimo nodo.
 	Questo vincolo garantisce che $i$ sia esclusivamente un nodo di passaggio e che non possa generare o consumare informazioni.   \smallskip \\
-	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $i,j$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
+	(2.4): Se si sta soddisfacendo un Subscriber tramite l'arco $(i,j)$ allora quest'ultimo deve essere considerato attivo rispetto al transito dell'informazione $k$.
 	Questo vincolo serve a legare la variabile $e$ con la variabile $x$, garantendo che se si sta usando un arco allora esso è attivo. La scelta di $M$ ricade sul numero totale dei nodi poiché $x$, potendo assumere al massimo un valore pari al numero di nodi Subscriber, non potrà mai superare tale soglia.\smallskip \\
-	(2.5): Per ogni arco $i,j$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
+	(2.5): Per ogni arco $(i,j)$ si controlla che la somma della banda occupata da tutte le informazioni passanti in qualsiasi direzione non sia mai maggiore della capacità totale.
 	Questo vincolo garantisce di non superare mai il valore massimo della capacità di un arco.\smallskip \\
-	(2.6): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
-	(2.7): Per ogni arco $i,j$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
+	(2.6): Per ogni arco $(i,j)$ e per ogni informazione $k$, la variabile $x$ deve essere non negativa in quanto rappresenta il numero di Subscriber serviti tramite quell'arco e per quella informazione.\smallskip \\
+	(2.7): Per ogni arco $(i,j)$ e per ogni informazione $k$, la variabile $e$ indica se l'arco è attivo per il transito dell'informazione. Nel caso di modello intero assume valore binario mentre nel caso di rilassamento continuo può assumere qualsiasi valore reale nell'intervallo $[0,1]$. 
 	\section{Seconda Formulazione}
 	Una seconda formulazione del problema si può basare sull'idea che la generazione dell'informazione sia priva di costo e, quindi, che la spesa totale sia associata esclusivamente all'attivazione degli archi. Un obiettivo raggiungibile con questa formulazione è quello di essere facilmente rilassabile con il metodo lagrangiano, permettendo in questo modo di creare sotto-problemi locali, ovvero problemi dipendenti esclusivamente dal nodo su cui sono definiti insieme agli archi e ai nodi adiacenti. \smallskip \\
 	Funzione Obiettivo:\\
 	\begin{equation}
-		\text{minimizza} \sum_{k \in K} \sum_{i,j \in A} c_{ij}e^k_{ij} 
+		\text{minimizza} \sum_{k \in K} \sum_{(i,j) \in A} c_{ij}e^k_{ij} 
 	\end{equation}
 	\smallskip \\
 	Vincoli:\\
@@ -500,70 +500,70 @@
 		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile perciò effettuare i calcolo dell'ottimo all'interno dei nodi distribuiti.\smallskip \\
+	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende quindi possibile effettuare i calcoli dei percorsi ottimi all'interno dei nodi distribuiti.\smallskip \\
 	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
 	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
 	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.\\
-	(2.10): Per ogni arco $i,j$ si verifica che la somma della banda occupata dalle informazioni passanti non sia mai maggiore della capacità massima.	
+	(2.10): Per ogni arco $(i,j)$ si verifica che la somma della banda occupata dalle informazioni passanti non sia mai maggiore della capacità massima.	
 	La differenza del vincolo rispetto alla versione della prima formulazione (2.5) risiede nella gestione delle capacità: anziché considerare ogni arco come singolo e bidirezionale con una capacità condivisa tra le due direzioni, ora si considera come due archi distinti monodirezionali con capacità indipendenti. Questa scelta viene effettuata per semplificare il rilassamento lagrangiano, rendendo il vincolo dipendente dal singolo arco.\\
-	(2.11): Per ogni arco $i,j$ e per ogni informazione $k$, il valore della variabile $x$ è legato alla variabile $e$: se l'arco è disattivato nessuna informazione può transitarvi, altrimenti se è attivo il numero di informazioni può essere scelto in un intervallo da uno fino al numero di Subscriber richiedenti.
+	(2.11): Per ogni arco $(i,j)$ e per ogni informazione $k$, il valore della variabile $x$ è legato alla variabile $e$: se l'arco è disattivato nessuna informazione può transitarvi, altrimenti se è attivo il numero di informazioni può essere scelto in un intervallo da uno fino al numero di Subscriber richiedenti.
 	Questo vincolo garantisce un legame tra l'attivazione di un arco e il numero di informazioni che passano al suo interno.\\
 	I vincoli (2.12) e (2.13) sono analoghi ai vincoli (2.6) e (2.7). 
 	\section{Rilassamento Lagrangiano della Seconda Formulazione}
 	La seconda formulazione, con le modifiche apportate ai vincoli rispetto alla prima, risulta facilmente rilassabile usando il metodo lagrangiano \cite{Fisher1981}, permettendo dunque di ottenere una funzione obiettivo separabile in sotto-problemi indipendenti, uno per ogni arco della rete. \smallskip \\
-	Prima di procedere col rilassamento si definiscono $k \times i$ penalità lagrangiane: $\lambda^k_i$ con $k$ informazione e $i$ nodo. Il numero corrisponde a quanti vincoli sono stati rilassati e in questo caso corrisponde al vincolo (2.9) che deve essere rispettato per ogni possibile combinazione di $i$ e $k$. \smallskip \\
+	Prima di procedere col rilassamento si definiscono $k \times i$ penalità lagrangiane: $\lambda^k_i$ con $k$ informazione e $i$ nodo. Il numero corrisponde a quanti vincoli sono stati rilassati e in questo caso corrisponde ai vincoli (2.9) che devono essere rispettati per ogni possibile combinazione di $i$ e $k$. \smallskip \\
 	Si riscrive il vincolo nella forma di uguaglianza a zero:
 	\begin{equation}
 		\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i=0
 	\end{equation}
 	Questo viene successivamente incorporato nella funzione obiettivo insieme alle penalità:
 	\begin{equation}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
 	\end{equation}
-	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che il vincolo rilassato venga rispettato su tutte le combinazioni di $k$ e $i$ come da esso definito (2.9).\\
+	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che il vincolo rilassato venga rispettato su tutte le combinazioni di $k$ e $i$ come definito in (2.9).\\
 	(2.15): Il $+$ prima delle sommatorie è una scelta di comodità. In caso di violazione del vincolo, il segno di $\lambda$ si adatta al segno del termine $(\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)$ usando il metodo del subgradiente. Ciò tenderà a rendere il prodotto tra i due positivo e allontanerà la soluzione dal minimo, penalizzando il mancato rispetto del vincolo. \smallskip \\
 	Si ha quindi:
 	\begin{equation}
 		\begin{split}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij} & \\ - \sum_{k \in K}\sum_{i \in N} \lambda^k_i\sum_{j \in Lr_i}x^k_{ji} -\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij} & \\ - \sum_{k \in K}\sum_{i \in N} \lambda^k_i\sum_{j \in Lr_i}x^k_{ji} -\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\  -\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij} +\sum_{k \in K}\sum_{(i,j) \in A} \lambda^k_i x^k_{ij} & \\  -\sum_{k \in K}\sum_{(j,i) \in A} \lambda^k_i x^k_{ji}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 		\end{split}
 	\end{equation}
-	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà della linearità della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $i,j$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{i,j \in A}$. \smallskip \\
+	(2.16 $\rightarrow$ 2.17): La trasformazione delle sommatorie da $\sum_{k \in K}\sum_{i \in N} \lambda^k_i \sum_{j \in Lt_i}x^k_{ij}$ a $\sum_{k \in K}\sum_{(i,j) \in A} \lambda^k_i x^k_{ij}$ viene effettuata applicando prima la proprietà della linearità della sommatoria: $\sum_{k \in K}\sum_{i \in N}\sum_{j \in Lt_i} \lambda^k_i x^k_{ij}$ poi, notando che la doppia sommatoria $\sum_{i \in N}\sum_{j \in Lt_i}$ considera esattamente tutti gli archi $(i,j)$ della rete, trascrivendola sostituendo $\sum_{i \in N}\sum_{j \in Lt_i}$ con $\sum_{(i,j) \in A}$. \smallskip \\
 	Successivamente, il termine $\sum_{k \in K}\sum_{j,i \in A} \lambda^k_i x^k_{ji}$ viene rinominato cambiando $j \rightarrow i$ e $i \rightarrow j$:
 	\begin{equation}
-		\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}
+		\sum_{k \in K}\sum_{(i,j) \in A} \lambda^k_j x^k_{ij}
 	\end{equation}
 	Ne consegue:
 	\begin{equation}
 		\begin{split}
-			L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} \lambda^k_i x^k_{ij} & \\-\sum_{k \in K}\sum_{i,j \in A} \lambda^k_j x^k_{ij}- \sum_{k \in K}\sum_{i \in N}\lambda^k_i*b^k_i
+			L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{(i,j) \in A} \lambda^k_i x^k_{ij} & \\-\sum_{k \in K}\sum_{(i,j) \in A} \lambda^k_j x^k_{ij}- \sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{i,j \in A} (\lambda^k_i - \lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N} \lambda^k_i b^k_i
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij}+\sum_{k \in K}\sum_{(i,j) \in A} (\lambda^k_i - \lambda^k_j)x^k_{ij}-\sum_{k \in K}\sum_{i \in N} \lambda^k_i b^k_i
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i
 	\end{equation}
 	(2.19)$\rightarrow$(2.21): Nel passaggio tra le equazioni sono state svolte due semplici operazioni: un raccoglimento dei termini comuni e l'applicazione della proprietà della linearità. \smallskip \\
 	Dato che l'ultimo termine non ha variabili decisionali può essere estratto in quanto nella ricerca del minimo non influenza il risultato.
 	\begin{equation}
-		L(\lambda)= \min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
+		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
-	La funzione obiettivo risulta ora separabile: per ogni arco $i,j$ si ottiene un sotto-problema indipendente definito $LR$.
+	La funzione obiettivo risulta ora separabile: per ogni arco $(i,j)$ si ottiene un sotto-problema indipendente definito $LR$.
 	\begin{equation}
 		LR_{i,j \in A}(\lambda)=\min \sum_{k \in K}c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij}
 	\end{equation}
 	\begin{equation}
-		L(\lambda)=\sum_{i,j \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
+		L(\lambda)=\sum_{(i,j) \in A} LR_{i,j}(\lambda)-\sum_{k \in K}\sum_{i \in N}\lambda^k_i b^k_i
 	\end{equation}
 	$LR_{i,j}(\lambda)$ indica la soluzione ottima del sotto-problema per l'arco su cui è definita.\\
 	Per la sua risoluzione si introduce una variabile $d^k_{ij}$ che quantifica il costo dell'attivazione dell'arco $i,j$ per l'informazione $k$:
@@ -606,7 +606,7 @@
 	Questa variabile ricopre un ruolo chiave in due aspetti del problema: la funzione obiettivo del problema e la definizione di $b^k_i$.\smallskip \\
 	Per la sua integrazione si aggiorna la seconda formulazione e la definizione di $b^k_i$:
 	\begin{equation}
-		\text{minimizza} \sum_{k \in K}\sum_{i,j \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+		\text{minimizza} \sum_{k \in K}\sum_{(i,j) \in A}c_{ij}e^k_{ij}+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 	\end{equation}
 	dove P è la penalità per la mancata consegna a un nodo richiedente.
 	\begin{equation}
@@ -617,15 +617,15 @@
 		0 & \text{se } i \text{ Broker} 
 	\end{cases}
 	\end{equation}
-	P è scelto con un valore sufficientemente grande affinché, se un nodo è raggiungibile, risulti sempre più conveniente servirlo piuttosto che pagare la penalità. Idealmente si può pensare a P come il costo complessivo di tutti gli archi della rete sommato a uno. In questo modo, anche un percorso che utilizza tutti gli archi risulta preferibile al mancato servizio del nodo. 
+	P è scelto con un valore sufficientemente grande affinché, se un nodo è raggiungibile, risulti sempre più conveniente servirlo piuttosto che pagare la penalità. Idealmente si può pensare a P come il costo complessivo di tutti gli archi della rete sommato a uno. In questo modo, anche una soluzione che utilizza tutti gli archi risulta preferibile al mancato servizio del nodo. 
 	\begin{equation}
-		P = (\sum_{i,j \in A} c_{ij})+1
+		P = (\sum_{(i,j) \in A} c_{ij})+1
 	\end{equation}
 	Per decidere quali nodi servire e quali no, si applica lo stesso procedimento basato sul rilassamento lagrangiano già eseguito in precedenza per le variabili $x$ e $e$.
-	Si riprende dunque il lagrangiano ottenuto al punto 2.5 (equazione (2.21)) e vi si aggiunge il nuovo termine della funzione obiettivo in quanto non altera i calcoli già effettuati:
+	Si riprende dunque il lagrangiano ottenuto nella sezione 2.5 (equazione (2.21)) e vi si aggiunge il nuovo termine della funzione obiettivo in quanto non altera i calcoli già effettuati:
 	\begin{equation}
 		\begin{split}
-			L(\lambda)=\min \sum_{k \in K}\sum_{i,j \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
+			L(\lambda)=\min \sum_{k \in K}\sum_{(i,j) \in A} (c_{ij}e^k_{ij}+(\lambda^k_i-\lambda^k_j)x^k_{ij})-& \\\sum_{k \in K}\sum_{i \in N}\lambda^k_ib^k_i+P\sum_{k \in K}\sum_{t \in NodiTarget_k}(1-y^k_t)
 		\end{split}
 	\end{equation}
 	Si isola dunque la seconda parte dell'equazione, contenente la nuova variabile, per ottenere la condizione di attivazione di $y$:
@@ -696,26 +696,26 @@
 	Tali condizioni vengono ricalcolate seguendo il medesimo procedimento di rilassamento lagrangiano descritto in precedenza (2.5 e 3.1):
 	\begin{equation}
 		\begin{split}
-			L(\lambda)=\min \sum_{k \in K}\sum_{i,j \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
+			L(\lambda)=\min \sum_{k \in K}\sum_{(i,j) \in A} c_{ij}e^k_{ij}+P\sum_{k\in K}\sum_{t \in NodiTarget_k}(1-y^k_t)+& \\\sum_{k\in K}\sum_{t \in NodiTarget_k}\sum_{i \in N} \lambda^{kt}_i(\sum_{j \in Lt_i}x^{kt}_{ij}-\sum_{j \in Lr_i} x^{kt}_{ji}-b^{kt}_i)
 		\end{split}
 	\end{equation}
 	$$\downarrow$$
 	\begin{equation}
 		\begin{split}
-			L(\lambda)=\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{i,j \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{j,i \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
+			L(\lambda)=\min \sum_{k \in K}(\sum_{(i,j) \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}(\sum_{(i,j) \in A}\lambda^{kt}_ix^{kt}_{ij}-\sum_{(j,i) \in A}\lambda^{kt}_i x^{kt}_{ji}-& \\(\sum_{o \in NodoOrigine_{kt}}\lambda^{kt}_oy^k_t+\sum_{ta \in NodiTarget_{kt}}-\lambda^{kt}_{ta}y^k_t))+\sum_{t \in NodiTarget_k}P(1-y^k_t))
 		\end{split}
 	\end{equation}
 	Essendo unici il nodo di origine $o$ e il nodo target $ta$, per ogni informazione $k$ e target $t$, le rispettive sommatorie presentano un unico termine, e possono quindi essere rimosse. Inoltre, poiché $ta$ e $t$ indicano lo stesso nodo, è possibile sostituire $ta$ con $t$: 
 	\begin{equation}
 		\begin{split}
-			L(\lambda)=\min \sum_{k \in K}(\sum_{i,j \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
+			L(\lambda)=\min \sum_{k \in K}(\sum_{(i,j) \in A} c_{ij}e^k_{ij}+\sum_{t \in NodiTarget_k}\sum_{i,j \in A}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij}+& \\\sum_{t \in NodiTarget_k}(P-Py^k_t)-\sum_{t \in NodiTarget_k}(\lambda^{kt}_o-\lambda^{kt}_{t})y^k_t)
 		\end{split}
 	\end{equation}
 	La funzione obiettivo può essere suddivisa in due sotto-problemi indipendenti, ciascuno utilizzato per ricavare le condizioni di attivazione delle relative variabili decisionali al loro interno.\\
 	Il primo sotto-problema permette di ricavare le condizioni per $e^k_{ij}$ e $x^{kt}_{ij}$:
 	\begin{equation}
 		\begin{split}
-			\min \sum_{k \in K}\sum_{i,j \in A}( c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij})
+			\min \sum_{k \in K}\sum_{(i,j) \in A}( c_{ij}e^k_{ij}+\sum_{t \in NodiTarget}(\lambda^{kt}_i-\lambda^{kt}_j)x^{kt}_{ij})
 		\end{split}
 	\end{equation}
 	Per attivare $e^k_{ij}$ si confronta il caso attivo con quello disattivo, mirando a una riduzione del valore della funzione obiettivo:
