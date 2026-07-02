@@ -396,7 +396,7 @@
 	\section{Ambiente di Sviluppo}
 	Esistono molti ambienti di sviluppo che permettono la risoluzione di problemi di ottimizzazione, ma quelli su cui ci si vuole soffermare in questa tesi sono Cplex Optimization Studio e Google Colab.\smallskip \\
 	Cplex Optimization Studio \cite{Cplex} è un software sviluppato da IBM con l'obiettivo di permettere la risoluzione di problemi di ottimizzazione in maniera intuitiva senza l'obbligo di dover implementare i metodi risolutivi da parte dell'utente finale.
-	Per garantire questa semplicità, all'utente è richiesto solamente di definire la struttura del problema, ovvero le variabili decisionali, i vincoli e la funzione obiettivo, di fornire i dati necessari a istanziare il modello e di specificare le configurazioni di avvio, cioè i parametri che regolano l'esecuzione del risolutore. Sarà il software poi a occuparsi della scelta e dell'utilizzo del metodo risolutivo più adatto.
+	Per garantire questa semplicità, all'utente è richiesto solamente di definire la struttura del problema (ovvero le variabili decisionali, i vincoli e la funzione obiettivo), di fornire i dati necessari a istanziare il modello e di specificare le configurazioni di avvio, cioè i parametri che regolano l'esecuzione del risolutore. Sarà poi il software a occuparsi della scelta e dell'utilizzo del metodo risolutivo più adatto.
 	È un ambiente di sviluppo potente ma presenta delle limitazioni: è particolarmente costoso in termini economici, usa un linguaggio di programmazione molto specifico, non facilmente riconoscibile a prima vista da un utente inesperto e modellare problemi di rilassamento lagrangiano \cite{Fisher1981} al suo interno è complesso. \smallskip \\
 	Google Colab \cite{GoogleColab} invece è un ambiente Python online scelto per diversi vantaggi: le librerie sono già installate o facilmente installabili, i file sono salvati nel cloud, quindi accessibili da più dispositivi e la modalità a celle permette di eseguire porzioni di codice senza dover rieseguire tutto ogni volta.
 	La scelta di Python è dovuta sia a delle difficoltà tecniche nel far collaborare l'ambiente di sviluppo Cplex con Java, sia al fatto che si parla di un ambiente estremamente flessibile e in quanto tale, permette di importare numerose librerie per la semplificazione dei calcoli.
@@ -447,12 +447,12 @@
 		\item $NodiTarget_k$, è l'insieme contenente per ogni informazione $k$ i nodi che richiedono quella informazione.
 		\item $b^k_i$, è una variabile che, a seconda del nodo $i$ e della informazione $k$, indica il ruolo di $i$ rispetto a $k$: se è maggiore di $0$ allora $i$ è un generatore e produce $b^k_i$ informazioni $k$, se è uguale a $0$ allora $i$ è un nodo di trasmissione e invece se è uguale a $-1$ allora $i$ è un nodo richiedente di $k$.
 		\item $a_k$, è una variabile che indica per ogni informazione $k$ quanta banda occupa all'interno di un canale.
-		\item $c_{ij}$, è il costo associato all'arco $i,j$.
-		\item $u_{ij}$, è la capacità associata all'arco $i,j$.
+		\item $c_{ij}$, è il costo associato all'arco $(i,j)$.
+		\item $u_{ij}$, è la capacità associata all'arco $(i,j)$.
 		\item $Lt_i$, è l'insieme contenente, per ogni nodo $i$, tutti i nodi raggiungibili da $i$.
 		\item $Lr_i$, è l'insieme contenente, per ogni nodo $i$, tutti i nodi da cui si può raggiungere $i$.
-		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $i,j$.
-		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $i,j$ è attivo.
+		\item $x^k_{ij}$, è una variabile decisionale che indica quanti Subscriber, richiedenti l'informazione $k$, stanno venendo serviti usando l'arco $(i,j)$.
+		\item $e^k_{ij}$, è una variabile decisionale che indica se per il trasporto di una informazione $k$ l'arco $(i,j)$ è attivo.
 		\item $M$, è un parametro di valore molto alto, solitamente pari al numero dei nodi, usata per definire dei vincoli.
 	\end{itemize}
 	\section{Prima Formulazione}
@@ -471,7 +471,7 @@
 		& x^k_{ij} \geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale. La funzione obiettivo tiene conto dell'instradamento effettivo su ciascun arco, ovvero della quantità di copie della medesima informazione $k$ che vi transita, mentre il vincolo di capacità non considera questa quantità ma si limita a verificare se l'arco risulta attivo in uno dei due versi o in entrambi per il transito dell'informazione $k$. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
+	Alla base di questa formulazione si immagina che ogni copia dell'informazione abbia un costo e che, quindi, per ogni Subscriber soddisfatto aumenti la spesa totale. La funzione obiettivo tiene conto dell'instradamento effettivo su ciascun arco, ovvero della quantità di copie della medesima informazione $k$ che vi transita, mentre il vincolo di capacità non considera questa quantità ma si limita a verificare se l'arco risulta attivo in uno dei due versi o in entrambi per il transito dell'informazione. Questa formulazione nasce con l'idea di un approccio centralizzato e richiede perciò  un computer centrale per il calcolo dell'ottimo.\smallskip \\
 	(2.1): Per ogni informazione $k$, per ogni nodo $i$, si somma il costo degli archi entranti in $i$ moltiplicati per il numero di Subscriber serviti su quell'arco.
 	In pratica il costo totale dipende da quanti Subscriber vengono serviti per ogni informazione $k$ e da quali archi si sta utilizzando per farlo.\smallskip \\
 	(2.2): Sommando le informazioni in entrata al Subscriber il risultato deve corrispondere a 1.
@@ -500,7 +500,7 @@
 		& x^k_{ij}\geq 0 && \forall (i,j) \in A, k \in K\\[3ex]
 		& e^k_{ij} \in \{0,1\} \text{ oppure } 0 \leq e^k_{ij}\leq 1 && \forall (i,j) \in A, k \in K
 	\end{align}
-	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende quindi possibile effettuare i calcoli dei percorsi ottimi all'interno dei nodi distribuiti.\smallskip \\
+	Questa formulazione nasce con l'idea di un possibile approccio decentralizzato e rende possibile effettuare i calcoli dei percorsi ottimi all'interno dei nodi distribuiti.\smallskip \\
 	(2.8): Per ogni informazione $k$, si somma il costo dell'arco per la sua attivazione rispetto al trasporto di $k$. Minimizzando si cerca di usare il minor numero di archi possibili soddisfacendo comunque tutte le richieste.\\
 	(2.9): Per ogni nodo $i$ e per ogni informazione $k$, la differenza tra le informazioni uscenti e entranti deve essere uguale a $b$. Questo vincolo garantisce che ogni nodo svolga correttamente il proprio ruolo all'interno della rete per ogni informazione considerata.
 	La creazione di questo vincolo nasce con l'intenzione di unire le condizioni (2.2) e (2.3) della prima formulazione in modo da avere un solo vincolo che analizza sia gli archi entranti sia quelli uscenti, semplificando il rilassamento lagrangiano.\\
@@ -520,7 +520,7 @@
 	\begin{equation}
 		L(\lambda)= \min \sum_{k \in K}\sum_{(i,j) \in A}c_{i,j}e^k_{ij}+\sum_{k \in K}\sum_{i \in N}\lambda^k_i (\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)
 	\end{equation}
-	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che il vincolo rilassato venga rispettato su tutte le combinazioni di $k$ e $i$ come definito in (2.9).\\
+	(2.15): La doppia sommatoria $\sum_{k \in K}\sum_{i \in N}$ è necessaria perché si vuole trovare il minimo della funzione considerando che i vincoli rilassati vengano rispettati per tutte le combinazioni di $k$ e $i$ come definito in (2.9).\\
 	(2.15): Il $+$ prima delle sommatorie è una scelta di comodità. In caso di violazione del vincolo, il segno di $\lambda$ si adatta al segno del termine $(\sum_{j \in Lt_i}x^k_{ij}-\sum_{j \in Lr_i}x^k_{ji}-b^k_i)$ usando il metodo del subgradiente. Ciò tenderà a rendere il prodotto tra i due positivo e allontanerà la soluzione dal minimo, penalizzando il mancato rispetto del vincolo. \smallskip \\
 	Si ha quindi:
 	\begin{equation}
@@ -754,7 +754,7 @@
 		\item Algoritmo Lagrangiano: implementato in Python, applica la logica teorica del rilassamento lagrangiano \cite{Fisher1981} e delle condizioni di attivazione per il calcolo del Lower Bound ottimo.
 		\item Algoritmo euristico per l'Upper Bound: ispirato alla logica di Dijkstra \cite{Dijkstra1959}, che viene utilizzato per la ricerca rapida di un Upper Bound ammissibile.
 	\end{itemize}
-	Ogni algoritmo presentato in questo capitolo utilizza le variabili già definite nel paragrafo dei simboli globali (2.2).
+	Ogni algoritmo presentato in questo capitolo utilizza le variabili già definite nel paragrafo della notazione (2.2).
 	\section{Implementazione delle Formulazioni Senza Soluzioni Parziali}
 	In questa sezione si analizzano le due formulazioni che non prevedono la possibilità di generare soluzioni parziali insieme al loro algoritmo per la ricerca di un Upper Bound ammissibile.
 	\subsection{Upper Bound Euristico}
@@ -1204,7 +1204,7 @@ for k in K:
 	Per quanto riguarda la nuova formulazione, l'approccio alla ricerca di un Upper Bound ammissibile è stato radicalmente cambiato per superare i limiti della precedente versione. Nel modello antecedente l'algoritmo, l'impossibilità di raggiungere anche un solo nodo target da parte della rispettiva informazione decretava il fallimento dell'intera esecuzione. Nella nuova versione, divisa in funzioni, il calcolo di un Upper Bound euristico è composto da una base logica che segue  la procedura di Dijkstra per i cammini minimi unita con una logica di generazione di scenari alternativi. L'approccio è euristico in quanto l'algoritmo valuta solo un sottoinsieme di permutazioni, scelte casualmente, sia delle informazioni, sia dei target da raggiungere. \smallskip \\
 	Le due principali innovazioni introdotte in questa versione consistono nella gestione di scenari multipli di esplorazione delle soluzioni e del meccanismo di stringimento dell'Upper Bound. \smallskip \\
 	La prima novità riguarda la strutturazione di soluzioni seguendo scenari alternativi per la scelta del percorso.
-	Qualora l'algoritmo incontri più strade per il raggiungimento di un nodo target di pari costo, non sceglie casualmente quale memorizzare e utilizzare ma, al contrario, crea uno scenario distinto per ogni strada ottima individuata. Con questa modalità, la ricerca del percorso ottimo per le informazioni e target successivi non risente di una decisione casuale, ma viene testata in parallelo insieme agli altri scenari possibili. Al termine del processo vengono estrapolati gli scenari migliori individuati e i relativi costi associati. Per rimanere in linea con l'ideologia di un algoritmo rapido ed euristico viene imposto un limite massimo sia alle soluzioni finali sia agli scenari da mantenere attivi durante l'esecuzione.\smallskip \\
+	Qualora l'algoritmo incontri più strade per il raggiungimento di un nodo target di pari costo, non sceglie casualmente quale memorizzare e utilizzare ma, al contrario, crea uno scenario distinto per ogni strada ottima individuata. Con questa modalità, la ricerca dei percorsi ottimi per le informazioni e target successivi non risente di una decisione casuale, ma viene testata in parallelo insieme agli altri scenari possibili. Al termine del processo vengono estrapolati gli scenari migliori individuati e i relativi costi associati. Per rimanere in linea con l'ideologia di un algoritmo rapido ed euristico viene imposto un limite massimo sia alle soluzioni finali sia agli scenari da mantenere attivi durante l'esecuzione.\smallskip \\
 	La seconda novità risiede nella convergenza dell'Upper Bound verso la soluzione ottima. La determinazione dell'Upper Bound migliore risulta particolarmente dispendiosa nella prima iterazione sebbene si utilizzi una procedura euristica. Per ovviare a questo problema si adotta una strategia di aggiornamento ripetuto in cui, a intervalli prefissati di iterazioni, l'Upper Bound viene ricalcolato con il medesimo codice, incorporando nei costi degli archi le penalità lagrangiane.
 	\subsubsection{Algoritmo di Dijkstra con Controllo Capacità}
 	Questa versione dell'algoritmo è stata ottimizzata utilizzando la libreria heapq di Python, la quale implementa una struttura dati con priorità per semplificare il codice.
@@ -1601,7 +1601,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 \end{figure}
 
 \subsection{Secondo Scenario}
-Il secondo scenario di test viene utilizzato per analizzare il comportamento degli algoritmi in una rete densamente interconnessa. L'obiettivo è verificare la correttezza degli algoritmi nella scelta del percorso ottimo in un contesto con molteplici cammini alternativi.
+Il secondo scenario di test viene utilizzato per analizzare il comportamento degli algoritmi in una rete densamente interconnessa. L'obiettivo è verificare la correttezza degli algoritmi nella scelta dei percorsi ottimi in un contesto con molteplici cammini alternativi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso2}
@@ -1670,7 +1670,7 @@ La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi targe
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso3Ottimo}
-	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al terzo scenario.}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorsi ottimi disegnati sulla base del risultato della terza formulazione applicata al terzo scenario.}
 	\label{fig:caso3ottimo}
 \end{figure}\newpage
 \subsection{Quarto Scenario}
@@ -1703,7 +1703,7 @@ In quanto lo scenario si basa sulla mancata ricezione da parte di un'informazion
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso4ottimo}
-	\caption[Percorso ottimo disegnato sulla base della soluzione fornita dalla terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al quarto scenario.}
+	\caption[Percorso ottimo disegnato sulla base della soluzione fornita dalla terza formulazione.]{Percorsi ottimi disegnati sulla base del risultato della terza formulazione applicata al quarto scenario.}
 	\label{fig:caso4ottimo}
 \end{figure}\newpage
 
@@ -1732,11 +1732,11 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 	\caption{Panoramica dei risultati dei vari algoritmi per il quinto scenario.}
 \end{table}
 
-\noindent I risultati mostrano una convergenza parziale verso la soluzione ottima, nello specifico, mentre il Lower Bound converge completamente, l'Upper Bound si attesta su un valore pari a 1465. Nonostante la distanza dall'ottimo, l'esito dello scenario è da considerare eccellente. La distanza dall'ottimo è di sole 7 unità, valore molto minore rispetto alla mediana del costo degli archi che vale 57, dimostrando che, anche in caso di mancata convergenza completa, il risultato ottenuto è comunque migliore di una soluzione che commetterebbe un errore pari al costo di un singolo arco per l'instradamento. Il successo dello scenario inoltre si può confermare sia dalla piena convergenza del Lower Bound sia dall'analisi del percorso ottimo restituito dall'Upper Bound, in cui l'unica informazione non trasmessa è la $2$ per il target $9$.
+\noindent I risultati mostrano una convergenza parziale verso la soluzione ottima, nello specifico, mentre il Lower Bound converge completamente, l'Upper Bound si attesta su un valore pari a 1465. Nonostante la distanza dall'ottimo, l'esito dello scenario è da considerare eccellente. La distanza dall'ottimo è di sole 7 unità, valore molto minore rispetto alla mediana del costo degli archi che vale 57, dimostrando che, anche in caso di mancata convergenza completa, il risultato ottenuto è comunque migliore di una soluzione che commetterebbe un errore pari al costo di un singolo arco per l'instradamento. Il successo dello scenario inoltre si può confermare sia dalla piena convergenza del Lower Bound sia dall'analisi dei percorsi ottimi restituiti dall'Upper Bound, in cui l'unica informazione non trasmessa è la $2$ per il target $9$.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso5Ottimo}
-	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al quinto scenario.}
+	\caption[Percorsi ottimi disegnati sulla base del risultato della terza formulazione.]{Percorsi ottimi disegnati sulla base del risultato della terza formulazione applicata al quinto scenario.}
 	\label{fig:caso5ottimo}
 \end{figure}\newpage
 \section{Scenari e Test Casuali}
