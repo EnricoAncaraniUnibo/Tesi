@@ -223,7 +223,7 @@
 		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
 	\end{equation}
 	\subsection{Rilassamento Lagrangiano}
-	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, maggiore sarà la distanza del valore della funzione obiettivo dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà i valori ottimi di entrambi.
+	Un rilassamento particolarmente utile è quello lagrangiano \cite{Fisher1981}, che permette di rilassare i vincoli computazionalmente dispendiosi aggiungendoli alla funzione obiettivo e associando a ognuno di essi un moltiplicatore di Lagrange, definito anche penalità lagrangiana. Questi moltiplicatori si adattano al rispetto del vincolo rilassato: maggiore è la violazione, maggiore sarà la distanza del valore della funzione obiettivo dall'ottimo. Il risultato è, dunque, una nuova funzione obiettivo, detta lagrangiana, che dipende sia dalle variabili originali del problema sia dai moltiplicatori di Lagrange, e la cui risoluzione fornirà un limite inferiore per la soluzione del problema di minimizzazione originale, senza tuttavia garantire il raggiungimento dell'ottimo.
 	\subsubsection{Spiegazione Matematica}
 	Si considera un problema di minimizzazione P:
 	\begin{equation}
