@@ -1559,9 +1559,10 @@ In questo capitolo si approfondisce l'applicazione pratica degli algoritmi svilu
 Le soluzioni ottenute tramite gli algoritmi sviluppati vengono confrontate con il valore ottimo calcolato direttamente nell'ambiente Cplex \cite{Cplex} e la distanza da esso rappresenta una metrica fondamentale e sufficiente per valutarne la qualità. \smallskip \\
 La generazione degli scenari segue due modalità: un'arbitraria per analizzare il corretto funzionamento all'interno dei casi limite e una casuale per verificare la correttezza in contesti non preconfigurati. In particolare gli scenari casuali vengono generati con un incremento iterativo delle possibili variabili: informazioni, nodi, archi e numero target per individuare quale parametro porta criticità agli algoritmi.
 \section{Scenari e Test Arbitrari}
-Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo entro un prefissato numero di variabili.
+Durante i vari test vengono raccolte statistiche secondarie, specificamente il tempo di esecuzione e il numero di iterazioni, per valutare, laddove possibile, l'andamento e l'efficienza degli algoritmi. Dove questi parametri non sono leggibili o non sono considerati utilizzabili a fini di verifica dell'ottimalità viene inserito un ``/" nella tabella. In particolare, per le esecuzioni tramite l'ambiente di sviluppo di Cplex, il tempo di calcolo non è riportato poiché questa soluzione viene presa come riferimento standard per il risultato ottimo e il relativo tempo di esecuzione non è quindi rilevante ai fini dell'analisi. \smallskip \\
+Le implementazioni in Python basate sull'API di Cplex presentano, inoltre, un limite imposto dalla libreria, che consente l'esecuzione solo entro un prefissato numero di variabili.
 \subsection{Primo Scenario}
-La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono disposte in modo che i percorsi più brevi siano composti da soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è vedere una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
+La prima istanza di test è una rete semplice con un totale di 4 nodi. Le connessioni sono disposte in modo che i percorsi più brevi siano composti da soli due archi, tuttavia, i costi di questi collegamenti sono intenzionalmente elevati. L'obiettivo è verificare una scelta da parte degli algoritmi di un percorso più lungo al fine di ridurre i costi complessivi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso1}
@@ -1587,7 +1588,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 		Terza Formulazione Python API & 7 & 0.0481 & /\\ \hline
 		Upper Bound & 7 & / & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+	\caption{Panoramica dei risultati dei vari algoritmi per il primo scenario.}
 \end{table}
 
 \noindent Come emerge dai risultati, nonostante la prima formulazione e le successive due adottino criteri diversi per il calcolo del costo del percorso ottimo, hanno tutte restituito la medesima soluzione con tempi molto ridotti. Tale soluzione, inoltre, risulta ottima per ciascun algoritmo sviluppato, in quanto coincide con il risultato restituito dagli algoritmi sviluppati su Cplex. Le soluzioni tra le formulazioni coincidono in quanto, avendo una sola informazione e un solo target, la $x$ si comporta similmente alla $e$ e quindi le funzioni obiettivo coincidono.
@@ -1595,7 +1596,7 @@ I costi del percorso $0-2-3-4$ sono molto ridotti.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{Caso1OttimoPercorso}
-	\caption{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\caption{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al primo scenario.}
 	\label{fig:caso1ottimopercorso}
 \end{figure}
 
@@ -1626,15 +1627,15 @@ La peculiarità dello scenario risiede nell'elevato numero di archi all'interno d
 		Terza Formulazione Python API & 113 & 0.0549 & /\\ \hline
 		Upper Bound & 113 & / & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+	\caption{Panoramica dei risultati dei vari algoritmi per il secondo scenario.}
 \end{table}
 \noindent Come emerge dalle soluzioni, tutti gli algoritmi hanno trovato l'ottimo con tempi relativamente brevi, tuttavia, si rileva un peggioramento delle tempistiche rispetto al primo scenario, da associare sia all'aumento dei percorsi da controllare tramite l'algoritmo di Upper Bound, sia all'aumento delle iterazioni dei cicli, i quali dipendono dal numero di archi e nodi. Analogamente a quanto osservato nel primo scenario, l'uguaglianza tra le soluzioni delle diverse formulazioni dipende dal comportamento della variabile $x$ in scenari con una sola informazione da trasmettere a un solo target.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso2Ottimo}
-	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al secondo scenario.}
 	\label{fig:caso2ottimo}
-\end{figure}
+\end{figure} \newpage
 \subsection{Terzo Scenario}
 Il terzo scenario di test introduce una situazione di congestione della rete in cui tre informazioni, di cui una con due target, competono per arrivare ai nodi Subscriber. Le capacità degli archi sono state elaborate precisamente per indurre uno scenario di saturazione che colpisca il percorso ottimo, costringendo agli algoritmi di dover usufruire di altri cammini per la trasmissione delle informazioni.
 Gli obiettivi di questo scenario consistono nel verificare la corretta saturazione della cammino ottimo e l'efficace scelta della via percorribile alternativa.
@@ -1662,13 +1663,14 @@ La rete deve trasportare tre informazioni $0$, $1$, $2$ ai rispettivi nodi targe
 		Terza Formulazione Python API & 234 & 0.0818 & /\\ \hline
 		Upper Bound & 234 & / & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
-\end{table} \newpage
+	\caption{Panoramica dei risultati dei vari algoritmi per il terzo scenario.}
+\end{table}  
+
 \noindent Dall'analisi delle soluzioni restituite dagli algoritmi emerge una mancata convergenza dell'algoritmo lagrangiano della seconda formulazione entro il limite massimo di iterazioni prefissate. Andando nel dettaglio, si nota che, mentre l'Upper Bound restituisce il risultato ottimo, il valore della soluzione lagrangiana si ferma a 233.73. Al contrario, la terza formulazione mostra un'eccellente efficienza computazionale, convergendo all'ottimo in tempi e iterazioni ridotte. Controllando la soluzione ottima, si riscontra il comportamento ricercato dallo scenario, ovvero la saturazione del cammino dal nodo $7$ a $9$, che costringe l'informazione in partenza dal nodo $2$ a passare dal nodo $4$ per raggiungere il nodo $9$, nonostante il tragitto sia più costoso. Il motivo del blocco a una determinata soglia da parte del Lower Bound della seconda formulazione dipende dalla difficoltà nelle casistiche in cui una informazione richiede la trasmissione a più target. Questo avviene a causa della formulazione debole dei vincoli, infatti, eliminando la doppia richiesta l'algoritmo converge senza problemi.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso3Ottimo}
-	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al terzo scenario.}
 	\label{fig:caso3ottimo}
 \end{figure}\newpage
 \subsection{Quarto Scenario}
@@ -1694,14 +1696,14 @@ In quanto lo scenario si basa sulla mancata ricezione da parte di un'informazion
 		Terza Formulazione Python API & 1026 & 0.0732 & /\\ \hline
 		Upper Bound & 1026 & / & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+	\caption{Panoramica dei risultati dei vari algoritmi per il quarto scenario.}
 \end{table}
 
 \noindent Come evince dai risultati, l'algoritmo lagrangiano ha individuato la soluzione ottima in tempi ridotti. Nello scenario corrente, la scelta ottima ricade nel non consegnare l'informazione $2$ al target $9$. La decisione presa è dettata dalla topologia della rete, la quale richiederebbe all'informazione $2$ di attraversare un tragitto più lungo e costoso rispetto all'informazione $0$. Inoltre i costi risultano molto elevati perché sono sommati alla penalità associata col mancato trasferimento di una informazione che nel quarto scenario vale 553.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso4ottimo}
-	\caption[Percorso ottimo disegnato sulla base della soluzione fornita dalla terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\caption[Percorso ottimo disegnato sulla base della soluzione fornita dalla terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al quarto scenario.}
 	\label{fig:caso4ottimo}
 \end{figure}\newpage
 
@@ -1727,18 +1729,18 @@ In quanto lo scenario richiede una soluzione parziale, l'unico algoritmo che res
 		Terza Formulazione Python API & 1458 & 0.0582 & /\\ \hline
 		Upper Bound & 1465 & / & /\\ \hline
 	\end{tabular}
-	\caption{Panoramica dei risultati dei vari algoritmi per questo scenario.}
+	\caption{Panoramica dei risultati dei vari algoritmi per il quinto scenario.}
 \end{table}
 
 \noindent I risultati mostrano una convergenza parziale verso la soluzione ottima, nello specifico, mentre il Lower Bound converge completamente, l'Upper Bound si attesta su un valore pari a 1465. Nonostante la distanza dall'ottimo, l'esito dello scenario è da considerare eccellente. La distanza dall'ottimo è di sole 7 unità, valore molto minore rispetto alla mediana del costo degli archi che vale 57, dimostrando che, anche in caso di mancata convergenza completa, il risultato ottenuto è comunque migliore di una soluzione che commetterebbe un errore pari al costo di un singolo arco per l'instradamento. Il successo dello scenario inoltre si può confermare sia dalla piena convergenza del Lower Bound sia dall'analisi del percorso ottimo restituito dall'Upper Bound, in cui l'unica informazione non trasmessa è la $2$ per il target $9$.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{caso5Ottimo}
-	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione.}
+	\caption[Percorso ottimo disegnato sulla base del risultato della terza formulazione.]{Percorso ottimo disegnato sulla base del risultato della terza formulazione applicata al quinto scenario.}
 	\label{fig:caso5ottimo}
 \end{figure}\newpage
 \section{Scenari e Test Casuali}
-Come descritto in precedenza, questa sezione è dedicata allo sviluppo di scenari casuali con la peculiarità di un incremento progressivo, a ogni iterazione, di una specifica variabile della rete. A causa dell'elevata probabilità di nodi irraggiungibili e target multipli in quanto generati casualmente, si è optato per applicare il test solo sulla terza formulazione ovvero quella centrale di questa tesi, oltre che quella che ha dato i migliori risultati negli scenari arbitrari. Questo approccio permette di testare gli algoritmi in simulazioni sempre più complesse, portando alla luce eventuali limiti o difficoltà.
+Questa sezione è dedicata allo sviluppo di scenari casuali con la peculiarità di un incremento progressivo, a ogni iterazione, di una specifica variabile della rete. A causa dell'elevata probabilità di nodi irraggiungibili e target multipli in quanto generati casualmente, si è optato per applicare il test solo sulla terza formulazione ovvero quella centrale di questa tesi, oltre che quella che ha dato i migliori risultati negli scenari arbitrari. Questo approccio permette di testare gli algoritmi in simulazioni sempre più complesse, portando alla luce eventuali limiti o difficoltà.
 \subsection{Scenario Incrementale Casuale}
 Per valutare l'ottimalità delle soluzioni anche nei casi di mancata convergenza, all'interno della tabella è stato introdotto il parametro mA che rappresenta il costo mediano degli archi in quella precisa istanza.
 L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale, se la distanza tra Lower e Upper risulta inferiore al costo mediano degli archi, allora si può considerare trascurabile in quanto vale meno di un errore sulla scelta di un singolo arco.
@@ -1764,7 +1766,7 @@ L'aggiunta di tale metrica permette di stabilire una soglia di tolleranza quale,
 	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
 \end{table} \newpage
 \noindent I risultati raccolti nella tabella permettono di valutare vari aspetti del nostro algoritmo lagrangiano per la terza formulazione all'aumentare della complessità dello scenario. Nelle prime iterazioni, l'incremento dei target aumenta vertiginosamente il costo della rete, evidenziando come alcuni nodi aggiunti sono irraggiungibili. Un comportamento simile si nota con l'aggiunta di nuove informazioni da trasmettere, ciò è dovuto sia agli archi attivati per soddisfare le nuove richieste sia all'eventuale impossibilità di raggiungimento dei target. Al contrario di questi eventi, l'aumento della dimensione della rete non provoca alterazioni nel valore ottimo. Questo accade perché, a causa della generazione casuale, è altamente improbabile che un nuovo nodo o arco riescano a creare un percorso ottimo. Analizzando più nel dettaglio la convergenza, si nota come, nelle casistiche in cui l'Upper Bound non è riuscito a raggiungere l'ottimo, il Lower Bound abbia comunque dimostrato una convergenza più stabile. In due di questi casi, la distanza tra il Lower ottimo e l'Upper è meno costosa di un errore di scelta su un arco, rendendo quindi ottimale lo scenario. Solo alla fine, con l'aggiunta di un Broker, si è notevolmente complicato il calcolo dell'Upper Bound, allontanandolo dall'ottimo. Questa distanza ha ridotto l'efficacia dello step di aggiornamento del Lower Bound, impedendone la corretta convergenza all'interno del numero di iterazioni prefissate.
-Da questa analisi emerge la necessità di approfondire separatamente due aspetti: l'aumento di informazioni e di target e l'aumento di nodi e di archi.
+Da questa analisi emerge la necessità di approfondire separatamente due aspetti: l'aumento di informazioni e di target e l'aumento di nodi e di archi.\newpage
 \subsection{Scenario Incrementale Informazioni e Target}
 \begin{table}[htbp]
 	\centering % Centra la tabella nella pagina
@@ -1784,8 +1786,9 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 		8 & Informazioni & 14283 & Lower, Upper ottimi\\ \hline
 		9 & Target & 20802 & Lower, Upper ottimi\\ \hline
 	\end{tabular}
-	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
-\end{table} \newpage
+	\caption{Risultati per le istanze degli scenari casuali.}
+\end{table} 
+
 \noindent Dai risultati raccolti si può evidenziare un comportamento prevedibile da parte dei nostri algoritmi, sia all'aumentare delle informazioni sia dei target. Questo è dovuto al fatto che, avendo una struttura semplice della rete, individuare i percorsi ottimi risulta facile. Una volta individuati, tutte le informazioni che non riescono a raggiungere i target vengono semplicemente tramutate nelle penalità da aggiungere al costo totale.
 \subsection{Scenario Incrementale Broker e Archi}
 \begin{table}[htbp]
@@ -1803,7 +1806,7 @@ Da questa analisi emerge la necessità di approfondire separatamente due aspetti:
 		5 & Archi & 110 & Lower, Upper ottimi\\ \hline
 		6 & Broker &110 & Lower, Upper ottimi\\ \hline
 	\end{tabular}
-	\caption{Tabella dei risultati a ogni istanza degli scenari casuali.}
+	\caption{Risultati per le istanze degli scenari casuali.}
 \end{table}
 \noindent Dai risultati nella tabella risulta chiaro come la condizione analizzata precedentemente valga allo stesso modo anche per l'aumento dei nodi e degli archi. Infatti, nonostante la rete diventi più complessa, l'informazione da inviare e il nodo da raggiungere rimangono fissi. Poiché l'aggiunta di nodi o archi può solo mantenere o migliorare la soluzione esistente, il problema rimane facilmente risolvibile.
 \section{Analisi della Sensibilità dei Parametri}
@@ -1843,7 +1846,7 @@ In linea teorica, aumentare questi parametri migliora la qualità dell'Upper Boun
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\linewidth]{Tempi}
-	\caption[Grafico mostrante i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.]{Grafico mostrante i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.}
+	\caption[Grafico mostrante i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.]{Grafico che mostra i tempi di esecuzione dell'algoritmo euristico in base ai valori dei parametri.}
 	\label{fig:tempi}
 \end{figure}
 
@@ -1858,12 +1861,12 @@ Un effetto parzialmente analogo si osserva con la distanza dell'Upper Bound dall
 Per quanto riguarda la profondità della ricerca euristica, i test confermano che il costo computazionale è gestito da due parametri fondamentali: il numero di permutazioni da controllare per informazione e il numero di scenari attivi da mantenere. Incrementare un solo parametro alla volta non produce un aumento significativo dei tempi di calcolo, mentre, al contrario, l'aumento di entrambi genera una crescita dei tempi molto più marcata. \smallskip \\
 In conclusione, i test evidenziano come la terza formulazione e gli algoritmi sviluppati siano efficaci in numerosi scenari e riescano a ottenere i risultati attesi. Negli scenari in cui l'Upper Bound non converge all'ottimo, il Lower Bound riesce quasi sempre, dimostrando come la criticità principale risieda nel calcolo di un Upper Bound euristico di alta qualità. Poiché l'Upper Bound viene ricalcolato periodicamente sfruttando le penalità lagrangiane, si tende a ottenere la migliore soluzione individuabile da un approccio basato sui cammini minimi, che non sempre corrisponde all'ottimo. Nonostante questa limitazione, gli algoritmi rimangono utilizzabili in modo efficiente in contesti realistici, producendo soluzioni di buona qualità in tempi contenuti.
 \chapter{Conclusioni e Sviluppi Futuri}
-Questa tesi evidenzia come la trasmissione di informazioni all'interno di una rete, in particolar modo negli ambienti IoT \cite{Atzori2010}, caratterizzati da un'elevata vulnerabilità a guasti o richieste multiple, possa trovarsi davanti a scenari critici.
+Questa tesi evidenzia come la trasmissione di informazioni all'interno di una rete, in particolar modo negli ambienti IoT \cite{Atzori2010}, caratterizzati da un'elevata vulnerabilità a guasti o richieste multiple, possa richiedere di gestire scenari critici.
 In tali contesti, nasce l'esigenza di definire un approccio ottimizzato in grado di determinare i percorsi corretti di instradamento delle informazioni gestendo la possibilità di richieste irrisolvibili attraverso la generazione di soluzioni parziali. \smallskip \\
 La tesi propone un approccio basato sulla convergenza di un Lower Bound e un Upper Bound per individuare la soluzione ottima. 
 Il Lower Bound viene calcolato mediante un algoritmo sviluppato a partire del rilassamento lagrangiano \cite{Fisher1981} della formulazione matematica del problema (3.2.4). L'Upper Bound, invece, deriva da un algoritmo euristico basato sulla logica di Dijkstra \cite{Dijkstra1959} per l'individuazione dei cammini minimi, esteso alla gestione di scenari alternativi. \smallskip \\
 I test effettuati hanno dimostrato una convergenza ottima e robusta della metodologia proposta, grazie soprattutto all'efficacia dell'algoritmo lagrangiano. Al contrario, l'aumento della complessità della rete tende a penalizzare la fase di calcolo dell'Upper Bound, confermandolo come l'anello debole nella ricerca della soluzione ottima. Nonostante ciò, l'approccio si rileva efficiente, garantendo soluzioni ottime o di buona qualità in tempi computazionalmente ridotti, anche su reti di media e alta complessità.\smallskip \\
-Possibili sviluppi futuri di questo lavoro includono una rielaborazione della logica alla base dell'algoritmo di Upper Bound, al fine di garantire una sua corretta convergenza anche in casi di elevata complessità. Parallelamente, si potrebbe procedere allo sviluppo distribuito dell'algoritmo lagrangiano, spostando il calcolo da un server centralizzato ai singoli nodi della rete.\smallskip \\
+Possibili sviluppi futuri di questo lavoro includono una rielaborazione della logica alla base dell'algoritmo per il calcolo dell'Upper Bound, al fine di garantire una sua corretta convergenza anche in casi di elevata complessità. Parallelamente, si potrebbe procedere allo sviluppo distribuito dell'algoritmo lagrangiano, spostando il calcolo da un server centralizzato ai singoli nodi della rete.\smallskip \\
 In conclusione, la soluzione presentata in questa tesi si dimostra un approccio robusto ed efficiente per l'instradamento in reti Publish/Subscribe \cite{PubSub} ponendo basi solide per un suo futuro impiego in contesti reali.
 \bibliographystyle{unsrt}
 \bibliography{bibliografia}
