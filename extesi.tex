@@ -180,7 +180,7 @@
 		\label{fig:publish-subscribe}
 	\end{figure}
 	\section{La Difficoltà del Calcolo dei Percorsi Ottimi}
-	In un sistema moderno, per garantire la velocità di una rete è cruciale trovare i percorsi ottimi per la trasmissione dei dati, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale per ogni informazione da trasmettere.
+	In un sistema moderno, per garantire la velocità di una rete è cruciale trovare i percorsi ottimi per la trasmissione dei dati, infatti una scelta non ottimizzata potrebbe ritardare o addirittura impedire la ricezione delle informazioni, compromettendo il funzionamento dei dispositivi che dipendono da esse. Per questo motivo è necessario individuare il metodo più efficiente per rappresentare la rete e per calcolare il percorso ottimale per ogni informazione.
 	\subsection{Grafo}
 	Uno dei metodi migliori per poter descrivere una rete di dispositivi connessi è tramite un grafo. Usando questa struttura, i dispositivi vengono rappresentati tramite dei nodi e i collegamenti tramite degli archi. \begin{figure}[h]
 		\centering
@@ -191,13 +191,13 @@
 	\noindent L'uso di un grafo risulta una scelta efficiente perché, per reti semplici, consente di mostrare in modo naturale sia i componenti della rete sia le relazioni tra essi e grazie alla sua flessibilità permette inoltre di aggiungere varie proprietà agli elementi rappresentati, rendendo possibile modellare scenari complessi con facilità.
 	\subsection{Centralizzazione}
 	Un altro aspetto fondamentale del problema riguarda la centralizzazione dell'elaborazione della rete.
-	In un caso reale, calcolare qual è il percorso ottimo necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
-	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca del percorso ottimo sia nella gestione dei guasti in caso di malfunzionamento di un canale.
+	In un caso reale, calcolare quali sono i percorsi ottimi necessita di una notevole potenza di calcolo e, soprattutto, bisogna che ci sia la garanzia di possedere informazioni complete sulla composizione della rete.
+	Da qui nasce l'idea di non affidarsi più esclusivamente ad un server centrale ma di distribuire il calcolo su tutti i dispositivi della rete rendendola autonoma sia nella ricerca dei percorsi ottimi sia nella gestione dei guasti in caso di malfunzionamento di un canale.
 	\subsubsection{Peer-To-Peer}
 	Ciò è reso possibile sfruttando un protocollo Peer-to-Peer \cite{Schollmeier2001}, ovvero un protocollo che tratta i dispositivi in comunicazione sia come Client sia come Server, permettendogli dunque di scambiarsi richieste di risorse o servizi senza dover passare da terzi. \smallskip \\
 	
 	\section{Problema di Ottimizzazione}
-	Il problema della ricerca del percorso ottimo può essere formalizzato come un problema di ottimizzazione \cite{Wolsey1998}, problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione definita obiettivo e rispettando i vincoli imposti. \smallskip \\
+	Il problema della ricerca dei percorsi ottimi può essere formalizzato come un problema di ottimizzazione \cite{Wolsey1998}; problema che richiede di trovare la migliore soluzione possibile fra tutte le soluzioni ammissibili, massimizzando o minimizzando una funzione obiettivo e rispettando i vincoli imposti. \smallskip \\
 	Questo tipo di problema è descrivibile utilizzando un modello matematico:
 	\begin{equation}
 		min/max\ \sum_i c_ix_i
@@ -215,9 +215,9 @@
 		x \in \{0, 1\}
 	\end{equation}
 	Con $c$ il vettore dei costi, $x$ la variabile decisionale, $A$ e $B$ le matrici dei coefficienti del problema, $b$ e $d$ i vettori delle costanti per i vincoli.\smallskip \\
-	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo un limite inferiore per la soluzione del problema originale.
+	Molto spesso quando si tratta di problemi di questo tipo, si possono riscontrare delle difficoltà nella risoluzione, per questo viene adottata la tecnica del rilassamento dei vincoli che consente di semplificare il calcolo ottenendo, per la soluzione del problema originale, un limite superiore nel caso di massimizzazione della funzione obiettivo, o un limite inferiore nel caso di minimizzazione.
 	\subsection{Rilassamento Continuo}
-	Il rilassamento più intuitivo è quello continuo \cite{Wolsey1998}, dove se il problema presenta la variabile decisionale come intera, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza della variabile e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
+	Il rilassamento più intuitivo è quello continuo \cite{Wolsey1998}, dove se il problema presenta delle variabili decisionali intere, è possibile costruire un problema di ottimizzazione equivalente, abbandonando il vincolo di interezza delle variabili e permettendole di assumere un qualsiasi valore reale all'interno di un intervallo continuo derivato dal vincolo originale. \smallskip \\
 	Questo approccio trasforma il problema intero in un problema di programmazione lineare continua, per il quale esistono algoritmi efficienti. Lo spazio delle soluzioni ammissibili, tuttavia, è più ampio e il valore ottimo del problema rilassato potrebbe non essere sempre applicabile al problema originale.
 	\begin{equation}
 		x \in \{0, 1\}  \rightarrow 0 \leq	x \leq 1
