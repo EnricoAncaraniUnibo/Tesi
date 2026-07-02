@@ -260,7 +260,7 @@
 		\item Per $\lambda \geq 0$ e $Ax^* - b\geq 0$ si ha: \begin{equation}
 			cx^* \geq cx^* - \lambda(ax^*-b)
 		\end{equation}
-		\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore di $x^*$:
+		\item $x^*$ è anche soluzione ammissibile per il problema rilassato quindi esiste sicuramente una soluzione di $L(\lambda)$ che sarà o minore o uguale al valore in corrispondenza di $x^*$:
 		\begin{equation}
 			L(\lambda)=\min(cx-\lambda(Ax-b))\leq cx^*-\lambda(Ax^*-b)
 		\end{equation}\vspace{-0.75cm}
@@ -306,12 +306,12 @@
 				\addplot[red, thick, smooth] coordinates {(3.2,3.72) (4.8,2.55)};   
 			\end{axis}
 		\end{tikzpicture}
-		\caption{Immagine di una funzione lagrangiana con inviluppo}
+		\caption{Esempio di una funzione lagrangiana con inviluppo}
 		\label{fig:lagrangiana_inviluppo}
 	\end{figure}
 	\newpage
 	\noindent 
-	Data una lambda, si ottiene una $\bar{x}$ tale che:
+	Dato un moltiplicatore $\bar{\lambda}$, si ottiene una $\bar{x}$ tale che:
 	\begin{equation}
 		L(\bar{\lambda})=\min (cx-\bar{\lambda}(Ax-b))=c\bar{x}-\bar{\lambda}(A\bar{x}-b)
 	\end{equation}
@@ -341,7 +341,7 @@
 		\caption{Valore di $L(\bar{\lambda})$ corrispondente a una $\bar{\lambda}$ scelta}
 		\label{fig:Determinisco di L scelta una lambda}
 	\end{figure} \\
-	Riprendendo la soluzione $\bar{x}$ derivata dalla $\bar{\lambda}$ data, si può ridefinire $L(\lambda)$, cioè il valore ottimo in una qualsiasi altra lambda generica, come o minore o uguale della soluzione trovata ora:
+	Riprendendo la soluzione $\bar{x}$, ottenuta a partire dal moltiplicatore $\bar{\lambda}$ dato, è possibile dimostrare che $L(\lambda)$, ovvero il valore ottimo del problema rilassato per un qualsiasi moltiplicatore $\lambda$ generico, sarà minore o uguale al valore dell'espressione lagrangiana in $\bar{x}$ con lo stesso $\lambda$.
 	\begin{equation}
 		L(\lambda)=\min (cx-\lambda(Ax-b))\leq c\bar{x}-\lambda(A\bar{x}-b)
 	\end{equation}
